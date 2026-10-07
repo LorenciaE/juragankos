@@ -5,14 +5,18 @@ const getAllPayments = async (req, res) => {
     try {
         const query = `
             SELECT p.*, k.No_Kamar, k.Harga 
-            FROM \`PEMBAYARAN\` p
-            JOIN \`KAMAR\` k ON p.Kamar_ID = k.Kamar_ID
+            FROM \`pembayaran\` p
+            JOIN \`kamar\` k ON p.Kamar_ID = k.Kamar_ID
             ORDER BY p.Pembayaran_ID DESC
         `;
+
         const [rows] = await db.query(query);
         res.json(rows);
     } catch (error) {
-        res.status(500).json({ message: 'Terjadi kesalahan pada server', error: error.message });
+        res.status(500).json({
+            message: 'Terjadi kesalahan pada server',
+            error: error.message
+        });
     }
 };
 
@@ -20,34 +24,76 @@ const getAllPayments = async (req, res) => {
 const getPaymentById = async (req, res) => {
     try {
         const { id } = req.params;
-        const [rows] = await db.query('SELECT * FROM `PEMBAYARAN` WHERE Pembayaran_ID = ?', [id]);
+
+        const [rows] = await db.query(
+            'SELECT * FROM `pembayaran` WHERE Pembayaran_ID = ?',
+            [id]
+        );
+
         if (rows.length === 0) {
-            return res.status(404).json({ message: 'Data pembayaran tidak ditemukan' });
+            return res.status(404).json({
+                message: 'Data pembayaran tidak ditemukan'
+            });
         }
+
         res.json(rows[0]);
     } catch (error) {
-        res.status(500).json({ message: 'Terjadi kesalahan pada server', error: error.message });
+        res.status(500).json({
+            message: 'Terjadi kesalahan pada server',
+            error: error.message
+        });
     }
 };
 
 // POST: Menambahkan data pembayaran baru
 const createPayment = async (req, res) => {
     try {
-        const { Bulan_Pembayaran, Tgl_Pembayaran, Status_Pembayaran, Metode_Pembayaran, Nominal, Sewa_ID, Kamar_ID } = req.body;
-        
+        const {
+            Bulan_Pembayaran,
+            Tgl_Pembayaran,
+            Status_Pembayaran,
+            Metode_Pembayaran,
+            Nominal,
+            Sewa_ID,
+            Kamar_ID
+        } = req.body;
+
         // Validasi
-        if (!Bulan_Pembayaran || !Tgl_Pembayaran || !Status_Pembayaran || !Metode_Pembayaran || Nominal === undefined || !Sewa_ID || !Kamar_ID) {
-            return res.status(400).json({ message: 'Mohon Lengkapi Data' });
+        if (
+            !Bulan_Pembayaran ||
+            !Tgl_Pembayaran ||
+            !Status_Pembayaran ||
+            !Metode_Pembayaran ||
+            Nominal === undefined ||
+            !Sewa_ID ||
+            !Kamar_ID
+        ) {
+            return res.status(400).json({
+                message: 'Mohon Lengkapi Data'
+            });
         }
 
         await db.query(
-            'INSERT INTO `PEMBAYARAN` (Bulan_Pembayaran, Tgl_Pembayaran, Status_Pembayaran, Metode_Pembayaran, Nominal, Sewa_ID, Kamar_ID) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [Bulan_Pembayaran, Tgl_Pembayaran, Status_Pembayaran, Metode_Pembayaran, Nominal, Sewa_ID, Kamar_ID]
+            'INSERT INTO `pembayaran` (Bulan_Pembayaran, Tgl_Pembayaran, Status_Pembayaran, Metode_Pembayaran, Nominal, Sewa_ID, Kamar_ID) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [
+                Bulan_Pembayaran,
+                Tgl_Pembayaran,
+                Status_Pembayaran,
+                Metode_Pembayaran,
+                Nominal,
+                Sewa_ID,
+                Kamar_ID
+            ]
         );
-        
-        res.status(201).json({ message: 'Data Berhasil Ditambahkan / Diedit' });
+
+        res.status(201).json({
+            message: 'Data Berhasil Ditambahkan / Diedit'
+        });
     } catch (error) {
-        res.status(500).json({ message: 'Terjadi kesalahan pada server', error: error.message });
+        res.status(500).json({
+            message: 'Terjadi kesalahan pada server',
+            error: error.message
+        });
     }
 };
 
@@ -55,24 +101,59 @@ const createPayment = async (req, res) => {
 const updatePayment = async (req, res) => {
     try {
         const { id } = req.params;
-        const { Bulan_Pembayaran, Tgl_Pembayaran, Status_Pembayaran, Metode_Pembayaran, Nominal, Sewa_ID, Kamar_ID } = req.body;
 
-        if (!Bulan_Pembayaran || !Tgl_Pembayaran || !Status_Pembayaran || !Metode_Pembayaran || Nominal === undefined || !Sewa_ID || !Kamar_ID) {
-            return res.status(400).json({ message: 'Mohon Lengkapi Data' });
+        const {
+            Bulan_Pembayaran,
+            Tgl_Pembayaran,
+            Status_Pembayaran,
+            Metode_Pembayaran,
+            Nominal,
+            Sewa_ID,
+            Kamar_ID
+        } = req.body;
+
+        if (
+            !Bulan_Pembayaran ||
+            !Tgl_Pembayaran ||
+            !Status_Pembayaran ||
+            !Metode_Pembayaran ||
+            Nominal === undefined ||
+            !Sewa_ID ||
+            !Kamar_ID
+        ) {
+            return res.status(400).json({
+                message: 'Mohon Lengkapi Data'
+            });
         }
 
         const [result] = await db.query(
-            'UPDATE `PEMBAYARAN` SET Bulan_Pembayaran = ?, Tgl_Pembayaran = ?, Status_Pembayaran = ?, Metode_Pembayaran = ?, Nominal = ?, Sewa_ID = ?, Kamar_ID = ? WHERE Pembayaran_ID = ?',
-            [Bulan_Pembayaran, Tgl_Pembayaran, Status_Pembayaran, Metode_Pembayaran, Nominal, Sewa_ID, Kamar_ID, id]
+            'UPDATE `pembayaran` SET Bulan_Pembayaran = ?, Tgl_Pembayaran = ?, Status_Pembayaran = ?, Metode_Pembayaran = ?, Nominal = ?, Sewa_ID = ?, Kamar_ID = ? WHERE Pembayaran_ID = ?',
+            [
+                Bulan_Pembayaran,
+                Tgl_Pembayaran,
+                Status_Pembayaran,
+                Metode_Pembayaran,
+                Nominal,
+                Sewa_ID,
+                Kamar_ID,
+                id
+            ]
         );
 
         if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Data pembayaran tidak ditemukan' });
+            return res.status(404).json({
+                message: 'Data pembayaran tidak ditemukan'
+            });
         }
 
-        res.json({ message: 'Data Berhasil Ditambahkan / Diedit' });
+        res.json({
+            message: 'Data Berhasil Ditambahkan / Diedit'
+        });
     } catch (error) {
-        res.status(500).json({ message: 'Terjadi kesalahan pada server', error: error.message });
+        res.status(500).json({
+            message: 'Terjadi kesalahan pada server',
+            error: error.message
+        });
     }
 };
 
@@ -80,15 +161,26 @@ const updatePayment = async (req, res) => {
 const deletePayment = async (req, res) => {
     try {
         const { id } = req.params;
-        const [result] = await db.query('DELETE FROM `PEMBAYARAN` WHERE Pembayaran_ID = ?', [id]);
-        
+
+        const [result] = await db.query(
+            'DELETE FROM `pembayaran` WHERE Pembayaran_ID = ?',
+            [id]
+        );
+
         if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Data pembayaran tidak ditemukan' });
+            return res.status(404).json({
+                message: 'Data pembayaran tidak ditemukan'
+            });
         }
 
-        res.json({ message: 'Data Berhasil Dihapus' });
+        res.json({
+            message: 'Data Berhasil Dihapus'
+        });
     } catch (error) {
-        res.status(500).json({ message: 'Terjadi kesalahan pada server', error: error.message });
+        res.status(500).json({
+            message: 'Terjadi kesalahan pada server',
+            error: error.message
+        });
     }
 };
 
