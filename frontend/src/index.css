@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap');
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family:'Open Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:root {
+  --font-light: 300;
+  --font-regular: 400;
+  --font-semi-bold: 600;
+  --font-bold: 700;
+}
+
+body {
+  background-color: #f4f6f9; /* Ubah warna ini agar lebih terang mirip OutSystems */
+  color: #4f575e;
+}
+
+.navbar {
+  background-color: rgb(5, 49, 131); /* Warna biru tua dari UI */
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 30px;
+  align-items: center;
+  height: 56px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.nav-links a:hover {
+  text-decoration: underline;
+}
+
+.logout-btn {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  margin-right: 125px;
+  font-size: 15px;
+}
+
+.container {
+  padding: 40px;
+  max-width: 1280px;
+  margin: 0 116.4px;
+}
+
+.filter-select {
+  border: 1px solid #e0e0e0;
+  outline: none;
+}
+
+.filter-select:focus {
+  border: 1px solid #053183 !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.sortable-header {
+  cursor: pointer;
+}
+
+.sortable-header:hover {
+  color: #053183 !important;
+}
