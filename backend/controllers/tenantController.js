@@ -1,4 +1,5 @@
 const db = require('../config/database');
+
 const getAllTenants = async (req, res) => {
     try {
         const query = `
