@@ -1,11 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap');
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family:'Open Sans', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
+  background-color: #f4f6f9;
+  color: #4f575e;
+  overflow-x: hidden;
 }
 
 :root {
@@ -15,19 +29,19 @@
   --font-bold: 700;
 }
 
-body {
-  background-color: #f4f6f9; /* Ubah warna ini agar lebih terang mirip OutSystems */
-  color: #4f575e;
-}
+/* =========================
+   NAVBAR
+   ========================= */
 
 .navbar {
-  background-color: rgb(5, 49, 131); /* Warna biru tua dari UI */
+  background-color: rgb(5, 49, 131);
   color: white;
   display: flex;
   justify-content: space-between;
-  padding: 15px 30px;
   align-items: center;
+  padding: 15px 30px;
   height: 56px;
+  width: 100%;
 }
 
 .nav-links {
@@ -56,11 +70,40 @@ body {
   font-size: 15px;
 }
 
-.container {
-  padding: 40px;
-  max-width: 1280px;
-  margin: 0 116.4px;
+@media (max-width: 1024px) {
+  .logout-btn {
+    margin-right: 60px;
+  }
 }
+
+@media (max-width: 768px) {
+  .logout-btn {
+    margin-right: 20px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logout-btn {
+    margin-right: 10px;
+    font-size: 12px;
+  }
+}
+
+/* =========================
+   MAIN CONTAINER
+   ========================= */
+
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+/* =========================
+   FILTER
+   ========================= */
 
 .filter-select {
   border: 1px solid #e0e0e0;
@@ -73,10 +116,104 @@ body {
   box-shadow: none !important;
 }
 
+/* =========================
+   SORTABLE TABLE HEADER
+   ========================= */
+
 .sortable-header {
   cursor: pointer;
 }
 
 .sortable-header:hover {
   color: #053183 !important;
+}
+
+/* ==================================================
+   TABLET
+   Maksimal lebar 1024px
+   ================================================== */
+
+@media (max-width: 1024px) {
+
+  .navbar {
+    padding: 15px 20px;
+  }
+
+  .nav-links {
+    gap: 12px;
+  }
+
+  .nav-links a {
+    font-size: 14px;
+  }
+
+  .container {
+    padding: 30px;
+  }
+
+}
+
+/* ==================================================
+   MOBILE
+   Maksimal lebar 768px
+   ================================================== */
+
+@media (max-width: 768px) {
+
+  .navbar {
+    padding: 12px 16px;
+    min-height: 56px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .nav-links {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .nav-links a {
+    font-size: 13px;
+  }
+
+  .logout-btn {
+    font-size: 13px;
+  }
+
+  .container {
+    padding: 20px 16px;
+  }
+
+}
+
+/* ==================================================
+   SMALL MOBILE
+   Maksimal lebar 480px
+   ================================================== */
+
+@media (max-width: 480px) {
+
+  .navbar {
+    padding: 10px 12px;
+    min-height: auto;
+  }
+
+  .nav-links {
+    width: 100%;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .nav-links a {
+    font-size: 12px;
+  }
+
+  .logout-btn {
+    font-size: 12px;
+  }
+
+  .container {
+    padding: 16px 12px;
+  }
+
 }

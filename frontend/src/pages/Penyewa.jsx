@@ -88,12 +88,15 @@ const Penyewa = () => {
 
   // Fungsi untuk menyensor nomor HP (menampilkan 4 digit awal dan 4 digit akhir)
   const maskPhoneNumber = (phone) => {
-    if (!phone) return '-';
-    const phoneStr = phone.toString();
-    if (phoneStr.length >= 8) {
-      return phoneStr.slice(0, 4) + '****' + phoneStr.slice(-4);
-    }
+  if (!phone) return '-';
+
+  const phoneStr = String(phone);
+
+  if (phoneStr.length <= 8) {
     return phoneStr;
+  }
+
+  return `${phoneStr.slice(0, 4)}****${phoneStr.slice(-4)}`;
   };
 
   // Logika Pencarian, Filter, dan Urutkan
