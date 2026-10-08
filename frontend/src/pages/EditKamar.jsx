@@ -233,7 +233,7 @@ const EditKamar = () => {
                 <option value="AC" style={{ color: '#272b30' }}>AC</option>
                 <option value="NON AC" style={{ color: '#272b30' }}>NON AC</option>
               </select>
-              <img src="/down.png" alt="" style={{ position: 'absolute', right: '16px', top: '38px', width: '11px', height: '11px', pointerEvents: 'none' }}/>
+              <img src="/down.png" alt="" style={{ position: 'absolute', right: '14px', top: '43.5px', width: '11px', height: '11px', pointerEvents: 'none' }}/>
               {fieldErrors.Tipe_Kamar && (
                 <small style={{ display:'block', color:'red', fontSize:'12px', lineHeight:'16px', marginTop:'4px' }}>
                   This field is required.
@@ -252,7 +252,7 @@ const EditKamar = () => {
                 <option value="TERISI" style={{ color: '#272b30' }}>TERISI</option>
                 <option value="KOSONG" style={{ color: '#272b30' }}>KOSONG</option>
               </select>
-              <img src="/down.png" alt="" style={{ position: 'absolute', right: '16px', top: '38px', width: '11px', height: '11px', pointerEvents: 'none' }}/>
+              <img src="/down.png" alt="" style={{ position: 'absolute', right: '14px', top: '43.5px', width: '11px', height: '11px', pointerEvents: 'none' }}/>
               {fieldErrors.Status_Ketersediaan && (
                 <small style={{ display:'block', color:'red', fontSize:'12px', lineHeight:'16px', marginTop:'4px' }}>
                   This field is required.

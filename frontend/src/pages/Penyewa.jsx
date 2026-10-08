@@ -88,15 +88,15 @@ const Penyewa = () => {
 
   // Fungsi untuk menyensor nomor HP (menampilkan 4 digit awal dan 4 digit akhir)
   const maskPhoneNumber = (phone) => {
-  if (!phone) return '-';
+    if (!phone) return '-';
 
-  const phoneStr = String(phone);
+    const phoneStr = String(phone);
 
-  if (phoneStr.length <= 8) {
-    return phoneStr;
-  }
+    if (phoneStr.length <= 8) {
+      return phoneStr;
+    }
 
-  return `${phoneStr.slice(0, 4)}****${phoneStr.slice(-4)}`;
+    return `${phoneStr.slice(0, 4)}****${phoneStr.slice(-4)}`;
   };
 
   // Logika Pencarian, Filter, dan Urutkan
@@ -151,9 +151,27 @@ const Penyewa = () => {
   // Ambil opsi unik untuk dropdown status
   const uniqueStatus = [...new Set(tenants.map(item => item.Status_Sewa))];
 
-  // Styling Variables
-  const tableHeaderStyle = { padding: '0px 24px', borderBottom: '1px solid #e0e0e0', fontWeight: '600', color: '#4f575e', fontSize: '14px', cursor: 'pointer', userSelect: 'none', height: '48px' };
-  const tableDataStyle = { padding: '8px 24px', borderBottom: '1px solid #e0e0e0', fontSize: '14px', color: '#272b30', height: '56.8px' };
+  // Styling Variables (Disesuaikan untuk vertical align center & text wrapping)
+  const tableHeaderStyle = { 
+    padding: '0px 24px', 
+    borderBottom: '1px solid #e0e0e0', 
+    fontWeight: '600', 
+    color: '#4f575e', 
+    fontSize: '14px', 
+    cursor: 'pointer', 
+    userSelect: 'none', 
+    height: '48px',
+    verticalAlign: 'middle'
+  };
+
+  const tableDataStyle = { 
+    padding: '12px 24px', 
+    borderBottom: '1px solid #e0e0e0', 
+    fontSize: '14px', 
+    color: '#272b30',
+    verticalAlign: 'middle' // Menjadikan posisi konten di tengah tinggi baris secara vertikal
+  };
+
   const btnStyle = { display: 'inline-flex', alignItems: 'center', color: 'white', border: 'none', padding: '0px 16px', borderRadius: '4px', cursor: 'pointer', textDecoration: 'none', fontSize: '14px', fontWeight: '600', height: '40px' };
   const filterInputStyle = { padding: '10px 15px', borderRadius: '4px', border: '1px solid #d9d9d9', fontSize: '14px', width: '100%', outline: 'none', color: '#4f575e', backgroundColor: '#fff' };
 
@@ -260,7 +278,7 @@ const Penyewa = () => {
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
           <thead>
             <tr>
-              <th className="sortable-header" style={{ ...tableHeaderStyle, width: '110.59px', color: sortConfig.key === 'Nama_Lengkap' ? '#083487' : '#4f575e' }} onClick={() => requestSort('Nama_Lengkap')}>Nama<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
+              <th className="sortable-header" style={{ ...tableHeaderStyle, width: '150px', color: sortConfig.key === 'Nama_Lengkap' ? '#083487' : '#4f575e' }} onClick={() => requestSort('Nama_Lengkap')}>Nama<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
               <th className="sortable-header" style={{ ...tableHeaderStyle, width: '177.65px', color: sortConfig.key === 'No_Hp' ? '#083487' : '#4f575e' }} onClick={() => requestSort('No_Hp')}>Nomor Telepon<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
               <th className="sortable-header" style={{ ...tableHeaderStyle, width: '173.15px', color: sortConfig.key === 'Tgl_Masuk' ? '#083487' : '#4f575e' }} onClick={() => requestSort('Tgl_Masuk')}>Tanggal Masuk<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
               <th className="sortable-header" style={{ ...tableHeaderStyle, width: '172.34px', color: sortConfig.key === 'Tgl_Keluar' ? '#083487' : '#4f575e' }} onClick={() => requestSort('Tgl_Keluar')}>Tanggal Keluar<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
@@ -274,13 +292,16 @@ const Penyewa = () => {
             <tbody>
               {currentTenants.map(tenant => (
                 <tr key={tenant.Penyewa_ID}>
-                  <td style={tableDataStyle}>{tenant.Nama_Lengkap}</td>
+                  {/* Kolom Nama dengan penanganan teks panjang agar turun ke bawah */}
+                  <td style={{ ...tableDataStyle, wordBreak: 'break-word', whiteSpace: 'normal' }}>
+                    {tenant.Nama_Lengkap}
+                  </td>
                   <td style={tableDataStyle}>{maskPhoneNumber(tenant.No_Hp)}</td>
                   <td style={tableDataStyle}>{formatDate(tenant.Tgl_Masuk)}</td>
                   <td style={tableDataStyle}>{formatDate(tenant.Tgl_Keluar)}</td>
                   <td style={tableDataStyle}>{tenant.No_Kamar}</td>
                   <td style={tableDataStyle}>{tenant.Status_Sewa}</td>
-                  <td style={{ ...tableDataStyle }}>
+                  <td style={{ ...tableDataStyle, textAlign: 'center' }}>
                     <Link to={`/penyewa/edit/${tenant.Penyewa_ID}`} style={{ ...btnStyle, backgroundColor: '#feb941', height: '40px', width: '71.58px', gap: '3px' }}>Edit<img src="/pen.png" style={{ width: '14px', height: '14px' }} alt="Edit" /></Link>
                     <button onClick={() => openDeleteModal(tenant.Penyewa_ID)} style={{ ...btnStyle, backgroundColor: '#f00', height: '40px', margin: '0px 0px 0px 24px', gap: '5px', width: '87.68px' }}>Hapus<img src="/trash.png" style={{ width: '14px', height: '14px' }} alt="Hapus" /></button>
                   </td>
