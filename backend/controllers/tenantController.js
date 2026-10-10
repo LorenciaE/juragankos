@@ -45,7 +45,7 @@ const createTenant = async (req, res) => {
     try {
         const { Nama_Lengkap, No_Hp, Tgl_Masuk, Tgl_Keluar, Kamar_ID, Status_Sewa } = req.body;
         
-        if (!Nama_Lengkap || !No_Hp || !Tgl_Masuk || !Tgl_Keluar || !Kamar_ID || !Status_Sewa) {
+        if (!Nama_Lengkap || !No_Hp || !Tgl_Masuk || !Kamar_ID || !Status_Sewa) {
             return res.status(400).json({ message: 'Mohon Lengkapi Data' });
         }
 
@@ -59,7 +59,7 @@ const createTenant = async (req, res) => {
 
         await connection.query(
             'INSERT INTO \`sewa\` (Status_Sewa, Tgl_Masuk, Tgl_Keluar, Penyewa_ID, Kamar_ID) VALUES (?, ?, ?, ?, ?)',
-            [Status_Sewa, Tgl_Masuk, Tgl_Keluar, newPenyewaId, Kamar_ID]
+            [Status_Sewa, Tgl_Masuk, Tgl_Keluar || null, newPenyewaId, Kamar_ID]
         );
 
         if (Status_Sewa === 'AKTIF') {
@@ -86,7 +86,7 @@ const updateTenant = async (req, res) => {
         const { id } = req.params;
         const { Nama_Lengkap, No_Hp, Tgl_Masuk, Tgl_Keluar, Kamar_ID, Status_Sewa } = req.body;
 
-        if (!Nama_Lengkap || !No_Hp || !Tgl_Masuk || !Tgl_Keluar || !Kamar_ID || !Status_Sewa) {
+        if (!Nama_Lengkap || !No_Hp || !Tgl_Masuk || !Kamar_ID || !Status_Sewa) {
             return res.status(400).json({ message: 'Mohon Lengkapi Data' });
         }
 
@@ -99,7 +99,7 @@ const updateTenant = async (req, res) => {
 
         await connection.query(
             'UPDATE \`sewa\` SET Status_Sewa = ?, Tgl_Masuk = ?, Tgl_Keluar = ?, Kamar_ID = ? WHERE Penyewa_ID = ?',
-            [Status_Sewa, Tgl_Masuk, Tgl_Keluar, Kamar_ID, id]
+            [Status_Sewa, Tgl_Masuk, Tgl_Keluar || null, Kamar_ID, id]
         );
 
         if (Status_Sewa === 'AKTIF') {

@@ -81,7 +81,6 @@ const TambahPenyewa = () => {
     if (!formData.Nama_Lengkap) errors.Nama_Lengkap = true;
     if (!formData.No_Hp) errors.No_Hp = true;
     if (!formData.Tgl_Masuk) errors.Tgl_Masuk = true;
-    if (!formData.Tgl_Keluar) errors.Tgl_Keluar = true;
     if (!formData.Kamar_ID) errors.Kamar_ID = true;
     if (!formData.Status_Sewa) errors.Status_Sewa = true;
 
@@ -93,9 +92,10 @@ const TambahPenyewa = () => {
 
     // Mengirim payload dengan No_Hp yang sudah di-masking ke backend
     const payload = {
-      ...formData,
-      No_Hp: maskPhoneNumber(formData.No_Hp) // atau ganti dengan formData.No_Hp jika backend butuh nomor asli
-    };
+  ...formData,
+  No_Hp: maskPhoneNumber(formData.No_Hp),
+  Tgl_Keluar: formData.Tgl_Keluar || null
+};
 
     try {
       await createTenant(payload);
