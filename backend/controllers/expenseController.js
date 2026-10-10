@@ -48,46 +48,25 @@ const getExpenseById = async (req, res) => {
 // POST: Menambahkan pengeluaran baru
 const createExpense = async (req, res) => {
     try {
-        const {
-            Tgl_Pengeluaran,
-            Kategori,
-            Nominal,
-            Deskripsi,
-            Kamar_ID
-        } = req.body;
+        const { Tgl_Pengeluaran, Kategori, Nominal, Deskripsi, Kamar_ID } = req.body;
 
-        // Validasi input
-        if (
-            !Tgl_Pengeluaran ||
-            !Kategori ||
-            Nominal === undefined ||
-            !Deskripsi ||
-            !Kamar_ID
-        ) {
-            return res.status(400).json({
-                message: 'Mohon Lengkapi Data'
-            });
+        // VALIDASI: Deskripsi dan Kamar_ID dihapus dari pengecekan agar opsional
+        if (!Tgl_Pengeluaran || !Kategori || Nominal === undefined) {
+            return res.status(400).json({ message: 'Mohon Lengkapi Data Wajib' });
         }
+
+        // Set ke null jika data kosong (mencegah error dari MySQL)
+        const valDeskripsi = Deskripsi || null;
+        const valKamarId = Kamar_ID || null;
 
         await db.query(
             'INSERT INTO `pengeluaran` (Kategori, Deskripsi, Tgl_Pengeluaran, Nominal, Kamar_ID) VALUES (?, ?, ?, ?, ?)',
-            [
-                Kategori,
-                Deskripsi,
-                Tgl_Pengeluaran,
-                Nominal,
-                Kamar_ID
-            ]
+            [Kategori, valDeskripsi, Tgl_Pengeluaran, Nominal, valKamarId]
         );
 
-        res.status(201).json({
-            message: 'Data Berhasil Ditambahkan / Diedit'
-        });
+        res.status(201).json({ message: 'Data Berhasil Ditambahkan' });
     } catch (error) {
-        res.status(500).json({
-            message: 'Terjadi kesalahan pada server',
-            error: error.message
-        });
+        res.status(500).json({ message: 'Terjadi kesalahan pada server', error: error.message });
     }
 };
 
@@ -95,53 +74,29 @@ const createExpense = async (req, res) => {
 const updateExpense = async (req, res) => {
     try {
         const { id } = req.params;
+        const { Tgl_Pengeluaran, Kategori, Nominal, Deskripsi, Kamar_ID } = req.body;
 
-        const {
-            Tgl_Pengeluaran,
-            Kategori,
-            Nominal,
-            Deskripsi,
-            Kamar_ID
-        } = req.body;
-
-        if (
-            !Tgl_Pengeluaran ||
-            !Kategori ||
-            Nominal === undefined ||
-            !Deskripsi ||
-            !Kamar_ID
-        ) {
-            return res.status(400).json({
-                message: 'Mohon Lengkapi Data'
-            });
+        // VALIDASI: Samakan dengan create, jadikan Deskripsi & Kamar_ID opsional
+        if (!Tgl_Pengeluaran || !Kategori || Nominal === undefined) {
+            return res.status(400).json({ message: 'Mohon Lengkapi Data Wajib' });
         }
+
+        // Set ke null jika data kosong
+        const valDeskripsi = Deskripsi || null;
+        const valKamarId = Kamar_ID || null;
 
         const [result] = await db.query(
             'UPDATE `pengeluaran` SET Kategori = ?, Deskripsi = ?, Tgl_Pengeluaran = ?, Nominal = ?, Kamar_ID = ? WHERE Pengeluaran_ID = ?',
-            [
-                Kategori,
-                Deskripsi,
-                Tgl_Pengeluaran,
-                Nominal,
-                Kamar_ID,
-                id
-            ]
+            [Kategori, valDeskripsi, Tgl_Pengeluaran, Nominal, valKamarId, id]
         );
 
         if (result.affectedRows === 0) {
-            return res.status(404).json({
-                message: 'Data pengeluaran tidak ditemukan'
-            });
+            return res.status(404).json({ message: 'Data pengeluaran tidak ditemukan' });
         }
 
-        res.json({
-            message: 'Data Berhasil Ditambahkan / Diedit'
-        });
+        res.json({ message: 'Data Berhasil Diedit' });
     } catch (error) {
-        res.status(500).json({
-            message: 'Terjadi kesalahan pada server',
-            error: error.message
-        });
+        res.status(500).json({ message: 'Terjadi kesalahan pada server', error: error.message });
     }
 };
 

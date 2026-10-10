@@ -43,26 +43,44 @@ const TambahPengeluaran = () => {
     setSuccessMessage('');
 
     let errors = {};
+    
+    // 1. Validasi Frontend (HANYA field wajib, Kamar_ID TIDAK dicek di sini)
     if (!formData.Tgl_Pengeluaran) errors.Tgl_Pengeluaran = true;
     if (!formData.Kategori) errors.Kategori = true;
     if (!formData.Nominal) errors.Nominal = true;
-    if (!formData.Deskripsi) errors.Deskripsi = true;
-    if (!formData.Kamar_ID) errors.Kamar_ID = true;
+    if (!formData.Deskripsi || !formData.Deskripsi.trim()) errors.Deskripsi = true;
 
+    // Jika ada field wajib yang belum diisi, hentikan proses dan tampilkan error
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
       setErrorMessage('Mohon Lengkapi Data');
       return;
     }
 
+    // 2. Siapkan Payload yang "Bersih" untuk Backend
+    const payload = {
+      Tgl_Pengeluaran: formData.Tgl_Pengeluaran,
+      Kategori: formData.Kategori,
+      Nominal: formData.Nominal,
+      Deskripsi: formData.Deskripsi,
+    };
+
+    // 3. Hanya kirim Kamar_ID jika user benar-benar memilih (tidak kosong)
+    if (formData.Kamar_ID && formData.Kamar_ID.trim() !== '') {
+      payload.Kamar_ID = formData.Kamar_ID;
+    }
+
     try {
-      await createExpense(formData);
+      await createExpense(payload);
       setSuccessMessage('Data Berhasil Ditambahkan');
       setTimeout(() => {
         navigate('/pengeluaran'); 
       }, 1500);
     } catch (err) {
-      const msg = err.response?.data?.message || 'Terjadi kesalahan pada server';
+      // 4. Tangkap Error dari Backend
+      const msg = err.response?.data?.message 
+               || err.response?.data?.error 
+               || 'Terjadi kesalahan pada server. Pastikan database mengizinkan data kosong pada No Kamar.';
       setErrorMessage(msg);
     }
   };
@@ -239,14 +257,19 @@ const TambahPengeluaran = () => {
             </div>
 
             <div style={{ marginBottom: '24px' }}>
-              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px', color: '#4f575e', height: '21px' }}>No Kamar</label>
-              <select name="Kamar_ID" value={formData.Kamar_ID} onChange={handleChange} onFocus={(e) => {
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px', color: '#4f575e', height: '21px' }}>No Kamar (Opsional)</label>
+              <select 
+                name="Kamar_ID" 
+                value={formData.Kamar_ID} 
+                onChange={handleChange} 
+                onFocus={(e) => {
                   e.target.style.border = '1px solid #053183';
                   e.target.style.outline = 'none';
                 }}
-                onBlur={(e) => e.target.style.border = fieldErrors.Kamar_ID 
-                ? '0.8px solid red' : '0.8px solid #ced4da'} style={{ appearance: 'none', width: '100%', padding: '0px 16px', borderRadius: '4px', border: fieldErrors.Kamar_ID ? '0.8px solid red' : '0.8px solid #ced4da', height: '40px', color: formData.Kamar_ID ? '#272b30' : '#272b30', fontSize: '14px'}}>
-                <option value="" style={{ color: '#272b30' }}>Pilih No Kamar</option>
+                onBlur={(e) => e.target.style.border = '0.8px solid #ced4da'} 
+                style={{ appearance: 'none', width: '100%', padding: '0px 16px', borderRadius: '4px', border: '0.8px solid #ced4da', height: '40px', color: '#272b30', fontSize: '14px'}}
+              >
+                <option value="" style={{ color: '#272b30' }}>Pilih No Kamar (Opsional)</option>
                 {rooms.map(room => (
                   <option key={room.Kamar_ID} value={room.Kamar_ID}>{room.No_Kamar}</option>
                 ))}

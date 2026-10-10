@@ -14,6 +14,9 @@ const TambahPenyewa = () => {
     Status_Sewa: ''
   });
 
+  // State untuk menyimpan teks tampilan No HP di UI
+  const [displayNoHp, setDisplayNoHp] = useState('');
+
   const [rooms, setRooms] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -31,10 +34,42 @@ const TambahPenyewa = () => {
     fetchRooms();
   }, []);
 
+  // Fungsi untuk menyamarkan digit tengah nomor HP
+  const maskPhoneNumber = (phone) => {
+    // Menghapus semua karakter non-angka
+    const cleanPhone = phone.replace(/\D/g, '');
+    if (cleanPhone.length <= 6) return cleanPhone;
+
+    const startLength = 4; // 4 digit pertama tetap terlihat (misal: 0812)
+    const endLength = 3;   // 3 digit terakhir tetap terlihat
+
+    if (cleanPhone.length <= startLength + endLength) {
+      return cleanPhone;
+    }
+
+    const start = cleanPhone.slice(0, startLength);
+    const end = cleanPhone.slice(-endLength);
+    const maskedLength = cleanPhone.length - (startLength + endLength);
+    const masked = '*'.repeat(maskedLength);
+
+    return `${start}${masked}${end}`;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-    setFieldErrors({ ...fieldErrors, [name]: false });
+
+    if (name === 'No_Hp') {
+      // Menyimpan nilai asli tanpa karakter non-digit
+      const rawDigits = value.replace(/\D/g, '');
+      const maskedVal = maskPhoneNumber(rawDigits);
+
+      setFormData({ ...formData, No_Hp: rawDigits });
+      setDisplayNoHp(maskedVal);
+      setFieldErrors({ ...fieldErrors, No_Hp: false });
+    } else {
+      setFormData({ ...formData, [name]: value });
+      setFieldErrors({ ...fieldErrors, [name]: false });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -56,8 +91,14 @@ const TambahPenyewa = () => {
       return;
     }
 
+    // Mengirim payload dengan No_Hp yang sudah di-masking ke backend
+    const payload = {
+      ...formData,
+      No_Hp: maskPhoneNumber(formData.No_Hp) // atau ganti dengan formData.No_Hp jika backend butuh nomor asli
+    };
+
     try {
-      await createTenant(formData);
+      await createTenant(payload);
       setSuccessMessage('Data Berhasil Ditambahkan / Diedit');
       setTimeout(() => {
         navigate('/penyewa'); 
@@ -188,13 +229,21 @@ const TambahPenyewa = () => {
 
             <div style={{ marginBottom: fieldErrors.No_Hp ? '4px' : '24px' }}>
               <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px', color: '#4f575e', height: '21px'}}>No Telepon <span style={{ color: 'red' }}>*</span></label>
-              <input type="text" name="No_Hp" value={formData.No_Hp} onChange={handleChange} onFocus={(e) => {
-                e.target.style.border = '1px solid #053183';
-                e.target.style.outline = 'none';
-              }}
-              onBlur={(e) => e.target.style.border = fieldErrors.No_Hp 
-              ? '1px solid red' 
-              : '1px solid #ccc'} style={{ width: '100%', padding: '0px 16px', borderRadius: '4px', border: fieldErrors.No_Hp ? '0.8px solid red' : '0.8px solid #ced4da', height: '40px', fontSize: '14px' }} />
+              <input 
+                type="text" 
+                name="No_Hp" 
+                value={displayNoHp} 
+                onChange={handleChange} 
+                placeholder="0812****567"
+                onFocus={(e) => {
+                  e.target.style.border = '1px solid #053183';
+                  e.target.style.outline = 'none';
+                }}
+                onBlur={(e) => e.target.style.border = fieldErrors.No_Hp 
+                ? '1px solid red' 
+                : '1px solid #ccc'} 
+                style={{ width: '100%', padding: '0px 16px', borderRadius: '4px', border: fieldErrors.No_Hp ? '0.8px solid red' : '0.8px solid #ced4da', height: '40px', fontSize: '14px' }} 
+              />
               {fieldErrors.No_Hp && (
                 <small style={{ display:'block', color:'red', fontSize:'12px', lineHeight:'16px', marginTop:'4px' }}>
                   This field is required.

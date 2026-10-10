@@ -129,7 +129,7 @@ const TambahKamar = () => {
             fontSize: '16px',
             fontWeight: '600'
           }}
-        >
+        >–
           <div
             style={{
               width: '20px',
