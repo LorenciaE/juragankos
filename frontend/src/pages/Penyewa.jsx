@@ -81,23 +81,27 @@ const Penyewa = () => {
 
   // Format tanggal (ex: 15 Aug 2026)
   const formatDate = (dateString) => {
-    if (!dateString) return '-';
+    if (!dateString) return '';
     const options = { day: 'numeric', month: 'short', year: 'numeric' };
     return new Date(dateString).toLocaleDateString('id-ID', options);
   };
 
   // Fungsi untuk menyensor nomor HP (menampilkan 4 digit awal dan 4 digit akhir)
-  const maskPhoneNumber = (phone) => {
-    if (!phone) return '-';
+const maskPhoneNumber = (phone) => {
+  if (!phone) return '-';
 
-    const phoneStr = String(phone);
+  const phoneStr = String(phone).replace(/\D/g, '');
 
-    if (phoneStr.length <= 8) {
-      return phoneStr;
-    }
+  if (phoneStr.length <= 7) {
+    return phoneStr;
+  }
 
-    return `${phoneStr.slice(0, 4)}****${phoneStr.slice(-4)}`;
-  };
+  const start = phoneStr.slice(0, 4);
+  const end = phoneStr.slice(-3);
+  const masked = '*'.repeat(phoneStr.length - 7);
+
+  return `${start}${masked}${end}`;
+};
 
   // Logika Pencarian, Filter, dan Urutkan
   const processedTenants = useMemo(() => {

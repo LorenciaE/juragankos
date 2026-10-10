@@ -65,7 +65,6 @@ const EditPenyewa = () => {
     if (!formData.Nama_Lengkap) errors.Nama_Lengkap = true;
     if (!formData.No_Hp) errors.No_Hp = true;
     if (!formData.Tgl_Masuk) errors.Tgl_Masuk = true;
-    if (!formData.Tgl_Keluar) errors.Tgl_Keluar = true;
     if (!formData.Kamar_ID) errors.Kamar_ID = true;
     if (!formData.Status_Sewa) errors.Status_Sewa = true;
 

@@ -55,22 +55,37 @@ const TambahPenyewa = () => {
     return `${start}${masked}${end}`;
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
 
-    if (name === 'No_Hp') {
-      // Menyimpan nilai asli tanpa karakter non-digit
-      const rawDigits = value.replace(/\D/g, '');
-      const maskedVal = maskPhoneNumber(rawDigits);
+const handleChange = (e) => {
+  const { name, value } = e.target;
 
-      setFormData({ ...formData, No_Hp: rawDigits });
-      setDisplayNoHp(maskedVal);
-      setFieldErrors({ ...fieldErrors, No_Hp: false });
-    } else {
-      setFormData({ ...formData, [name]: value });
-      setFieldErrors({ ...fieldErrors, [name]: false });
-    }
-  };
+  if (name === 'No_Hp') {
+    const rawDigits = value.replace(/\D/g, '');
+
+    setFormData((prev) => ({
+      ...prev,
+      No_Hp: rawDigits
+    }));
+
+    setDisplayNoHp(rawDigits);
+
+    setFieldErrors((prev) => ({
+      ...prev,
+      No_Hp: false
+    }));
+  } else {
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+
+    setFieldErrors((prev) => ({
+      ...prev,
+      [name]: false
+    }));
+  }
+};
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -79,8 +94,8 @@ const TambahPenyewa = () => {
 
     let errors = {};
     if (!formData.Nama_Lengkap) errors.Nama_Lengkap = true;
-    if (!formData.No_Hp) errors.No_Hp = true;
     if (!formData.Tgl_Masuk) errors.Tgl_Masuk = true;
+    if (!formData.No_Hp) errors.No_Hp = true;
     if (!formData.Kamar_ID) errors.Kamar_ID = true;
     if (!formData.Status_Sewa) errors.Status_Sewa = true;
 
@@ -91,9 +106,10 @@ const TambahPenyewa = () => {
     }
 
     // Mengirim payload dengan No_Hp yang sudah di-masking ke backend
-    const payload = {
+
+const payload = {
   ...formData,
-  No_Hp: maskPhoneNumber(formData.No_Hp),
+  No_Hp: formData.No_Hp,
   Tgl_Keluar: formData.Tgl_Keluar || null
 };
 
@@ -234,7 +250,6 @@ const TambahPenyewa = () => {
                 name="No_Hp" 
                 value={displayNoHp} 
                 onChange={handleChange} 
-                placeholder="0812****567"
                 onFocus={(e) => {
                   e.target.style.border = '1px solid #053183';
                   e.target.style.outline = 'none';
