@@ -173,7 +173,8 @@ const maskPhoneNumber = (phone) => {
     borderBottom: '1px solid #e0e0e0', 
     fontSize: '14px', 
     color: '#272b30',
-    verticalAlign: 'middle' // Menjadikan posisi konten di tengah tinggi baris secara vertikal
+    verticalAlign: 'middle',
+    whiteSpace: 'nowrap'// Menjadikan posisi konten di tengah tinggi baris secara vertikal
   };
 
   const btnStyle = { display: 'inline-flex', alignItems: 'center', color: 'white', border: 'none', padding: '0px 16px', borderRadius: '4px', cursor: 'pointer', textDecoration: 'none', fontSize: '14px', fontWeight: '600', height: '40px' };
@@ -283,12 +284,12 @@ const maskPhoneNumber = (phone) => {
           <thead>
             <tr>
               <th className="sortable-header" style={{ ...tableHeaderStyle, width: '150px', color: sortConfig.key === 'Nama_Lengkap' ? '#083487' : '#4f575e' }} onClick={() => requestSort('Nama_Lengkap')}>Nama<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
-              <th className="sortable-header" style={{ ...tableHeaderStyle, width: '177.65px', color: sortConfig.key === 'No_Hp' ? '#083487' : '#4f575e' }} onClick={() => requestSort('No_Hp')}>Nomor Telepon<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
+              <th className="sortable-header" style={{ ...tableHeaderStyle, width: '173.65px', color: sortConfig.key === 'No_Hp' ? '#083487' : '#4f575e' }} onClick={() => requestSort('No_Hp')}>Nomor Telepon<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
               <th className="sortable-header" style={{ ...tableHeaderStyle, width: '173.15px', color: sortConfig.key === 'Tgl_Masuk' ? '#083487' : '#4f575e' }} onClick={() => requestSort('Tgl_Masuk')}>Tanggal Masuk<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
-              <th className="sortable-header" style={{ ...tableHeaderStyle, width: '172.34px', color: sortConfig.key === 'Tgl_Keluar' ? '#083487' : '#4f575e' }} onClick={() => requestSort('Tgl_Keluar')}>Tanggal Keluar<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
-              <th className="sortable-header" style={{ ...tableHeaderStyle, width: '167.78px', color: sortConfig.key === 'No_Kamar' ? '#083487' : '#4f575e' }} onClick={() => requestSort('No_Kamar')}>Nomor Kamar<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
-              <th className="sortable-header" style={{ ...tableHeaderStyle, width: '156.89px', color: sortConfig.key === 'Status_Sewa' ? '#083487' : '#4f575e' }} onClick={() => requestSort('Status_Sewa')}>Status Sewa<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
-              <th style={{ ...tableHeaderStyle, width: '240.01px', cursor: 'default', textAlign: 'center' }}>Action</th>
+              <th className="sortable-header" style={{ ...tableHeaderStyle, width: '168.34px', color: sortConfig.key === 'Tgl_Keluar' ? '#083487' : '#4f575e' }} onClick={() => requestSort('Tgl_Keluar')}>Tanggal Keluar<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
+              <th className="sortable-header" style={{ ...tableHeaderStyle, width: '165.78px', color: sortConfig.key === 'No_Kamar' ? '#083487' : '#4f575e' }} onClick={() => requestSort('No_Kamar')}>Nomor Kamar<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
+              <th className="sortable-header" style={{ ...tableHeaderStyle, width: '150.5px', color: sortConfig.key === 'Status_Sewa' ? '#083487' : '#4f575e' }} onClick={() => requestSort('Status_Sewa')}>Status Sewa<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
+              <th style={{ ...tableHeaderStyle, width: '231.25px', cursor: 'default', textAlign: 'center' }}>Action</th>
             </tr>
           </thead>
 

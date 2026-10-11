@@ -10,24 +10,34 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    setErrorMessage('');
 
-    let errors = {};
-    if (!username) errors.username = true;
-    if (!password) errors.password = true;
+const handleLogin = (e) => {
+  e.preventDefault();
+  setErrorMessage('');
 
-    // Jika ada kolom yang kosong saat ditekan login
-    if (Object.keys(errors).length > 0) {
-      setFieldErrors(errors);
-      setErrorMessage('Invalid username or password.');
-      return;
-    }
+  let errors = {};
 
-    // Jika lolos validasi, arahkan ke dashboard
-    navigate('/');
-  };
+  if (!username) errors.username = true;
+  if (!password) errors.password = true;
+
+  // Jika ada kolom yang kosong
+  if (Object.keys(errors).length > 0) {
+    setFieldErrors(errors);
+    setErrorMessage('Invalid username or password.');
+    return;
+  }
+
+  setFieldErrors({});
+
+  // Validasi username dan password
+if (username === 'admin123' && password === 'admin123') {
+  sessionStorage.setItem('isLoggedIn', 'true');
+  navigate('/');
+} else {
+  setErrorMessage('Invalid username or password.');
+}
+};
+
 
   const handleInputChange = (field, value) => {
     if (field === 'username') setUsername(value);
