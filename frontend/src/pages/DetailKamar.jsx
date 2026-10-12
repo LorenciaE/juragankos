@@ -166,7 +166,7 @@ const DetailKamar = () => {
       </h2>
 
       {/* Bagian 1: Informasi Kamar */}
-      <div style={cardStyle}>
+      <div style={{...cardStyle, marginTop: '28px'}}>
         <h3 style={{ ...cardTitleStyle, margin: '0px 0px 10px' }}>Informasi Kamar</h3>
 
         <label style={labelStyle}>Nomor Kamar</label>
@@ -179,14 +179,14 @@ const DetailKamar = () => {
         <input type="text" value={room.Status_Ketersediaan || ''} readOnly style={{ ...readOnlyInputStyle, backgroundColor: '#f1f3f5', color: '#adb5bd', marginBottom: room.Status_Ketersediaan === 'KOSONG' ? '4px' : '10px' }} />
 
         {room.Status_Ketersediaan === 'KOSONG' && tglKosongSejak && (
-          <p style={{ fontSize: '16px', fontWeight: '600', color: '#000000', marginTop: '0px', marginBottom: '10px' }}>
+          <p style={{ fontSize: '16px', fontWeight: '600', color: '#000000', marginTop: '5px', marginBottom: '0px' }}>
             Kosong Sejak: {tglKosongSejak} - Sekarang
           </p>
         )}
       </div>
 
       {/* Bagian 2: Riwayat Penyewa */}
-      <div style={cardStyle}>
+      <div style={{...cardStyle, marginTop:'32px'}}>
         <h3 style={{ ...cardTitleStyle, marginBottom: '10px' }}>Riwayat Penyewa</h3>
         <div style={{ border: '1px solid #e6e6e6', borderRadius: '4px', backgroundColor: '#fff' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>

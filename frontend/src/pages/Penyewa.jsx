@@ -87,21 +87,13 @@ const Penyewa = () => {
   };
 
   // Fungsi untuk menyensor nomor HP (menampilkan 4 digit awal dan 4 digit akhir)
+
 const maskPhoneNumber = (phone) => {
   if (!phone) return '-';
 
-  const phoneStr = String(phone).replace(/\D/g, '');
-
-  if (phoneStr.length <= 7) {
-    return phoneStr;
-  }
-
-  const start = phoneStr.slice(0, 4);
-  const end = phoneStr.slice(-3);
-  const masked = '*'.repeat(phoneStr.length - 7);
-
-  return `${start}${masked}${end}`;
+  return String(phone);
 };
+
 
   // Logika Pencarian, Filter, dan Urutkan
   const processedTenants = useMemo(() => {

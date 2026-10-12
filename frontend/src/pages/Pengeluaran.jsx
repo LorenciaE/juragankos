@@ -308,7 +308,8 @@ const Pengeluaran = () => {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '10px'
+                gap: '10px',
+                marginLeft: 'auto'
               }}
             >
               {/* Previous Button */}

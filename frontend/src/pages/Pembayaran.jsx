@@ -704,7 +704,7 @@ const Pembayaran = () => {
                 className="sortable-header"
                 style={{
                   ...tableHeaderStyle,
-                  width: '127.17px',
+                  width: '135.17px',
                   color:
                     sortConfig.key === 'Nominal'
                       ? '#083487'
