@@ -257,7 +257,7 @@ const TambahPengeluaran = () => {
             </div>
 
             <div style={{ marginBottom: '24px' }}>
-              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px', color: '#4f575e', height: '21px' }}>No Kamar (Opsional)</label>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px', color: '#4f575e', height: '21px' }}>No Kamar</label>
               <select 
                 name="Kamar_ID" 
                 value={formData.Kamar_ID} 
@@ -269,7 +269,7 @@ const TambahPengeluaran = () => {
                 onBlur={(e) => e.target.style.border = '0.8px solid #ced4da'} 
                 style={{ appearance: 'none', width: '100%', padding: '0px 16px', borderRadius: '4px', border: '0.8px solid #ced4da', height: '40px', color: '#272b30', fontSize: '14px'}}
               >
-                <option value="" style={{ color: '#272b30' }}>Pilih No Kamar (Opsional)</option>
+                <option value="" style={{ color: '#272b30' }}>Pilih No Kamar</option>
                 {rooms.map(room => (
                   <option key={room.Kamar_ID} value={room.Kamar_ID}>{room.No_Kamar}</option>
                 ))}
