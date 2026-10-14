@@ -47,7 +47,7 @@ const DetailKamar = () => {
 
   // Format Tanggal
   const formatDate = (dateString) => {
-    if (!dateString) return '-';
+    if (!dateString) return '';
     const options = { day: '2-digit', month: 'short', year: 'numeric' };
     return new Date(dateString).toLocaleDateString('id-ID', options);
   };
