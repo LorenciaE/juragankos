@@ -1,18 +1,20 @@
+
 const db = require('../config/database');
 
-// GET: Mengambil semua data pengeluaran (dengan JOIN ke tabel kamar untuk mengambil No_Kamar)
+// GET: Mengambil semua pengeluaran beserta nomor kamar
 const getAllExpenses = async (req, res) => {
     try {
-        const query = `
-            SELECT p.*, k.No_Kamar 
-            FROM \`pengeluaran\` p
-            LEFT JOIN \`kamar\` k ON p.Kamar_ID = k.Kamar_ID
-            ORDER BY p.Pengeluaran_ID DESC
-        `;
+        const result = await db.query(`
+            SELECT p.*, k.no_kamar
+            FROM defaultdb.pengeluaran p
+            LEFT JOIN defaultdb.kamar k
+                ON p.kamar_id = k.kamar_id
+            ORDER BY p.pengeluaran_id DESC
+        `);
 
-        const [rows] = await db.query(query);
-        res.json(rows);
+        res.json(result.rows);
     } catch (error) {
+        console.error('Error getAllExpenses:', error.message);
         res.status(500).json({
             message: 'Terjadi kesalahan pada server',
             error: error.message
@@ -25,19 +27,22 @@ const getExpenseById = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const [rows] = await db.query(
-            'SELECT * FROM `pengeluaran` WHERE Pengeluaran_ID = ?',
+        const result = await db.query(
+            `SELECT *
+             FROM defaultdb.pengeluaran
+             WHERE pengeluaran_id = $1`,
             [id]
         );
 
-        if (rows.length === 0) {
+        if (result.rows.length === 0) {
             return res.status(404).json({
                 message: 'Data pengeluaran tidak ditemukan'
             });
         }
 
-        res.json(rows[0]);
+        res.json(result.rows[0]);
     } catch (error) {
+        console.error('Error getExpenseById:', error.message);
         res.status(500).json({
             message: 'Terjadi kesalahan pada server',
             error: error.message
@@ -48,25 +53,53 @@ const getExpenseById = async (req, res) => {
 // POST: Menambahkan pengeluaran baru
 const createExpense = async (req, res) => {
     try {
-        const { Tgl_Pengeluaran, Kategori, Nominal, Deskripsi, Kamar_ID } = req.body;
+        const {
+            Tgl_Pengeluaran,
+            Kategori,
+            Nominal,
+            Deskripsi,
+            Kamar_ID
+        } = req.body;
 
-        // VALIDASI: Deskripsi dan Kamar_ID dihapus dari pengecekan agar opsional
-        if (!Tgl_Pengeluaran || !Kategori || Nominal === undefined) {
-            return res.status(400).json({ message: 'Mohon Lengkapi Data Wajib' });
+        if (
+            !Tgl_Pengeluaran ||
+            !Kategori ||
+            Nominal === undefined ||
+            Nominal === null
+        ) {
+            return res.status(400).json({
+                message: 'Mohon Lengkapi Data Wajib'
+            });
         }
 
-        // Set ke null jika data kosong (mencegah error dari MySQL)
         const valDeskripsi = Deskripsi || null;
-        const valKamarId = Kamar_ID || null;
+        const valKamarId =
+            Kamar_ID === undefined || Kamar_ID === ''
+                ? null
+                : Kamar_ID;
 
         await db.query(
-            'INSERT INTO `pengeluaran` (Kategori, Deskripsi, Tgl_Pengeluaran, Nominal, Kamar_ID) VALUES (?, ?, ?, ?, ?)',
-            [Kategori, valDeskripsi, Tgl_Pengeluaran, Nominal, valKamarId]
+            `INSERT INTO defaultdb.pengeluaran
+                (kategori, deskripsi, tgl_pengeluaran, nominal, kamar_id)
+             VALUES ($1, $2, $3, $4, $5)`,
+            [
+                Kategori,
+                valDeskripsi,
+                Tgl_Pengeluaran,
+                Nominal,
+                valKamarId
+            ]
         );
 
-        res.status(201).json({ message: 'Data Berhasil Ditambahkan' });
+        res.status(201).json({
+            message: 'Data Berhasil Ditambahkan'
+        });
     } catch (error) {
-        res.status(500).json({ message: 'Terjadi kesalahan pada server', error: error.message });
+        console.error('Error createExpense:', error.message);
+        res.status(500).json({
+            message: 'Terjadi kesalahan pada server',
+            error: error.message
+        });
     }
 };
 
@@ -74,29 +107,64 @@ const createExpense = async (req, res) => {
 const updateExpense = async (req, res) => {
     try {
         const { id } = req.params;
-        const { Tgl_Pengeluaran, Kategori, Nominal, Deskripsi, Kamar_ID } = req.body;
+        const {
+            Tgl_Pengeluaran,
+            Kategori,
+            Nominal,
+            Deskripsi,
+            Kamar_ID
+        } = req.body;
 
-        // VALIDASI: Samakan dengan create, jadikan Deskripsi & Kamar_ID opsional
-        if (!Tgl_Pengeluaran || !Kategori || Nominal === undefined) {
-            return res.status(400).json({ message: 'Mohon Lengkapi Data Wajib' });
+        if (
+            !Tgl_Pengeluaran ||
+            !Kategori ||
+            Nominal === undefined ||
+            Nominal === null
+        ) {
+            return res.status(400).json({
+                message: 'Mohon Lengkapi Data Wajib'
+            });
         }
 
-        // Set ke null jika data kosong
         const valDeskripsi = Deskripsi || null;
-        const valKamarId = Kamar_ID || null;
+        const valKamarId =
+            Kamar_ID === undefined || Kamar_ID === ''
+                ? null
+                : Kamar_ID;
 
-        const [result] = await db.query(
-            'UPDATE `pengeluaran` SET Kategori = ?, Deskripsi = ?, Tgl_Pengeluaran = ?, Nominal = ?, Kamar_ID = ? WHERE Pengeluaran_ID = ?',
-            [Kategori, valDeskripsi, Tgl_Pengeluaran, Nominal, valKamarId, id]
+        const result = await db.query(
+            `UPDATE defaultdb.pengeluaran
+             SET kategori = $1,
+                 deskripsi = $2,
+                 tgl_pengeluaran = $3,
+                 nominal = $4,
+                 kamar_id = $5
+             WHERE pengeluaran_id = $6`,
+            [
+                Kategori,
+                valDeskripsi,
+                Tgl_Pengeluaran,
+                Nominal,
+                valKamarId,
+                id
+            ]
         );
 
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Data pengeluaran tidak ditemukan' });
+        if (result.rowCount === 0) {
+            return res.status(404).json({
+                message: 'Data pengeluaran tidak ditemukan'
+            });
         }
 
-        res.json({ message: 'Data Berhasil Diedit' });
+        res.json({
+            message: 'Data Berhasil Diedit'
+        });
     } catch (error) {
-        res.status(500).json({ message: 'Terjadi kesalahan pada server', error: error.message });
+        console.error('Error updateExpense:', error.message);
+        res.status(500).json({
+            message: 'Terjadi kesalahan pada server',
+            error: error.message
+        });
     }
 };
 
@@ -105,12 +173,13 @@ const deleteExpense = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const [result] = await db.query(
-            'DELETE FROM `pengeluaran` WHERE Pengeluaran_ID = ?',
+        const result = await db.query(
+            `DELETE FROM defaultdb.pengeluaran
+             WHERE pengeluaran_id = $1`,
             [id]
         );
 
-        if (result.affectedRows === 0) {
+        if (result.rowCount === 0) {
             return res.status(404).json({
                 message: 'Data pengeluaran tidak ditemukan'
             });
@@ -120,6 +189,14 @@ const deleteExpense = async (req, res) => {
             message: 'Data Berhasil Dihapus'
         });
     } catch (error) {
+        console.error('Error deleteExpense:', error.message);
+
+        if (error.code === '23503') {
+            return res.status(400).json({
+                message: 'Data pengeluaran tidak dapat dihapus karena masih memiliki data terkait.'
+            });
+        }
+
         res.status(500).json({
             message: 'Terjadi kesalahan pada server',
             error: error.message

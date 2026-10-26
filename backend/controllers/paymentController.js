@@ -1,18 +1,24 @@
+
 const db = require('../config/database');
 
 // GET: Mengambil daftar pembayaran beserta informasi kamar
 const getAllPayments = async (req, res) => {
     try {
         const query = `
-            SELECT p.*, k.No_Kamar, k.Harga 
-            FROM \`pembayaran\` p
-            JOIN \`kamar\` k ON p.Kamar_ID = k.Kamar_ID
-            ORDER BY p.Pembayaran_ID DESC
+            SELECT
+                p.*,
+                k.no_kamar,
+                k.harga
+            FROM defaultdb.pembayaran p
+            JOIN defaultdb.kamar k
+                ON p.kamar_id = k.kamar_id
+            ORDER BY p.pembayaran_id DESC
         `;
 
-        const [rows] = await db.query(query);
-        res.json(rows);
+        const result = await db.query(query);
+        res.json(result.rows);
     } catch (error) {
+        console.error('Error getAllPayments:', error);
         res.status(500).json({
             message: 'Terjadi kesalahan pada server',
             error: error.message
@@ -25,19 +31,22 @@ const getPaymentById = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const [rows] = await db.query(
-            'SELECT * FROM `pembayaran` WHERE Pembayaran_ID = ?',
+        const result = await db.query(
+            `SELECT *
+             FROM defaultdb.pembayaran
+             WHERE pembayaran_id = $1`,
             [id]
         );
 
-        if (rows.length === 0) {
+        if (result.rows.length === 0) {
             return res.status(404).json({
                 message: 'Data pembayaran tidak ditemukan'
             });
         }
 
-        res.json(rows[0]);
+        res.json(result.rows[0]);
     } catch (error) {
+        console.error('Error getPaymentById:', error);
         res.status(500).json({
             message: 'Terjadi kesalahan pada server',
             error: error.message
@@ -58,13 +67,13 @@ const createPayment = async (req, res) => {
             Kamar_ID
         } = req.body;
 
-        // Validasi
         if (
             !Bulan_Pembayaran ||
             !Tgl_Pembayaran ||
             !Status_Pembayaran ||
             !Metode_Pembayaran ||
             Nominal === undefined ||
+            Nominal === null ||
             !Sewa_ID ||
             !Kamar_ID
         ) {
@@ -73,8 +82,18 @@ const createPayment = async (req, res) => {
             });
         }
 
-        await db.query(
-            'INSERT INTO `pembayaran` (Bulan_Pembayaran, Tgl_Pembayaran, Status_Pembayaran, Metode_Pembayaran, Nominal, Sewa_ID, Kamar_ID) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        const result = await db.query(
+            `INSERT INTO defaultdb.pembayaran (
+                bulan_pembayaran,
+                tgl_pembayaran,
+                status_pembayaran,
+                metode_pembayaran,
+                nominal,
+                sewa_id,
+                kamar_id
+            )
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            RETURNING pembayaran_id`,
             [
                 Bulan_Pembayaran,
                 Tgl_Pembayaran,
@@ -87,9 +106,18 @@ const createPayment = async (req, res) => {
         );
 
         res.status(201).json({
-            message: 'Data Berhasil Ditambahkan / Diedit'
+            message: 'Data Berhasil Ditambahkan',
+            pembayaran_id: result.rows[0].pembayaran_id
         });
     } catch (error) {
+        console.error('Error createPayment:', error);
+
+        if (error.code === '23503') {
+            return res.status(400).json({
+                message: 'Data sewa atau kamar tidak ditemukan'
+            });
+        }
+
         res.status(500).json({
             message: 'Terjadi kesalahan pada server',
             error: error.message
@@ -118,6 +146,7 @@ const updatePayment = async (req, res) => {
             !Status_Pembayaran ||
             !Metode_Pembayaran ||
             Nominal === undefined ||
+            Nominal === null ||
             !Sewa_ID ||
             !Kamar_ID
         ) {
@@ -126,8 +155,16 @@ const updatePayment = async (req, res) => {
             });
         }
 
-        const [result] = await db.query(
-            'UPDATE `pembayaran` SET Bulan_Pembayaran = ?, Tgl_Pembayaran = ?, Status_Pembayaran = ?, Metode_Pembayaran = ?, Nominal = ?, Sewa_ID = ?, Kamar_ID = ? WHERE Pembayaran_ID = ?',
+        const result = await db.query(
+            `UPDATE defaultdb.pembayaran
+             SET bulan_pembayaran = $1,
+                 tgl_pembayaran = $2,
+                 status_pembayaran = $3,
+                 metode_pembayaran = $4,
+                 nominal = $5,
+                 sewa_id = $6,
+                 kamar_id = $7
+             WHERE pembayaran_id = $8`,
             [
                 Bulan_Pembayaran,
                 Tgl_Pembayaran,
@@ -140,16 +177,24 @@ const updatePayment = async (req, res) => {
             ]
         );
 
-        if (result.affectedRows === 0) {
+        if (result.rowCount === 0) {
             return res.status(404).json({
                 message: 'Data pembayaran tidak ditemukan'
             });
         }
 
         res.json({
-            message: 'Data Berhasil Ditambahkan / Diedit'
+            message: 'Data Berhasil Diedit'
         });
     } catch (error) {
+        console.error('Error updatePayment:', error);
+
+        if (error.code === '23503') {
+            return res.status(400).json({
+                message: 'Data sewa atau kamar tidak ditemukan'
+            });
+        }
+
         res.status(500).json({
             message: 'Terjadi kesalahan pada server',
             error: error.message
@@ -162,12 +207,13 @@ const deletePayment = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const [result] = await db.query(
-            'DELETE FROM `pembayaran` WHERE Pembayaran_ID = ?',
+        const result = await db.query(
+            `DELETE FROM defaultdb.pembayaran
+             WHERE pembayaran_id = $1`,
             [id]
         );
 
-        if (result.affectedRows === 0) {
+        if (result.rowCount === 0) {
             return res.status(404).json({
                 message: 'Data pembayaran tidak ditemukan'
             });
@@ -177,6 +223,14 @@ const deletePayment = async (req, res) => {
             message: 'Data Berhasil Dihapus'
         });
     } catch (error) {
+        console.error('Error deletePayment:', error);
+
+        if (error.code === '23503') {
+            return res.status(400).json({
+                message: 'Pembayaran tidak dapat dihapus karena masih digunakan oleh data lain'
+            });
+        }
+
         res.status(500).json({
             message: 'Terjadi kesalahan pada server',
             error: error.message

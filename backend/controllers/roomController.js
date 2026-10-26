@@ -1,13 +1,20 @@
+
 const db = require('../config/database');
 
 // GET: Mengambil semua data kamar
 const getAllRooms = async (req, res) => {
     try {
-        // Mengurutkan descending berdasarkan Kamar_ID agar data terbaru di atas
-        const [rows] = await db.query('SELECT * FROM `kamar` ORDER BY Kamar_ID DESC');
-        res.json(rows);
+        const result = await db.query(
+            'SELECT * FROM defaultdb.kamar ORDER BY kamar_id DESC'
+        );
+
+        res.json(result.rows);
     } catch (error) {
-        res.status(500).json({ message: 'Terjadi kesalahan pada server', error: error.message });
+        console.error('Error getAllRooms:', error.message);
+        res.status(500).json({
+            message: 'Terjadi kesalahan pada server',
+            error: error.message
+        });
     }
 };
 
@@ -15,36 +22,79 @@ const getAllRooms = async (req, res) => {
 const getRoomById = async (req, res) => {
     try {
         const { id } = req.params;
-        const [rows] = await db.query('SELECT * FROM `kamar` WHERE Kamar_ID = ?', [id]);
 
-        if (rows.length === 0) {
-            return res.status(404).json({ message: 'Kamar tidak ditemukan' });
+        const result = await db.query(
+            'SELECT * FROM defaultdb.kamar WHERE kamar_id = $1',
+            [id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                message: 'Kamar tidak ditemukan'
+            });
         }
 
-        res.json(rows[0]);
+        res.json(result.rows[0]);
     } catch (error) {
-        res.status(500).json({ message: 'Terjadi kesalahan pada server', error: error.message });
+        console.error('Error getRoomById:', error.message);
+        res.status(500).json({
+            message: 'Terjadi kesalahan pada server',
+            error: error.message
+        });
     }
 };
 
 // POST: Menambahkan kamar baru
 const createRoom = async (req, res) => {
     try {
-        const { No_Kamar, Harga, Lantai, Status_Ketersediaan, Tipe_Kamar } = req.body;
+        const {
+            No_Kamar,
+            Harga,
+            Lantai,
+            Status_Ketersediaan,
+            Tipe_Kamar,
+            user_id
+        } = req.body;
 
-        // Validasi input dari sisi backend
-        if (!No_Kamar || Harga === undefined || Lantai === undefined || !Status_Ketersediaan || !Tipe_Kamar) {
-            return res.status(400).json({ message: 'Mohon Lengkapi Data' });
+        if (
+            !No_Kamar ||
+            Harga === undefined ||
+            Harga === null ||
+            Lantai === undefined ||
+            Lantai === null ||
+            !Status_Ketersediaan ||
+            !Tipe_Kamar ||
+            user_id === undefined ||
+            user_id === null
+        ) {
+            return res.status(400).json({
+                message: 'Mohon lengkapi data kamar dan user_id'
+            });
         }
 
-        const [result] = await db.query(
-            'INSERT INTO `kamar` (No_Kamar, Harga, Lantai, Status_Ketersediaan, Tipe_Kamar) VALUES (?, ?, ?, ?, ?)',
-            [No_Kamar, Harga, Lantai, Status_Ketersediaan, Tipe_Kamar]
+        await db.query(
+            `INSERT INTO defaultdb.kamar
+            (no_kamar, harga, lantai, status_ketersediaan, tipe_kamar, user_id)
+            VALUES ($1, $2, $3, $4, $5, $6)`,
+            [
+                No_Kamar,
+                Harga,
+                Lantai,
+                Status_Ketersediaan,
+                Tipe_Kamar,
+                user_id
+            ]
         );
 
-        res.status(201).json({ message: 'Data Berhasil Ditambahkan / Diedit' });
+        res.status(201).json({
+            message: 'Data Berhasil Ditambahkan'
+        });
     } catch (error) {
-        res.status(500).json({ message: 'Terjadi kesalahan pada server', error: error.message });
+        console.error('Error createRoom:', error.message);
+        res.status(500).json({
+            message: 'Terjadi kesalahan pada server',
+            error: error.message
+        });
     }
 };
 
@@ -52,24 +102,61 @@ const createRoom = async (req, res) => {
 const updateRoom = async (req, res) => {
     try {
         const { id } = req.params;
-        const { No_Kamar, Harga, Lantai, Status_Ketersediaan, Tipe_Kamar } = req.body;
+        const {
+            No_Kamar,
+            Harga,
+            Lantai,
+            Status_Ketersediaan,
+            Tipe_Kamar
+        } = req.body;
 
-        if (!No_Kamar || Harga === undefined || Lantai === undefined || !Status_Ketersediaan || !Tipe_Kamar) {
-            return res.status(400).json({ message: 'Mohon Lengkapi Data' });
+        if (
+            !No_Kamar ||
+            Harga === undefined ||
+            Harga === null ||
+            Lantai === undefined ||
+            Lantai === null ||
+            !Status_Ketersediaan ||
+            !Tipe_Kamar
+        ) {
+            return res.status(400).json({
+                message: 'Mohon Lengkapi Data'
+            });
         }
 
-        const [result] = await db.query(
-            'UPDATE `kamar` SET No_Kamar = ?, Harga = ?, Lantai = ?, Status_Ketersediaan = ?, Tipe_Kamar = ? WHERE Kamar_ID = ?',
-            [No_Kamar, Harga, Lantai, Status_Ketersediaan, Tipe_Kamar, id]
+        const result = await db.query(
+            `UPDATE defaultdb.kamar
+            SET no_kamar = $1,
+                harga = $2,
+                lantai = $3,
+                status_ketersediaan = $4,
+                tipe_kamar = $5
+            WHERE kamar_id = $6`,
+            [
+                No_Kamar,
+                Harga,
+                Lantai,
+                Status_Ketersediaan,
+                Tipe_Kamar,
+                id
+            ]
         );
 
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Kamar tidak ditemukan' });
+        if (result.rowCount === 0) {
+            return res.status(404).json({
+                message: 'Kamar tidak ditemukan'
+            });
         }
 
-        res.json({ message: 'Data Berhasil Ditambahkan / Diedit' });
+        res.json({
+            message: 'Data Berhasil Diedit'
+        });
     } catch (error) {
-        res.status(500).json({ message: 'Terjadi kesalahan pada server', error: error.message });
+        console.error('Error updateRoom:', error.message);
+        res.status(500).json({
+            message: 'Terjadi kesalahan pada server',
+            error: error.message
+        });
     }
 };
 
@@ -77,20 +164,34 @@ const updateRoom = async (req, res) => {
 const deleteRoom = async (req, res) => {
     try {
         const { id } = req.params;
-        const [result] = await db.query('DELETE FROM `kamar` WHERE Kamar_ID = ?', [id]);
 
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Kamar tidak ditemukan' });
+        const result = await db.query(
+            'DELETE FROM defaultdb.kamar WHERE kamar_id = $1',
+            [id]
+        );
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({
+                message: 'Kamar tidak ditemukan'
+            });
         }
 
-        res.json({ message: 'Data Berhasil Dihapus' });
+        res.json({
+            message: 'Data Berhasil Dihapus'
+        });
     } catch (error) {
-        // ER_ROW_IS_REFERENCED_2 adalah kode error MySQL ketika ada constraint Foreign Key yang menghalangi delete
-        if (error.code === 'ER_ROW_IS_REFERENCED_2') {
-            return res.status(400).json({ message: 'Kamar Tidak Dapat Dihapus Karena Masih Memiliki Data Terkait.' });
+        console.error('Error deleteRoom:', error.message);
+
+        if (error.code === '23503') {
+            return res.status(400).json({
+                message: 'Kamar Tidak Dapat Dihapus Karena Masih Memiliki Data Terkait.'
+            });
         }
 
-        res.status(500).json({ message: 'Terjadi kesalahan pada server', error: error.message });
+        res.status(500).json({
+            message: 'Terjadi kesalahan pada server',
+            error: error.message
+        });
     }
 };
 

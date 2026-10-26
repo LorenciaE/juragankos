@@ -56,10 +56,12 @@ const TambahPenyewa = () => {
   };
 
 
+
 const handleChange = (e) => {
   const { name, value } = e.target;
 
   if (name === 'No_Hp') {
+    // Ambil digit yang diketik, tanpa karakter selain angka
     const rawDigits = value.replace(/\D/g, '');
 
     setFormData((prev) => ({
@@ -67,6 +69,7 @@ const handleChange = (e) => {
       No_Hp: rawDigits
     }));
 
+    // Tampilkan nomor yang digit tengahnya sudah disamarkan
     setDisplayNoHp(rawDigits);
 
     setFieldErrors((prev) => ({
@@ -85,6 +88,7 @@ const handleChange = (e) => {
     }));
   }
 };
+
 
 
   const handleSubmit = async (e) => {
@@ -107,11 +111,13 @@ const handleChange = (e) => {
 
     // Mengirim payload dengan No_Hp yang sudah di-masking ke backend
 
+
 const payload = {
   ...formData,
-  No_Hp: formData.No_Hp,
+  No_Hp: maskPhoneNumber(formData.No_Hp),
   Tgl_Keluar: formData.Tgl_Keluar || null
 };
+
 
     try {
       await createTenant(payload);
