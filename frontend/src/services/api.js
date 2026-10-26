@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://juragankos-production.up.railway.app/api';
+const API_BASE_URL = 'https://juragankos-backend.vercel.app/api';
 
 // Service untuk Kamar
 export const getRooms = async () => {
