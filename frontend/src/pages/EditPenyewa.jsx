@@ -23,43 +23,74 @@ const EditPenyewa = () => {
   const [fieldErrors, setFieldErrors] = useState({});
   const [loadingData, setLoadingData] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const roomsData = await getRooms();
-        setRooms(roomsData);
 
-        const tenantData = await getTenantById(id);
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const roomsData = await getRooms();
+      setRooms(roomsData);
 
-        const tglMasuk = tenantData.Tgl_Masuk
-          ? tenantData.Tgl_Masuk.split('T')[0]
-          : '';
+      const tenantData = await getTenantById(id);
 
-        const tglKeluar = tenantData.Tgl_Keluar
-          ? tenantData.Tgl_Keluar.split('T')[0]
-          : '';
+      console.log('Data penyewa:', tenantData);
+      console.log('Data kamar:', roomsData);
 
-        setFormData({
-          Nama_Lengkap: tenantData.Nama_Lengkap || '',
-          No_Hp: '',
-          Tgl_Masuk: tglMasuk,
-          Tgl_Keluar: tglKeluar,
-          Kamar_ID: tenantData.Kamar_ID || '',
-          Status_Sewa: tenantData.Status_Sewa || ''
-        });
+      // Format tanggal untuk input type="date"
+      const rawTglMasuk =
+        tenantData.tgl_masuk ??
+        tenantData.Tgl_Masuk ??
+        '';
 
-        // Nomor lama ditampilkan sesuai data tersimpan (sudah tersamarkan)
-        setDisplayNoHp(tenantData.No_Hp || '');
-        setLoadingData(false);
-      } catch (err) {
-        console.error('Gagal memuat data penyewa:', err);
-        setErrorMessage('Gagal memuat data penyewa.');
-        setLoadingData(false);
-      }
-    };
+      const rawTglKeluar =
+        tenantData.tgl_keluar ??
+        tenantData.Tgl_Keluar ??
+        '';
 
-    fetchData();
-  }, [id]);
+      const tglMasuk = rawTglMasuk
+        ? String(rawTglMasuk).split('T')[0]
+        : '';
+
+      const tglKeluar = rawTglKeluar
+        ? String(rawTglKeluar).split('T')[0]
+        : '';
+
+      setFormData({
+        Nama_Lengkap:
+          tenantData.nama_lengkap ??
+          tenantData.Nama_Lengkap ??
+          '',
+        No_Hp: '',
+        Tgl_Masuk: tglMasuk,
+        Tgl_Keluar: tglKeluar,
+        Kamar_ID: String(
+          tenantData.kamar_id ??
+          tenantData.Kamar_ID ??
+          ''
+        ),
+        Status_Sewa:
+          tenantData.status_sewa ??
+          tenantData.Status_Sewa ??
+          ''
+      });
+
+      // Nomor telepon lama tetap ditampilkan sesuai data tersimpan
+      setDisplayNoHp(
+        tenantData.no_hp ??
+        tenantData.No_Hp ??
+        ''
+      );
+
+      setLoadingData(false);
+    } catch (err) {
+      console.error('Gagal memuat data penyewa:', err);
+      setErrorMessage('Gagal memuat data penyewa.');
+      setLoadingData(false);
+    }
+  };
+
+  fetchData();
+}, [id]);
+
 
   const maskPhoneNumber = (phone) => {
     const cleanPhone = (phone || '').replace(/\D/g, '');
@@ -529,7 +560,7 @@ const payload = {
                 </option>
 
                 {rooms.map((room) => (
-                  <option key={room.Kamar_ID} value={room.Kamar_ID}>
+                  <option key={room.kamar_id} value={room.kamar_id}>
                     {room.No_Kamar}
                   </option>
                 ))}
