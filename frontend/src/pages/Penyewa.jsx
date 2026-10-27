@@ -103,14 +103,14 @@ const maskPhoneNumber = (phone) => {
     if (searchTerm) {
       const lowerSearch = searchTerm.toLowerCase();
       sortable = sortable.filter(t => 
-        (t.Nama_Lengkap && t.Nama_Lengkap.toLowerCase().includes(lowerSearch)) ||
-        (t.No_Kamar && t.No_Kamar.toString().toLowerCase().includes(lowerSearch))
+        (t.nama_lengkap && t.nama_lengkap.toLowerCase().includes(lowerSearch)) ||
+        (t.no_kamar && t.no_kamar.toString().toLowerCase().includes(lowerSearch))
       );
     }
 
     // 2. Filter Status
     if (filterStatus) {
-      sortable = sortable.filter(t => t.Status_Sewa === filterStatus);
+      sortable = sortable.filter(t => t.status_sewa === filterStatus);
     }
 
     // 3. Sort Data
@@ -145,7 +145,7 @@ const maskPhoneNumber = (phone) => {
   };
 
   // Ambil opsi unik untuk dropdown status
-  const uniqueStatus = [...new Set(tenants.map(item => item.Status_Sewa))];
+  const uniqueStatus = [...new Set(tenants.map(item => item.status_sewa))];
 
   // Styling Variables (Disesuaikan untuk vertical align center & text wrapping)
   const tableHeaderStyle = { 
@@ -275,12 +275,12 @@ const maskPhoneNumber = (phone) => {
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
           <thead>
             <tr>
-              <th className="sortable-header" style={{ ...tableHeaderStyle, width: '150px', color: sortConfig.key === 'Nama_Lengkap' ? '#083487' : '#4f575e' }} onClick={() => requestSort('Nama_Lengkap')}>Nama<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
-              <th className="sortable-header" style={{ ...tableHeaderStyle, width: '173.65px', color: sortConfig.key === 'No_Hp' ? '#083487' : '#4f575e' }} onClick={() => requestSort('No_Hp')}>Nomor Telepon<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
-              <th className="sortable-header" style={{ ...tableHeaderStyle, width: '173.15px', color: sortConfig.key === 'Tgl_Masuk' ? '#083487' : '#4f575e' }} onClick={() => requestSort('Tgl_Masuk')}>Tanggal Masuk<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
-              <th className="sortable-header" style={{ ...tableHeaderStyle, width: '168.34px', color: sortConfig.key === 'Tgl_Keluar' ? '#083487' : '#4f575e' }} onClick={() => requestSort('Tgl_Keluar')}>Tanggal Keluar<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
-              <th className="sortable-header" style={{ ...tableHeaderStyle, width: '165.78px', color: sortConfig.key === 'No_Kamar' ? '#083487' : '#4f575e' }} onClick={() => requestSort('No_Kamar')}>Nomor Kamar<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
-              <th className="sortable-header" style={{ ...tableHeaderStyle, width: '150.5px', color: sortConfig.key === 'Status_Sewa' ? '#083487' : '#4f575e' }} onClick={() => requestSort('Status_Sewa')}>Status Sewa<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
+              <th className="sortable-header" style={{ ...tableHeaderStyle, width: '150px', color: sortConfig.key === 'nama_lengkap' ? '#083487' : '#4f575e' }} onClick={() => requestSort('nama_lengkap')}>Nama<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
+              <th className="sortable-header" style={{ ...tableHeaderStyle, width: '173.65px', color: sortConfig.key === 'no_hp' ? '#083487' : '#4f575e' }} onClick={() => requestSort('no_hp')}>Nomor Telepon<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
+              <th className="sortable-header" style={{ ...tableHeaderStyle, width: '173.15px', color: sortConfig.key === 'tgl_masuk' ? '#083487' : '#4f575e' }} onClick={() => requestSort('tgl_masuk')}>Tanggal Masuk<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
+              <th className="sortable-header" style={{ ...tableHeaderStyle, width: '168.34px', color: sortConfig.key === 'tgl_keluar' ? '#083487' : '#4f575e' }} onClick={() => requestSort('tgl_keluar')}>Tanggal Keluar<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
+              <th className="sortable-header" style={{ ...tableHeaderStyle, width: '165.78px', color: sortConfig.key === 'no_kamar' ? '#083487' : '#4f575e' }} onClick={() => requestSort('no_kamar')}>Nomor Kamar<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
+              <th className="sortable-header" style={{ ...tableHeaderStyle, width: '150.5px', color: sortConfig.key === 'status_sewa' ? '#083487' : '#4f575e' }} onClick={() => requestSort('status_sewa')}>Status Sewa<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
               <th style={{ ...tableHeaderStyle, width: '231.25px', cursor: 'default', textAlign: 'center' }}>Action</th>
             </tr>
           </thead>
@@ -288,19 +288,19 @@ const maskPhoneNumber = (phone) => {
           {currentTenants.length > 0 && (
             <tbody>
               {currentTenants.map(tenant => (
-                <tr key={tenant.Penyewa_ID}>
+                <tr key={tenant.penyewa_id}>
                   {/* Kolom Nama dengan penanganan teks panjang agar turun ke bawah */}
                   <td style={{ ...tableDataStyle, wordBreak: 'break-word', whiteSpace: 'normal' }}>
-                    {tenant.Nama_Lengkap}
+                    {tenant.nama_lengkap}
                   </td>
-                  <td style={tableDataStyle}>{maskPhoneNumber(tenant.No_Hp)}</td>
-                  <td style={tableDataStyle}>{formatDate(tenant.Tgl_Masuk)}</td>
-                  <td style={tableDataStyle}>{formatDate(tenant.Tgl_Keluar)}</td>
-                  <td style={tableDataStyle}>{tenant.No_Kamar}</td>
-                  <td style={tableDataStyle}>{tenant.Status_Sewa}</td>
+                  <td style={tableDataStyle}>{maskPhoneNumber(tenant.no_hp)}</td>
+                  <td style={tableDataStyle}>{formatDate(tenant.tgl_masuk)}</td>
+                  <td style={tableDataStyle}>{formatDate(tenant.tgl_keluar)}</td>
+                  <td style={tableDataStyle}>{tenant.no_kamar}</td>
+                  <td style={tableDataStyle}>{tenant.status_sewa}</td>
                   <td style={{ ...tableDataStyle, textAlign: 'center' }}>
-                    <Link to={`/penyewa/edit/${tenant.Penyewa_ID}`} style={{ ...btnStyle, backgroundColor: '#feb941', height: '40px', width: '71.58px', gap: '3px' }}>Edit<img src="/pen.png" style={{ width: '14px', height: '14px' }} alt="Edit" /></Link>
-                    <button onClick={() => openDeleteModal(tenant.Penyewa_ID)} style={{ ...btnStyle, backgroundColor: '#f00', height: '40px', margin: '0px 0px 0px 24px', gap: '5px', width: '87.68px' }}>Hapus<img src="/trash.png" style={{ width: '14px', height: '14px' }} alt="Hapus" /></button>
+                    <Link to={`/penyewa/edit/${tenant.penyewa_id}`} style={{ ...btnStyle, backgroundColor: '#feb941', height: '40px', width: '71.58px', gap: '3px' }}>Edit<img src="/pen.png" style={{ width: '14px', height: '14px' }} alt="Edit" /></Link>
+                    <button onClick={() => openDeleteModal(tenant.penyewa_id)} style={{ ...btnStyle, backgroundColor: '#f00', height: '40px', margin: '0px 0px 0px 24px', gap: '5px', width: '87.68px' }}>Hapus<img src="/trash.png" style={{ width: '14px', height: '14px' }} alt="Hapus" /></button>
                   </td>
                 </tr>
               ))}

@@ -11,7 +11,7 @@ const Kamar = () => {
 
   // State untuk Filter, Search, dan Sort
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterLantai, setFilterLantai] = useState('');
+  const [filterlantai, setFilterlantai] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
   const [filterTipe, setFilterTipe] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
@@ -86,12 +86,12 @@ const Kamar = () => {
 
     if (searchTerm) {
       sortableRooms = sortableRooms.filter(r => 
-        r.No_Kamar.toString().toLowerCase().includes(searchTerm.toLowerCase())
+        r.no_kamar.toString().toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-    if (filterLantai) sortableRooms = sortableRooms.filter(r => r.Lantai.toString() === filterLantai);
-    if (filterStatus) sortableRooms = sortableRooms.filter(r => r.Status_Ketersediaan === filterStatus);
-    if (filterTipe) sortableRooms = sortableRooms.filter(r => r.Tipe_Kamar === filterTipe);
+    if (filterlantai) sortableRooms = sortableRooms.filter(r => r.lantai.toString() === filterlantai);
+    if (filterStatus) sortableRooms = sortableRooms.filter(r => r.status_ketersediaan === filterStatus);
+    if (filterTipe) sortableRooms = sortableRooms.filter(r => r.tipe_kamar === filterTipe);
 
     if (sortConfig.key !== null) {
       sortableRooms.sort((a, b) => {
@@ -101,7 +101,7 @@ const Kamar = () => {
       });
     }
     return sortableRooms;
-  }, [rooms, searchTerm, filterLantai, filterStatus, filterTipe, sortConfig]);
+  }, [rooms, searchTerm, filterlantai, filterStatus, filterTipe, sortConfig]);
 
   // PAGINATION
   const totalPages = Math.ceil(processedRooms.length / itemsPerPage);
@@ -111,7 +111,7 @@ const Kamar = () => {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, filterLantai, filterStatus, filterTipe, sortConfig]);
+  }, [searchTerm, filterlantai, filterStatus, filterTipe, sortConfig]);
 
   const requestSort = (key) => {
     let direction = 'asc';
@@ -119,7 +119,7 @@ const Kamar = () => {
     setSortConfig({ key, direction });
   };
 
-  const uniqueLantai = [...new Set(rooms.map(item => item.Lantai))];
+  const uniquelantai = [...new Set(rooms.map(item => item.lantai))];
 
   // Styling Variables
   const tableHeaderStyle = { borderBottom: '1px solid #e0e0e0', fontWeight: '600', color: '#4f575e', fontSize: '14px', cursor: 'pointer', userSelect: 'none', height: '48px'};
@@ -212,11 +212,11 @@ const Kamar = () => {
       {/* Baris 2: Dropdown Filters */}
       <div style={{ display: 'flex', gap: '16px', marginBottom: '20px', height: '40px' }}>
 
-        {/* Filter Lantai */}
+        {/* Filter lantai */}
         <div style={{ position: 'relative', flex: 1 }}>
-          <select className="filter-select" style={{ ...filterInputStyle, width: '100%', fontWeight: '600', padding: '0px 16px', appearance: 'none', WebkitAppearance: 'none', MozAppearance: 'none' }} value={filterLantai} onChange={(e) => setFilterLantai(e.target.value)}>
-            <option value="">Pilih Lantai</option>
-            {uniqueLantai.map((l) => (<option key={l} value={l}>{l}</option>))}
+          <select className="filter-select" style={{ ...filterInputStyle, width: '100%', fontWeight: '600', padding: '0px 16px', appearance: 'none', WebkitAppearance: 'none', MozAppearance: 'none' }} value={filterlantai} onChange={(e) => setFilterlantai(e.target.value)}>
+            <option value="">Pilih lantai</option>
+            {uniquelantai.map((l) => (<option key={l} value={l}>{l}</option>))}
           </select>
 
           <img src="/down.png" alt="" style={{ position: 'absolute', right: '14px', top: '55%', transform: 'translateY(-50%)', width: '11px', height: '11px', pointerEvents: 'none' }} />
@@ -251,11 +251,11 @@ const Kamar = () => {
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
           <thead>
             <tr>
-              <th className="sortable-header" style={{...tableHeaderStyle, padding:'0px 24px', color:sortConfig.key==='No_Kamar'?'#083487':'#555'}} onClick={()=>requestSort('No_Kamar')}>Nomor Kamar<img src="/sort.png" style={{width:'12px', height:'12px', marginLeft:'6px'}} alt="Sort" /></th>
-              <th className="sortable-header" style={{...tableHeaderStyle, padding:'0px 24px', width:'136.19px', color:sortConfig.key==='Harga'?'#083487':'#555'}} onClick={()=>requestSort('Harga')}>Harga<img src="/sort.png" style={{width:'12px', height:'12px', marginLeft:'6px'}} alt="Sort" /></th>
-              <th className="sortable-header" style={{...tableHeaderStyle, padding:'0px 20px', width:'115.98px', color:sortConfig.key==='Lantai'?'#083487':'#555'}} onClick={()=>requestSort('Lantai')}>Lantai<img src="/sort.png" style={{width:'12px', height:'12px', marginLeft:'6px'}} alt="Sort" /></th>
-              <th className="sortable-header" style={{...tableHeaderStyle, padding:'0px 20px', width:'193.53px', color:sortConfig.key==='Status_Ketersediaan'?'#083487':'#555'}} onClick={()=>requestSort('Status_Ketersediaan')}>Status Ketersediaan<img src="/sort.png" style={{width:'12px', height:'12px', marginLeft:'6px'}} alt="Sort" /></th>
-              <th className="sortable-header" style={{...tableHeaderStyle, padding:'0px 20px', width:'134.82px', color:sortConfig.key==='Tipe_Kamar'?'#083487':'#555'}} onClick={()=>requestSort('Tipe_Kamar')}>Tipe Kamar<img src="/sort.png" style={{width:'12px', height:'12px', marginLeft:'6px'}} alt="Sort" /></th>
+              <th className="sortable-header" style={{...tableHeaderStyle, padding:'0px 24px', color:sortConfig.key==='no_kamar'?'#083487':'#555'}} onClick={()=>requestSort('no_kamar')}>Nomor Kamar<img src="/sort.png" style={{width:'12px', height:'12px', marginLeft:'6px'}} alt="Sort" /></th>
+              <th className="sortable-header" style={{...tableHeaderStyle, padding:'0px 24px', width:'136.19px', color:sortConfig.key==='harga'?'#083487':'#555'}} onClick={()=>requestSort('harga')}>harga<img src="/sort.png" style={{width:'12px', height:'12px', marginLeft:'6px'}} alt="Sort" /></th>
+              <th className="sortable-header" style={{...tableHeaderStyle, padding:'0px 20px', width:'115.98px', color:sortConfig.key==='lantai'?'#083487':'#555'}} onClick={()=>requestSort('lantai')}>lantai<img src="/sort.png" style={{width:'12px', height:'12px', marginLeft:'6px'}} alt="Sort" /></th>
+              <th className="sortable-header" style={{...tableHeaderStyle, padding:'0px 20px', width:'193.53px', color:sortConfig.key==='status_ketersediaan'?'#083487':'#555'}} onClick={()=>requestSort('status_ketersediaan')}>Status Ketersediaan<img src="/sort.png" style={{width:'12px', height:'12px', marginLeft:'6px'}} alt="Sort" /></th>
+              <th className="sortable-header" style={{...tableHeaderStyle, padding:'0px 20px', width:'134.82px', color:sortConfig.key==='tipe_kamar'?'#083487':'#555'}} onClick={()=>requestSort('tipe_kamar')}>Tipe Kamar<img src="/sort.png" style={{width:'12px', height:'12px', marginLeft:'6px'}} alt="Sort" /></th>
               <th style={{...tableHeaderStyle, padding:'0px 20px', width:'456.21px', cursor:'default', textAlign:'center'}}>Action</th>
             </tr>
           </thead>
@@ -263,16 +263,16 @@ const Kamar = () => {
           {currentRooms.length > 0 && (
             <tbody>
               {currentRooms.map(room => (
-                <tr key={room.Kamar_ID}>
-                  <td style={tableDataStyle}>{room.No_Kamar}</td>
-                  <td style={tableDataStyle}>Rp {room.Harga.toLocaleString('id-ID')}</td>
-                  <td style={tableDataStyle}>{room.Lantai}</td>
-                  <td style={tableDataStyle}>{room.Status_Ketersediaan}</td>
-                  <td style={tableDataStyle}>{room.Tipe_Kamar}</td>
+                <tr key={room.kamar_id}>
+                  <td style={tableDataStyle}>{room.no_kamar}</td>
+                  <td style={tableDataStyle}>Rp {Number(room.harga ?? 0).toLocaleString('id-ID')}</td>
+                  <td style={tableDataStyle}>{room.lantai}</td>
+                  <td style={tableDataStyle}>{room.status_ketersediaan}</td>
+                  <td style={tableDataStyle}>{room.tipe_kamar}</td>
 
                   <td style={tableDataStyle}>
                     <Link
-                      to={`/kamar/detail/${room.Kamar_ID}`}
+                      to={`/kamar/detail/${room.kamar_id}`}
                       style={{
                         ...btnStyle,
                         backgroundColor: '#3d91fe',
@@ -286,7 +286,7 @@ const Kamar = () => {
                     </Link>
 
                     <Link
-                      to={`/kamar/edit/${room.Kamar_ID}`}
+                      to={`/kamar/edit/${room.kamar_id}`}
                       style={{
                         ...btnStyle,
                         backgroundColor: '#feb941',
@@ -301,7 +301,7 @@ const Kamar = () => {
                     </Link>
 
                     <Link
-                      to={`/kamar/${room.Kamar_ID}/pembayaran`}
+                      to={`/kamar/${room.kamar_id}/pembayaran`}
                       style={{
                         ...btnStyle,
                         backgroundColor: '#479f45',
@@ -316,7 +316,7 @@ const Kamar = () => {
                     </Link>
 
                     <button
-                      onClick={() => openDeleteModal(room.Kamar_ID)}
+                      onClick={() => openDeleteModal(room.kamar_id)}
                       style={{
                         ...btnStyle,
                         backgroundColor: '#f00',

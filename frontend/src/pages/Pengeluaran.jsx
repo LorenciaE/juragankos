@@ -15,7 +15,7 @@ const Pengeluaran = () => {
 
   // State untuk Filter, Search, dan Sort
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterKategori, setFilterKategori] = useState('');
+  const [filterkategori, setFilterkategori] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
   // Pagination
@@ -85,14 +85,14 @@ const Pengeluaran = () => {
     // 1. Search berdasarkan format tanggal
     if (searchTerm) {
       sortable = sortable.filter(e => {
-        const formattedDate = formatDate(e.Tgl_Pengeluaran).toLowerCase();
+        const formattedDate = formatDate(e.tgl_pengeluaran).toLowerCase();
         return formattedDate.includes(searchTerm.toLowerCase());
       });
     }
 
-    // 2. Filter Kategori
-    if (filterKategori) {
-      sortable = sortable.filter(e => e.Kategori === filterKategori);
+    // 2. Filter kategori
+    if (filterkategori) {
+      sortable = sortable.filter(e => e.kategori === filterkategori);
     }
 
     // 3. Sort Data
@@ -107,7 +107,7 @@ const Pengeluaran = () => {
       });
     }
     return sortable;
-  }, [expenses, searchTerm, filterKategori, sortConfig]);
+  }, [expenses, searchTerm, filterkategori, sortConfig]);
 
   // PAGINATION
   const totalPages = Math.ceil(processedExpenses.length / itemsPerPage);
@@ -118,7 +118,7 @@ const Pengeluaran = () => {
   // Kembali ke halaman 1 ketika search/filter/sort berubah
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, filterKategori, sortConfig]);
+  }, [searchTerm, filterkategori, sortConfig]);
 
   const requestSort = (key) => {
     let direction = 'asc';
@@ -127,7 +127,7 @@ const Pengeluaran = () => {
   };
 
   // Ambil data unik untuk dropdown kategori
-  const uniqueKategori = [...new Set(expenses.map(item => item.Kategori))];
+  const uniquekategori = [...new Set(expenses.map(item => item.kategori))];
 
   // Styling Variables
   const tableHeaderStyle = { padding: '0px 24px', borderBottom: '1px solid #e0e0e0', fontWeight: '600', color: '#4f575e', fontSize: '14px', cursor: 'pointer', userSelect: 'none', height: '48px' };
@@ -227,9 +227,9 @@ const Pengeluaran = () => {
 
       {/* Baris 2: Dropdown Filter Full Width */}
       <div style={{ marginBottom: '20px', position: 'relative' }}>
-        <select className="filter-select" style={{ padding: '0px 16px', borderRadius: '4px', flex: 1, fontWeight: '600', color: '#272b30', width: '1200px', height: '40px', fontSize: '14px', appearance: 'none', WebkitAppearance: 'none', MozAppearance: 'none' }} value={filterKategori} onChange={(e) => setFilterKategori(e.target.value)}>
-          <option value="">Pilih Kategori</option>
-          {uniqueKategori.map(k => <option key={k} value={k}>{k}</option>)}
+        <select className="filter-select" style={{ padding: '0px 16px', borderRadius: '4px', flex: 1, fontWeight: '600', color: '#272b30', width: '1200px', height: '40px', fontSize: '14px', appearance: 'none', WebkitAppearance: 'none', MozAppearance: 'none' }} value={filterkategori} onChange={(e) => setFilterkategori(e.target.value)}>
+          <option value="">Pilih kategori</option>
+          {uniquekategori.map(k => <option key={k} value={k}>{k}</option>)}
         </select>
         <img src="/down.png" alt="" style={{ position: 'absolute', right: '14px', top: '55%', transform: 'translateY(-50%)', width: '11px', height: '11px', pointerEvents: 'none' }} />
       </div>
@@ -239,11 +239,11 @@ const Pengeluaran = () => {
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
           <thead>
             <tr>
-              <th className="sortable-header" style={{...tableHeaderStyle, width:'207.48px', color:sortConfig.key==='Tgl_Pengeluaran'?'#083487':'#4f575e'}} onClick={()=>requestSort('Tgl_Pengeluaran')}>Tanggal Pengeluaran<img src="/sort.png" style={{width:'12px', height:'12px', marginLeft:'6px'}} alt="Sort" /></th>
-              <th className="sortable-header" style={{...tableHeaderStyle, width:'165.48px', color:sortConfig.key==='Kategori'?'#083487':'#4f575e'}} onClick={()=>requestSort('Kategori')}>Kategori<img src="/sort.png" style={{width:'12px', height:'12px', marginLeft:'6px'}} alt="Sort" /></th>
-              <th className="sortable-header" style={{...tableHeaderStyle, width:'150.57px', color:sortConfig.key==='Nominal'?'#083487':'#4f575e'}} onClick={()=>requestSort('Nominal')}>Nominal<img src="/sort.png" style={{width:'12px', height:'12px', marginLeft:'6px'}} alt="Sort" /></th>
-              <th className="sortable-header" style={{...tableHeaderStyle, width:'300px', color:sortConfig.key==='Deskripsi'?'#083487':'#4f575e'}} onClick={()=>requestSort('Deskripsi')}>Deskripsi<img src="/sort.png" style={{width:'12px', height:'12px', marginLeft:'6px'}} alt="Sort" /></th>
-              <th className="sortable-header" style={{...tableHeaderStyle, width:'137.35px', color:sortConfig.key==='No_Kamar'?'#083487':'#4f575e'}} onClick={()=>requestSort('No_Kamar')}>No Kamar<img src="/sort.png" style={{width:'12px', height:'12px', marginLeft:'6px'}} alt="Sort" /></th>
+              <th className="sortable-header" style={{...tableHeaderStyle, width:'207.48px', color:sortConfig.key==='tgl_pengeluaran'?'#083487':'#4f575e'}} onClick={()=>requestSort('tgl_pengeluaran')}>Tanggal Pengeluaran<img src="/sort.png" style={{width:'12px', height:'12px', marginLeft:'6px'}} alt="Sort" /></th>
+              <th className="sortable-header" style={{...tableHeaderStyle, width:'165.48px', color:sortConfig.key==='kategori'?'#083487':'#4f575e'}} onClick={()=>requestSort('kategori')}>kategori<img src="/sort.png" style={{width:'12px', height:'12px', marginLeft:'6px'}} alt="Sort" /></th>
+              <th className="sortable-header" style={{...tableHeaderStyle, width:'150.57px', color:sortConfig.key==='nominal'?'#083487':'#4f575e'}} onClick={()=>requestSort('nominal')}>nominal<img src="/sort.png" style={{width:'12px', height:'12px', marginLeft:'6px'}} alt="Sort" /></th>
+              <th className="sortable-header" style={{...tableHeaderStyle, width:'300px', color:sortConfig.key==='deskripsi'?'#083487':'#4f575e'}} onClick={()=>requestSort('deskripsi')}>deskripsi<img src="/sort.png" style={{width:'12px', height:'12px', marginLeft:'6px'}} alt="Sort" /></th>
+              <th className="sortable-header" style={{...tableHeaderStyle, width:'137.35px', color:sortConfig.key==='no_kamar'?'#083487':'#4f575e'}} onClick={()=>requestSort('no_kamar')}>No Kamar<img src="/sort.png" style={{width:'12px', height:'12px', marginLeft:'6px'}} alt="Sort" /></th>
               <th style={{...tableHeaderStyle, width:'237.53px', cursor:'default', textAlign:'center'}}>Action</th>
             </tr>
           </thead>
@@ -251,15 +251,15 @@ const Pengeluaran = () => {
           {currentExpenses.length > 0 && (
             <tbody>
               {currentExpenses.map(exp => (
-                <tr key={exp.Pengeluaran_ID}>
-                  <td style={{...tableDataStyle, width:'207.48px'}}>{formatDate(exp.Tgl_Pengeluaran)}</td>
-                  <td style={{...tableDataStyle, width:'165.48px'}}>{exp.Kategori}</td>
-                  <td style={{...tableDataStyle, width:'150.57px'}}>Rp {exp.Nominal.toLocaleString('id-ID')}</td>
-                  <td style={{...tableDataStyle, width:'300px'}}>{exp.Deskripsi}</td>
-                  <td style={{...tableDataStyle, width:'137.35px'}}>{exp.No_Kamar}</td>
+                <tr key={exp.pengeluaran_id}>
+                  <td style={{...tableDataStyle, width:'207.48px'}}>{formatDate(exp.tgl_pengeluaran)}</td>
+                  <td style={{...tableDataStyle, width:'165.48px'}}>{exp.kategori}</td>
+                  <td style={{...tableDataStyle, width:'150.57px'}}>Rp {Number(exp.nominal ?? 0).toLocaleString('id-ID')}</td>
+                  <td style={{...tableDataStyle, width:'300px'}}>{exp.deskripsi}</td>
+                  <td style={{...tableDataStyle, width:'137.35px'}}>{exp.no_kamar}</td>
                   <td style={{...tableDataStyle, width:'237.53px'}}>
-                    <Link to={`/pengeluaran/edit/${exp.Pengeluaran_ID}`} style={{ ...btnStyle, backgroundColor: '#feb941', height: '40px', width: '71.58px', gap: '3px'}}>Edit<img src="/pen.png" style={{width:'14px', height:'12px'}} alt="Edit" /></Link>
-                    <button onClick={() => openDeleteModal(exp.Pengeluaran_ID)} style={{ ...btnStyle, backgroundColor: '#f00', height: '40px', width:'90.09px', margin: '0px 0px 0px 24px', gap: '5px'}}>Hapus<img src="/trash.png" style={{width:'14px', height:'14px'}} alt="Hapus" /></button>
+                    <Link to={`/pengeluaran/edit/${exp.pengeluaran_id}`} style={{ ...btnStyle, backgroundColor: '#feb941', height: '40px', width: '71.58px', gap: '3px'}}>Edit<img src="/pen.png" style={{width:'14px', height:'12px'}} alt="Edit" /></Link>
+                    <button onClick={() => openDeleteModal(exp.pengeluaran_id)} style={{ ...btnStyle, backgroundColor: '#f00', height: '40px', width:'90.09px', margin: '0px 0px 0px 24px', gap: '5px'}}>Hapus<img src="/trash.png" style={{width:'14px', height:'14px'}} alt="Hapus" /></button>
                   </td>
                 </tr>
               ))}

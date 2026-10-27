@@ -45,10 +45,10 @@ const Pembayaran = () => {
       const roomData = await getRoomById(id);
       setRoom(roomData);
 
-      // Ambil semua pembayaran, saring berdasarkan Kamar_ID
+      // Ambil semua pembayaran, saring berdasarkan kamar_id
       const allPayments = await getPayments();
       const filteredPayments = allPayments.filter(
-        p => p.Kamar_ID === parseInt(id)
+        p => Number(p.kamar_id) === Number(id)
       );
 
       setPayments(filteredPayments);
@@ -106,8 +106,8 @@ const Pembayaran = () => {
     // 1. Search berdasarkan Bulan Pembayaran
     if (searchTerm) {
       sortable = sortable.filter(p =>
-        p.Bulan_Pembayaran &&
-        p.Bulan_Pembayaran
+        p.bulan_pembayaran &&
+        p.bulan_pembayaran
           .toLowerCase()
           .includes(searchTerm.toLowerCase())
       );
@@ -116,13 +116,13 @@ const Pembayaran = () => {
     // 2. Filter Dropdown
     if (filterStatus) {
       sortable = sortable.filter(
-        p => p.Status_Pembayaran === filterStatus
+        p => p.status_pembayaran === filterStatus
       );
     }
 
     if (filterMetode) {
       sortable = sortable.filter(
-        p => p.Metode_Pembayaran === filterMetode
+        p => p.metode_pembayaran === filterMetode
       );
     }
 
@@ -195,13 +195,13 @@ const Pembayaran = () => {
   // Ambil opsi unik untuk dropdown
   const uniqueStatus = [
     ...new Set(
-      payments.map(item => item.Status_Pembayaran)
+      payments.map(item => item.status_pembayaran)
     )
   ];
 
   const uniqueMetode = [
     ...new Set(
-      payments.map(item => item.Metode_Pembayaran)
+      payments.map(item => item.metode_pembayaran)
     )
   ];
 
@@ -511,7 +511,7 @@ const Pembayaran = () => {
                   fontWeight: '600'
                 }}
               >
-                {room.No_Kamar}
+                {room.no_kamar}
               </span>
             </div>
 
@@ -528,7 +528,7 @@ const Pembayaran = () => {
                   fontWeight: '600'
                 }}
               >
-                Harga:
+                harga:
               </span>
 
               <span
@@ -537,7 +537,7 @@ const Pembayaran = () => {
                   fontWeight: '600'
                 }}
               >
-                Rp {room.Harga?.toLocaleString('id-ID')}
+                Rp {Number(room.harga ?? 0).toLocaleString('id-ID')}
               </span>
             </div>
           </div>
@@ -610,11 +610,11 @@ const Pembayaran = () => {
                   ...tableHeaderStyle,
                   width: '200.03px',
                   color:
-                    sortConfig.key === 'Bulan_Pembayaran'
+                    sortConfig.key === 'bulan_pembayaran'
                       ? '#083487'
                       : '#4f575e'
                 }}
-                onClick={() => requestSort('Bulan_Pembayaran')}
+                onClick={() => requestSort('bulan_pembayaran')}
               >
                 Bulan Pembayaran
                 <img
@@ -634,11 +634,11 @@ const Pembayaran = () => {
                   ...tableHeaderStyle,
                   width: '214.06px',
                   color:
-                    sortConfig.key === 'Tgl_Pembayaran'
+                    sortConfig.key === 'tgl_pembayaran'
                       ? '#083487'
                       : '#4f575e'
                 }}
-                onClick={() => requestSort('Tgl_Pembayaran')}
+                onClick={() => requestSort('tgl_pembayaran')}
               >
                 Tanggal Pembayaran
                 <img
@@ -658,11 +658,11 @@ const Pembayaran = () => {
                   ...tableHeaderStyle,
                   width: '203.9px',
                   color:
-                    sortConfig.key === 'Status_Pembayaran'
+                    sortConfig.key === 'status_pembayaran'
                       ? '#083487'
                       : '#4f575e'
                 }}
-                onClick={() => requestSort('Status_Pembayaran')}
+                onClick={() => requestSort('status_pembayaran')}
               >
                 Status Pembayaran
                 <img
@@ -682,11 +682,11 @@ const Pembayaran = () => {
                   ...tableHeaderStyle,
                   width: '213.4px',
                   color:
-                    sortConfig.key === 'Metode_Pembayaran'
+                    sortConfig.key === 'metode_pembayaran'
                       ? '#083487'
                       : '#4f575e'
                 }}
-                onClick={() => requestSort('Metode_Pembayaran')}
+                onClick={() => requestSort('metode_pembayaran')}
               >
                 Metode Pembayaran
                 <img
@@ -706,13 +706,13 @@ const Pembayaran = () => {
                   ...tableHeaderStyle,
                   width: '135.17px',
                   color:
-                    sortConfig.key === 'Nominal'
+                    sortConfig.key === 'nominal'
                       ? '#083487'
                       : '#4f575e'
                 }}
-                onClick={() => requestSort('Nominal')}
+                onClick={() => requestSort('nominal')}
               >
-                Nominal
+                nominal
                 <img
                   src="/sort.png"
                   alt="Sort"
@@ -739,30 +739,30 @@ const Pembayaran = () => {
           {currentPayments.length > 0 && (
             <tbody>
               {currentPayments.map(pay => (
-                <tr key={pay.Pembayaran_ID}>
+                <tr key={pay.pembayaran_id}>
                   <td style={tableDataStyle}>
-                    {pay.Bulan_Pembayaran}
+                    {pay.bulan_pembayaran}
                   </td>
 
                   <td style={tableDataStyle}>
-                    {formatDate(pay.Tgl_Pembayaran)}
+                    {formatDate(pay.tgl_pembayaran)}
                   </td>
 
                   <td style={tableDataStyle}>
-                    {pay.Status_Pembayaran}
+                    {pay.status_pembayaran}
                   </td>
 
                   <td style={tableDataStyle}>
-                    {pay.Metode_Pembayaran}
+                    {pay.metode_pembayaran}
                   </td>
 
                   <td style={tableDataStyle}>
-                    Rp {pay.Nominal?.toLocaleString('id-ID')}
+                    Rp {Number(pay.nominal ?? 0).toLocaleString('id-ID')}
                   </td>
 
                   <td style={tableDataStyle}>
                     <Link
-                      to={`/kamar/${id}/pembayaran/edit/${pay.Pembayaran_ID}`}
+                      to={`/kamar/${id}/pembayaran/edit/${pay.pembayaran_id}`}
                       style={{
                         ...btnStyle,
                         backgroundColor: '#feb941',
@@ -784,7 +784,7 @@ const Pembayaran = () => {
                     </Link>
 
                     <button
-                      onClick={() => openDeleteModal(pay.Pembayaran_ID)}
+                      onClick={() => openDeleteModal(pay.pembayaran_id)}
                       style={{
                         ...btnStyle,
                         backgroundColor: '#f00',
