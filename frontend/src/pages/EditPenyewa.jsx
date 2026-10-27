@@ -561,7 +561,7 @@ const payload = {
 
                 {rooms.map((room) => (
                   <option key={room.kamar_id} value={room.kamar_id}>
-                    {room.No_Kamar}
+                    {room.no_kamar}
                   </option>
                 ))}
               </select>
