@@ -45,6 +45,8 @@ const getRoomById = async (req, res) => {
 };
 
 // POST: Menambahkan kamar baru
+
+ // POST: Menambahkan kamar baru
 const createRoom = async (req, res) => {
     try {
         const {
@@ -63,12 +65,10 @@ const createRoom = async (req, res) => {
             Lantai === undefined ||
             Lantai === null ||
             !Status_Ketersediaan ||
-            !Tipe_Kamar ||
-            user_id === undefined ||
-            user_id === null
+            !Tipe_Kamar
         ) {
             return res.status(400).json({
-                message: 'Mohon lengkapi data kamar dan user_id'
+                message: 'Mohon lengkapi nomor kamar, harga, lantai, tipe kamar, dan status ketersediaan'
             });
         }
 
@@ -82,7 +82,7 @@ const createRoom = async (req, res) => {
                 Lantai,
                 Status_Ketersediaan,
                 Tipe_Kamar,
-                user_id
+                user_id ?? null
             ]
         );
 
@@ -97,6 +97,7 @@ const createRoom = async (req, res) => {
         });
     }
 };
+
 
 // PUT: Mengedit kamar
 const updateRoom = async (req, res) => {
