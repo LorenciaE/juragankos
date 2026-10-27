@@ -20,34 +20,64 @@ const EditPengeluaran = () => {
   const [fieldErrors, setFieldErrors] = useState({});
   const [loadingData, setLoadingData] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Ambil daftar kamar untuk dropdown
-        const roomsData = await getRooms();
-        setRooms(roomsData);
 
-        // Ambil data pengeluaran lama
-        const expenseData = await getExpenseById(id);
-        
-        // Memformat tanggal dari database (contoh: 2026-08-16T00:00:00.000Z menjadi 2026-08-16)
-        const formattedDate = expenseData.Tgl_Pengeluaran ? expenseData.Tgl_Pengeluaran.split('T')[0] : '';
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      // Ambil daftar kamar untuk dropdown
+      const roomsData = await getRooms();
+      setRooms(roomsData);
 
-        setFormData({
-          Tgl_Pengeluaran: formattedDate,
-          Kategori: expenseData.Kategori,
-          Nominal: expenseData.Nominal,
-          Deskripsi: expenseData.Deskripsi,
-          Kamar_ID: expenseData.Kamar_ID || ''
-        });
-        setLoadingData(false);
-      } catch (err) {
-        setErrorMessage('Gagal memuat data.');
-        setLoadingData(false);
-      }
-    };
-    fetchData();
-  }, [id]);
+      // Ambil data pengeluaran lama
+      const response = await getExpenseById(id);
+
+      // Menyesuaikan format respons API
+      const expenseData =
+        response?.data ??
+        response?.expense ??
+        response;
+
+      // Backend menggunakan snake_case
+      const rawDate =
+        expenseData.tgl_pengeluaran ??
+        expenseData.Tgl_Pengeluaran ??
+        '';
+
+      const formattedDate = rawDate
+        ? String(rawDate).split('T')[0]
+        : '';
+
+      setFormData({
+        Tgl_Pengeluaran: formattedDate,
+        Kategori:
+          expenseData.kategori ??
+          expenseData.Kategori ??
+          '',
+        Nominal:
+          expenseData.nominal ??
+          expenseData.Nominal ??
+          '',
+        Deskripsi:
+          expenseData.deskripsi ??
+          expenseData.Deskripsi ??
+          '',
+        Kamar_ID:
+          expenseData.kamar_id ??
+          expenseData.Kamar_ID ??
+          ''
+      });
+
+    } catch (err) {
+      console.error('Gagal memuat data pengeluaran:', err);
+      setErrorMessage('Gagal memuat data.');
+    } finally {
+      setLoadingData(false);
+    }
+  };
+
+  fetchData();
+}, [id]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
