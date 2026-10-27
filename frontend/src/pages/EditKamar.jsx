@@ -19,25 +19,39 @@ const EditKamar = () => {
   const [fieldErrors, setFieldErrors] = useState({});
   const [loadingData, setLoadingData] = useState(true);
 
+
   useEffect(() => {
     const fetchRoom = async () => {
       try {
+        setLoadingData(true);
+        setErrorMessage('');
+
         const data = await getRoomById(id);
+
         setFormData({
-          No_Kamar: data.No_Kamar,
-          Harga: data.Harga,
-          Lantai: data.Lantai,
-          Tipe_Kamar: data.Tipe_Kamar,
-          Status_Ketersediaan: data.Status_Ketersediaan
+          No_Kamar: data.no_kamar ?? data.No_Kamar ?? '',
+          Harga: data.harga ?? data.Harga ?? '',
+          Lantai: data.lantai ?? data.Lantai ?? '',
+          Tipe_Kamar: data.tipe_kamar ?? data.Tipe_Kamar ?? '',
+          Status_Ketersediaan:
+            data.status_ketersediaan ?? data.Status_Ketersediaan ?? ''
         });
-        setLoadingData(false);
       } catch (err) {
-        setErrorMessage('Gagal memuat data kamar.');
+        console.error('Gagal mengambil data kamar:', err);
+        console.error('Detail error:', err.response?.data);
+
+        setErrorMessage(
+          err.response?.data?.message ||
+          'Gagal memuat data kamar.'
+        );
+      } finally {
         setLoadingData(false);
       }
     };
+
     fetchRoom();
   }, [id]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
