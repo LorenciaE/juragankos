@@ -68,7 +68,7 @@ const createRoom = async (req, res) => {
             !Tipe_Kamar
         ) {
             return res.status(400).json({
-                message: 'Mohon lengkapi nomor kamar, harga, lantai, tipe kamar, dan status ketersediaan'
+                message: 'Mohon lengkapi data'
             });
         }
 
@@ -100,6 +100,7 @@ const createRoom = async (req, res) => {
 
 
 // PUT: Mengedit kamar
+
 const updateRoom = async (req, res) => {
     try {
         const { id } = req.params;
@@ -111,17 +112,30 @@ const updateRoom = async (req, res) => {
             Tipe_Kamar
         } = req.body;
 
+        // Validasi ID kamar
+        if (!id || isNaN(Number(id))) {
+            return res.status(400).json({
+                message: 'ID kamar tidak valid'
+            });
+        }
+
+        // Validasi data kamar
         if (
             !No_Kamar ||
+            !String(No_Kamar).trim() ||
             Harga === undefined ||
             Harga === null ||
+            Harga === '' ||
+            !Number.isFinite(Number(Harga)) ||
             Lantai === undefined ||
             Lantai === null ||
+            Lantai === '' ||
+            !Number.isFinite(Number(Lantai)) ||
             !Status_Ketersediaan ||
             !Tipe_Kamar
         ) {
             return res.status(400).json({
-                message: 'Mohon Lengkapi Data'
+                message: 'Mohon lengkapi data'
             });
         }
 
@@ -134,9 +148,9 @@ const updateRoom = async (req, res) => {
                 tipe_kamar = $5
             WHERE kamar_id = $6`,
             [
-                No_Kamar,
-                Harga,
-                Lantai,
+                String(No_Kamar).trim(),
+                Number(Harga),
+                Number(Lantai),
                 Status_Ketersediaan,
                 Tipe_Kamar,
                 id
@@ -149,17 +163,20 @@ const updateRoom = async (req, res) => {
             });
         }
 
-        res.json({
+        return res.status(200).json({
             message: 'Data Berhasil Diedit'
         });
+
     } catch (error) {
         console.error('Error updateRoom:', error.message);
-        res.status(500).json({
+
+        return res.status(500).json({
             message: 'Terjadi kesalahan pada server',
             error: error.message
         });
     }
 };
+
 
 // DELETE: Menghapus kamar
 const deleteRoom = async (req, res) => {
