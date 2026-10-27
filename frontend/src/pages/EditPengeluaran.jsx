@@ -21,6 +21,7 @@ const EditPengeluaran = () => {
   const [loadingData, setLoadingData] = useState(true);
 
 
+
 useEffect(() => {
   const fetchData = async () => {
     try {
@@ -28,16 +29,13 @@ useEffect(() => {
       const roomsData = await getRooms();
       setRooms(roomsData);
 
-      // Ambil data pengeluaran lama
-      const response = await getExpenseById(id);
+      // Ambil data pengeluaran berdasarkan ID
+      const expenseData = await getExpenseById(id);
 
-      // Menyesuaikan format respons API
-      const expenseData =
-        response?.data ??
-        response?.expense ??
-        response;
+      console.log('Data pengeluaran:', expenseData);
+      console.log('Data kamar:', roomsData);
 
-      // Backend menggunakan snake_case
+      // Format tanggal untuk input type="date"
       const rawDate =
         expenseData.tgl_pengeluaran ??
         expenseData.Tgl_Pengeluaran ??
@@ -47,6 +45,7 @@ useEffect(() => {
         ? String(rawDate).split('T')[0]
         : '';
 
+      // Tampilkan data tersimpan pada form
       setFormData({
         Tgl_Pengeluaran: formattedDate,
         Kategori:
@@ -61,22 +60,24 @@ useEffect(() => {
           expenseData.deskripsi ??
           expenseData.Deskripsi ??
           '',
-        Kamar_ID:
+        Kamar_ID: String(
           expenseData.kamar_id ??
           expenseData.Kamar_ID ??
           ''
+        )
       });
 
+      setLoadingData(false);
     } catch (err) {
       console.error('Gagal memuat data pengeluaran:', err);
       setErrorMessage('Gagal memuat data.');
-    } finally {
       setLoadingData(false);
     }
   };
 
   fetchData();
 }, [id]);
+
 
 
   const handleChange = (e) => {
