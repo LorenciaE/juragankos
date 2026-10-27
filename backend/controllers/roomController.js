@@ -119,25 +119,25 @@ const updateRoom = async (req, res) => {
             });
         }
 
-        // Validasi data kamar
-        if (
-            !No_Kamar ||
-            !String(No_Kamar).trim() ||
-            Harga === undefined ||
-            Harga === null ||
-            Harga === '' ||
-            !Number.isFinite(Number(Harga)) ||
-            Lantai === undefined ||
-            Lantai === null ||
-            Lantai === '' ||
-            !Number.isFinite(Number(Lantai)) ||
-            !Status_Ketersediaan ||
-            !Tipe_Kamar
-        ) {
-            return res.status(400).json({
-                message: 'Mohon lengkapi data'
-            });
-        }
+                // Validasi data kamar
+            if (
+                No_Kamar == null ||
+                String(No_Kamar).trim() === '' ||
+                Harga === undefined ||
+                Harga === null ||
+                Harga === '' ||
+                Lantai === undefined ||
+                Lantai === null ||
+                Lantai === '' ||
+                Status_Ketersediaan == null ||
+                String(Status_Ketersediaan).trim() === '' ||
+                Tipe_Kamar == null ||
+                String(Tipe_Kamar).trim() === ''
+            ) {
+                return res.status(400).json({
+                    message: 'Mohon lengkapi data'
+                });
+            }
 
         const result = await db.query(
             `UPDATE defaultdb.kamar
