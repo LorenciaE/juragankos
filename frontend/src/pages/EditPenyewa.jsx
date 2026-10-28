@@ -514,6 +514,7 @@ const payload = {
               />
             </div>
 
+
             {/* NOMOR KAMAR */}
             <div style={{ marginBottom: fieldErrors.Kamar_ID ? '6px' : '24px' }}>
               <label
@@ -529,112 +530,85 @@ const payload = {
                 Nomor Kamar <span style={{ color: 'red' }}>*</span>
               </label>
 
-              <select
-                name="Kamar_ID"
-                value={formData.Kamar_ID}
-                onChange={handleChange}
-                onFocus={(e) => {
-                  e.target.style.border = '1px solid #053183';
-                  e.target.style.outline = 'none';
-                }}
-                onBlur={(e) => {
-                  e.target.style.border = fieldErrors.Kamar_ID
-                    ? '1px solid red'
-                    : '1px solid #ccc';
-                }}
-                style={{
-                  appearance: 'none',
-                  width: '100%',
-                  padding: '0px 16px',
-                  borderRadius: '4px',
-                  border: fieldErrors.Kamar_ID
-                    ? '0.8px solid red'
-                    : '0.8px solid #ced4da',
-                  height: '40px',
-                  fontSize: '14px',
-                  boxSizing: 'border-box'
-                }}
-              >
-                <option value="" style={{ color: '#272b30' }}>
-                  Pilih Nomor Kamar
-                </option>
+              <div style={{ position: 'relative', width: '100%' }}>
+                <select
+                  name="Kamar_ID"
+                  value={formData.Kamar_ID}
+                  onChange={handleChange}
+                  onFocus={(e) => {
+                    e.target.style.border = '1px solid #053183';
+                    e.target.style.outline = 'none';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.border = fieldErrors.Kamar_ID
+                      ? '1px solid red'
+                      : '1px solid #ced4da';
+                  }}
+                  style={{
+                    appearance: 'none',
+                    WebkitAppearance: 'none',
+                    width: '100%',
+                    padding: '0px 36px 0px 16px',
+                    borderRadius: '4px',
+                    border: fieldErrors.Kamar_ID
+                      ? '1px solid red'
+                      : '1px solid #ced4da',
+                    height: '40px',
+                    fontSize: '14px',
+                    backgroundColor: '#fff',
+                    color: '#272b30',
+                    boxSizing: 'border-box',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <option value="">Pilih Nomor Kamar</option>
 
-                {rooms.map((room) => {
-                const roomId = room.kamar_id ?? room.Kamar_ID;
-                const roomNumber = room.no_kamar ?? room.No_Kamar;
+                  {rooms.map((room, index) => {
+                    const roomId = room.kamar_id ?? room.Kamar_ID;
+                    const roomNumber = room.no_kamar ?? room.No_Kamar;
 
-                return (
-                  <option key={roomId} value={roomId}>
-                    {roomNumber}
-                  </option>
-                );
-              })}
-              </select>
-              <div style={{ position: 'relative' }}>
-              <select
-                name="Kamar_ID"
-                value={formData.Kamar_ID}
-                onChange={handleChange}
-                onFocus={(e) => {
-                  e.target.style.border = '1px solid #053183';
-                  e.target.style.outline = 'none';
-                }}
-                onBlur={(e) => {
-                  e.target.style.border = fieldErrors.Kamar_ID
-                    ? '1px solid red'
-                    : '1px solid #ccc';
-                }}
-                style={{
-                  appearance: 'none',
-                  WebkitAppearance: 'none',
-                  width: '100%',
-                  padding: '0px 36px 0px 16px',
-                  borderRadius: '4px',
-                  border: fieldErrors.Kamar_ID
-                    ? '0.8px solid red'
-                    : '0.8px solid #ced4da',
-                  height: '40px',
-                  fontSize: '14px',
-                  backgroundColor: '#fff',
-                  color: '#272b30',
-                  boxSizing: 'border-box',
-                  cursor: 'pointer'
-                }}
-              >
-                <option value="">Pilih Nomor Kamar</option>
+                    if (roomId == null || roomNumber == null) {
+                      return null;
+                    }
 
-                {rooms.map((room) => {
-                  const roomId = room.kamar_id ?? room.Kamar_ID;
-                  const roomNumber = room.no_kamar ?? room.No_Kamar;
+                    return (
+                      <option key={roomId ?? index} value={String(roomId)}>
+                        {roomNumber}
+                      </option>
+                    );
+                  })}
+                </select>
 
-                  return (
-                    <option key={roomId} value={String(roomId)}>
-                      {roomNumber}
-                    </option>
-                  );
-                })}
-              </select>
+                <img
+                  src="/down.png"
+                  alt=""
+                  style={{
+                    position: 'absolute',
+                    right: '16px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    width: '11px',
+                    height: '11px',
+                    pointerEvents: 'none'
+                  }}
+                />
+              </div>
 
-              <img
-                src="/down.png"
-                alt=""
-                style={{
-                  position: 'absolute',
-                  right: '16px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  width: '11px',
-                  height: '11px',
-                  pointerEvents: 'none'
-                }}
-              />
-            </div>
               {fieldErrors.Kamar_ID && (
-                <small style={{ display: 'block', color: 'red', fontSize: '12px', lineHeight: '16px', marginTop: '4px' }}>
+                <small
+                  style={{
+                    display: 'block',
+                    color: 'red',
+                    fontSize: '12px',
+                    lineHeight: '16px',
+                    marginTop: '4px'
+                  }}
+                >
                   This field is required.
                 </small>
               )}
             </div>
+
 
             {/* STATUS SEWA */}
             <div style={{ marginBottom: fieldErrors.Status_Sewa ? '4px' : '24px' }}>
