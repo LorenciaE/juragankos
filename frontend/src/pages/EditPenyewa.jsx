@@ -146,7 +146,7 @@ useEffect(() => {
     e.preventDefault();
     setErrorMessage('');
     setSuccessMessage('');
-
+    };
     const errors = {};
 
     if (!formData.Nama_Lengkap.trim()) {
@@ -202,7 +202,6 @@ const payload = {
 
       setErrorMessage(msg);
     }
-  };
 
   if (loadingData) {
     return <p style={{ padding: '20px' }}>Memuat data...</p>;
@@ -761,6 +760,5 @@ const payload = {
       </div>
     </div>
   );
-};
 
 export default EditPenyewa;
