@@ -80,7 +80,7 @@ const EditPenyewa = () => {
             ''
         });
 
-        setDisplayNoHp(noHpLama);
+        setDisplayNoHp(maskPhoneNumber(noHpLama));
       } catch (err) {
         console.error('Gagal memuat data penyewa:', err);
 
@@ -101,28 +101,19 @@ const EditPenyewa = () => {
     };
   }, [id]);
 
-      // Fungsi untuk menyamarkan digit tengah nomor HP
-  const maskPhoneNumber = (phone) => {
-    // Menghapus semua karakter non-angka
-    const cleanPhone = phone.replace(/\D/g, '');
-    if (cleanPhone.length <= 6) return cleanPhone;
+    const maskPhoneNumber = (phone) => {
+      const cleanPhone = String(phone ?? '').replace(/\D/g, '');
 
-    const startLength = 4; // 4 digit pertama tetap terlihat (misal: 0812)
-    const endLength = 3;   // 3 digit terakhir tetap terlihat
+      if (cleanPhone.length <= 7) return cleanPhone;
 
-    if (cleanPhone.length <= startLength + endLength) {
-      return cleanPhone;
-    }
+      const start = cleanPhone.slice(0, 4);
+      const end = cleanPhone.slice(-3);
+      const maskedLength = cleanPhone.length - 7;
 
-    const start = cleanPhone.slice(0, startLength);
-    const end = cleanPhone.slice(-endLength);
-    const maskedLength = cleanPhone.length - (startLength + endLength);
-    const masked = '*'.repeat(maskedLength);
+      return `${start}${'*'.repeat(maskedLength)}${end}`;
+    };
 
-    return `${start}${masked}${end}`;
-  };
-  
-  const handleChange = (e) => {
+    const handleChange = (e) => {
     const { name, value } = e.target;
 
     if (name === 'No_Hp') {
@@ -132,9 +123,7 @@ const EditPenyewa = () => {
 
       setFormData((prev) => ({
         ...prev,
-        No_Hp: cleanedValue.includes('*')
-          ? cleanedValue
-          : cleanedValue.replace(/\D/g, '')
+        No_Hp: cleanedValue.replace(/\D/g, '')
       }));
     } else {
       setFormData((prev) => ({
@@ -188,6 +177,7 @@ const EditPenyewa = () => {
     try {
       const payload = {
         ...formData,
+        No_Hp: maskPhoneNumber(formData.No_Hp),
         Tgl_Keluar: formData.Tgl_Keluar || null
       };
 
