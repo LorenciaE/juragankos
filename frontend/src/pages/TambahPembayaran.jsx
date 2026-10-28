@@ -20,20 +20,32 @@ const TambahPembayaran = () => {
   const [fieldErrors, setFieldErrors] = useState({});
 
   useEffect(() => {
-    // Cari Sewa_ID dari penyewa aktif di kamar ini
     const fetchActiveTenant = async () => {
       try {
         const tenants = await getTenants();
+
         const activeTenant = tenants.find(
-          t => t.Kamar_ID === parseInt(id) && t.Status_Sewa === 'AKTIF'
+          t =>
+            Number(t.Kamar_ID ?? t.kamar_id) === Number(id) &&
+            String(t.Status_Sewa ?? t.status_sewa ?? '').toUpperCase() === 'AKTIF'
         );
-        
+
+        if (activeTenant) {
+          const sewaId = activeTenant.Sewa_ID ?? activeTenant.sewa_id;
+          setActiveSewaId(sewaId);
+          console.log('Sewa_ID ditemukan:', sewaId);
+        } else {
+          setActiveSewaId(null);
+          console.error('Penyewa aktif tidak ditemukan untuk kamar:', id);
+        }
       } catch (err) {
         console.error('Gagal mengambil data penyewa:', err);
       }
     };
+
     fetchActiveTenant();
   }, [id]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
