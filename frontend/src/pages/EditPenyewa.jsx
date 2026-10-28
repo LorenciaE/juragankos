@@ -23,83 +23,78 @@ const EditPenyewa = () => {
   const [fieldErrors, setFieldErrors] = useState({});
   const [loadingData, setLoadingData] = useState(true);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const roomsData = await getRooms();
+        setRooms(roomsData);
 
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const roomsData = await getRooms();
-      setRooms(roomsData);
+        const tenantData = await getTenantById(id);
 
-      const tenantData = await getTenantById(id);
+        console.log('Data penyewa:', tenantData);
+        console.log('Data kamar:', roomsData);
 
-      console.log('Data penyewa:', tenantData);
-      console.log('Data kamar:', roomsData);
+        const rawTglMasuk =
+          tenantData.tgl_masuk ??
+          tenantData.Tgl_Masuk ??
+          '';
 
-      // Format tanggal untuk input type="date"
-      const rawTglMasuk =
-        tenantData.tgl_masuk ??
-        tenantData.Tgl_Masuk ??
-        '';
+        const rawTglKeluar =
+          tenantData.tgl_keluar ??
+          tenantData.Tgl_Keluar ??
+          '';
 
-      const rawTglKeluar =
-        tenantData.tgl_keluar ??
-        tenantData.Tgl_Keluar ??
-        '';
+        const tglMasuk = rawTglMasuk
+          ? String(rawTglMasuk).split('T')[0]
+          : '';
 
-      const tglMasuk = rawTglMasuk
-        ? String(rawTglMasuk).split('T')[0]
-        : '';
+        const tglKeluar = rawTglKeluar
+          ? String(rawTglKeluar).split('T')[0]
+          : '';
 
-      const tglKeluar = rawTglKeluar
-        ? String(rawTglKeluar).split('T')[0]
-        : '';
-
-      setFormData({
-        Nama_Lengkap:
-          tenantData.nama_lengkap ??
-          tenantData.Nama_Lengkap ??
-          '',
-        No_Hp: String(
-        tenantData.no_hp ??
-        tenantData.No_Hp ??
-        ''
-      ).replace(/\D/g, ''),
-        Tgl_Masuk: tglMasuk,
-        Tgl_Keluar: tglKeluar,
-        Kamar_ID: String(
-          tenantData.kamar_id ??
-          tenantData.Kamar_ID ??
+        const noHpLama = String(
+          tenantData.no_hp ??
+          tenantData.No_Hp ??
           ''
-        ),
-        Status_Sewa:
-          tenantData.status_sewa ??
-          tenantData.Status_Sewa ??
-          ''
-      });
+        );
 
-      // Nomor telepon lama tetap ditampilkan sesuai data tersimpan
-      setDisplayNoHp(
-        tenantData.no_hp ??
-        tenantData.No_Hp ??
-        ''
-      );
+        setFormData({
+          Nama_Lengkap:
+            tenantData.nama_lengkap ??
+            tenantData.Nama_Lengkap ??
+            '',
+          No_Hp: noHpLama.replace(/\D/g, ''),
+          Tgl_Masuk: tglMasuk,
+          Tgl_Keluar: tglKeluar,
+          Kamar_ID: String(
+            tenantData.kamar_id ??
+            tenantData.Kamar_ID ??
+            ''
+          ),
+          Status_Sewa:
+            tenantData.status_sewa ??
+            tenantData.Status_Sewa ??
+            ''
+        });
 
-      setLoadingData(false);
-    } catch (err) {
-      console.error('Gagal memuat data penyewa:', err);
-      setErrorMessage('Gagal memuat data penyewa.');
-      setLoadingData(false);
-    }
-  };
+        setDisplayNoHp(noHpLama);
+        setLoadingData(false);
+      } catch (err) {
+        console.error('Gagal memuat data penyewa:', err);
+        setErrorMessage('Gagal memuat data penyewa.');
+        setLoadingData(false);
+      }
+    };
 
-  fetchData();
-}, [id]);
-
+    fetchData();
+  }, [id]);
 
   const maskPhoneNumber = (phone) => {
-    const cleanPhone = (phone || '').replace(/\D/g, '');
+    const cleanPhone = String(phone ?? '').replace(/\D/g, '');
 
-    if (cleanPhone.length <= 6) return cleanPhone;
+    if (cleanPhone.length <= 7) {
+      return cleanPhone;
+    }
 
     const start = cleanPhone.slice(0, 4);
     const end = cleanPhone.slice(-3);
@@ -135,18 +130,12 @@ useEffect(() => {
     }));
   };
 
-  setFieldErrors((prev) => ({
-    ...prev,
-    [name]: false
-  }));
-};
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setErrorMessage('');
     setSuccessMessage('');
-    };
+
     const errors = {};
 
     if (!formData.Nama_Lengkap.trim()) {
@@ -176,15 +165,10 @@ useEffect(() => {
     }
 
     try {
-      
-const payload = {
-  ...formData,
-  No_Hp: formData.No_Hp.includes('*')
-    ? formData.No_Hp
-    : maskPhoneNumber(formData.No_Hp),
-  Tgl_Keluar: formData.Tgl_Keluar || null
-};
-
+      const payload = {
+        ...formData,
+        Tgl_Keluar: formData.Tgl_Keluar || null
+      };
 
       await updateTenant(id, payload);
 
@@ -194,7 +178,7 @@ const payload = {
         navigate('/penyewa');
       }, 1500);
     } catch (err) {
-      console.error('Gagal mengedit penyewa:', err);
+      console.error('Gagal mengedit data penyewa:', err);
 
       const msg =
         err.response?.data?.message ||
@@ -202,9 +186,14 @@ const payload = {
 
       setErrorMessage(msg);
     }
+  };
 
   if (loadingData) {
-    return <p style={{ padding: '20px' }}>Memuat data...</p>;
+    return (
+      <p style={{ padding: '20px' }}>
+        Memuat data...
+      </p>
+    );
   }
 
   return (
@@ -220,7 +209,7 @@ const payload = {
             left: '50%',
             transform: 'translateX(-50%)',
             width: '600px',
-            minHeight: '59px',
+            height: '59px',
             padding: '16px',
             backgroundColor: '#dc2020',
             color: '#ffffff',
@@ -267,7 +256,7 @@ const payload = {
             left: '50%',
             transform: 'translateX(-50%)',
             width: '600px',
-            minHeight: '59px',
+            height: '59px',
             padding: '16px',
             backgroundColor: '#29823B',
             color: '#ffffff',
@@ -315,7 +304,13 @@ const payload = {
         Edit Penyewa
       </h2>
 
-      <div style={{ display: 'flex', gap: '20px', marginTop: '32px' }}>
+      <div
+        style={{
+          display: 'flex',
+          gap: '20px',
+          marginTop: '32px'
+        }}
+      >
         <div
           style={{
             backgroundColor: 'white',
@@ -323,13 +318,16 @@ const payload = {
             borderRadius: '4px',
             border: '0.8px solid #d9dee3',
             width: '592px',
-            minHeight: '667.6px',
-            boxSizing: 'border-box'
+            height: '667.6px'
           }}
         >
           <form onSubmit={handleSubmit}>
             {/* NAMA */}
-            <div style={{ marginBottom: fieldErrors.Nama_Lengkap ? '4px' : '24px' }}>
+            <div
+              style={{
+                marginBottom: fieldErrors.Nama_Lengkap ? '4px' : '24px'
+              }}
+            >
               <label
                 style={{
                   display: 'block',
@@ -371,14 +369,26 @@ const payload = {
               />
 
               {fieldErrors.Nama_Lengkap && (
-                <small style={{ display: 'block', color: 'red', fontSize: '12px', lineHeight: '16px', marginTop: '4px' }}>
+                <small
+                  style={{
+                    display: 'block',
+                    color: 'red',
+                    fontSize: '12px',
+                    lineHeight: '16px',
+                    marginTop: '4px'
+                  }}
+                >
                   This field is required.
                 </small>
               )}
             </div>
 
             {/* NOMOR TELEPON */}
-            <div style={{ marginBottom: fieldErrors.No_Hp ? '4px' : '24px' }}>
+            <div
+              style={{
+                marginBottom: fieldErrors.No_Hp ? '4px' : '24px'
+              }}
+            >
               <label
                 style={{
                   display: 'block',
@@ -420,14 +430,26 @@ const payload = {
               />
 
               {fieldErrors.No_Hp && (
-                <small style={{ display: 'block', color: 'red', fontSize: '12px', lineHeight: '16px', marginTop: '4px' }}>
+                <small
+                  style={{
+                    display: 'block',
+                    color: 'red',
+                    fontSize: '12px',
+                    lineHeight: '16px',
+                    marginTop: '4px'
+                  }}
+                >
                   This field is required.
                 </small>
               )}
             </div>
 
             {/* TANGGAL MASUK */}
-            <div style={{ marginBottom: fieldErrors.Tgl_Masuk ? '12px' : '34px' }}>
+            <div
+              style={{
+                marginBottom: fieldErrors.Tgl_Masuk ? '12px' : '34px'
+              }}
+            >
               <label
                 style={{
                   display: 'block',
@@ -469,14 +491,26 @@ const payload = {
               />
 
               {fieldErrors.Tgl_Masuk && (
-                <small style={{ display: 'block', color: 'red', fontSize: '12px', lineHeight: '16px', marginTop: '4px' }}>
+                <small
+                  style={{
+                    display: 'block',
+                    color: 'red',
+                    fontSize: '12px',
+                    lineHeight: '16px',
+                    marginTop: '4px'
+                  }}
+                >
                   This field is required.
                 </small>
               )}
             </div>
 
             {/* TANGGAL KELUAR */}
-            <div style={{ marginBottom: fieldErrors.Tgl_Keluar ? '12px' : '34px' }}>
+            <div
+              style={{
+                marginBottom: fieldErrors.Tgl_Keluar ? '12px' : '34px'
+              }}
+            >
               <label
                 style={{
                   display: 'block',
@@ -518,9 +552,13 @@ const payload = {
               />
             </div>
 
-
             {/* NOMOR KAMAR */}
-            <div style={{ marginBottom: fieldErrors.Kamar_ID ? '6px' : '24px' }}>
+            <div
+              style={{
+                marginBottom: fieldErrors.Kamar_ID ? '6px' : '24px',
+                position: 'relative'
+              }}
+            >
               <label
                 style={{
                   display: 'block',
@@ -534,69 +572,59 @@ const payload = {
                 Nomor Kamar <span style={{ color: 'red' }}>*</span>
               </label>
 
-              <div style={{ position: 'relative', width: '100%' }}>
-                <select
-                  name="Kamar_ID"
-                  value={formData.Kamar_ID}
-                  onChange={handleChange}
-                  onFocus={(e) => {
-                    e.target.style.border = '1px solid #053183';
-                    e.target.style.outline = 'none';
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.border = fieldErrors.Kamar_ID
-                      ? '1px solid red'
-                      : '1px solid #ced4da';
-                  }}
-                  style={{
-                    appearance: 'none',
-                    WebkitAppearance: 'none',
-                    width: '100%',
-                    padding: '0px 36px 0px 16px',
-                    borderRadius: '4px',
-                    border: fieldErrors.Kamar_ID
-                      ? '1px solid red'
-                      : '1px solid #ced4da',
-                    height: '40px',
-                    fontSize: '14px',
-                    backgroundColor: '#fff',
-                    color: '#272b30',
-                    boxSizing: 'border-box',
-                    cursor: 'pointer'
-                  }}
-                >
-                  <option value="">Pilih Nomor Kamar</option>
+              <select
+                name="Kamar_ID"
+                value={formData.Kamar_ID}
+                onChange={handleChange}
+                onFocus={(e) => {
+                  e.target.style.border = '1px solid #053183';
+                  e.target.style.outline = 'none';
+                }}
+                onBlur={(e) => {
+                  e.target.style.border = fieldErrors.Kamar_ID
+                    ? '1px solid red'
+                    : '1px solid #ccc';
+                }}
+                style={{
+                  appearance: 'none',
+                  width: '100%',
+                  padding: '0px 32px 0px 16px',
+                  borderRadius: '4px',
+                  border: fieldErrors.Kamar_ID
+                    ? '0.8px solid red'
+                    : '0.8px solid #ced4da',
+                  height: '40px',
+                  fontSize: '14px',
+                  boxSizing: 'border-box',
+                  backgroundColor: '#fff'
+                }}
+              >
+                <option value="" style={{ color: '#272b30' }}>
+                  Pilih Nomor Kamar
+                </option>
 
-                  {rooms.map((room, index) => {
-                    const roomId = room.kamar_id ?? room.Kamar_ID;
-                    const roomNumber = room.no_kamar ?? room.No_Kamar;
+                {rooms.map((room) => (
+                  <option
+                    key={room.Kamar_ID ?? room.kamar_id}
+                    value={room.Kamar_ID ?? room.kamar_id}
+                  >
+                    {room.No_Kamar ?? room.no_kamar}
+                  </option>
+                ))}
+              </select>
 
-                    if (roomId == null || roomNumber == null) {
-                      return null;
-                    }
-
-                    return (
-                      <option key={roomId ?? index} value={String(roomId)}>
-                        {roomNumber}
-                      </option>
-                    );
-                  })}
-                </select>
-
-                <img
-                  src="/down.png"
-                  alt=""
-                  style={{
-                    position: 'absolute',
-                    right: '16px',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    width: '11px',
-                    height: '11px',
-                    pointerEvents: 'none'
-                  }}
-                />
-              </div>
+              <img
+                src="/down.png"
+                alt=""
+                style={{
+                  position: 'absolute',
+                  right: '16px',
+                  top: '38px',
+                  width: '11px',
+                  height: '11px',
+                  pointerEvents: 'none'
+                }}
+              />
 
               {fieldErrors.Kamar_ID && (
                 <small
@@ -612,9 +640,14 @@ const payload = {
                 </small>
               )}
             </div>
- 
+
             {/* STATUS SEWA */}
-            <div style={{ marginBottom: fieldErrors.Status_Sewa ? '4px' : '24px' }}>
+            <div
+              style={{
+                marginBottom: fieldErrors.Status_Sewa ? '4px' : '24px',
+                position: 'relative'
+              }}
+            >
               <label
                 style={{
                   display: 'block',
@@ -629,56 +662,56 @@ const payload = {
                 Status Sewa <span style={{ color: 'red' }}>*</span>
               </label>
 
-              <div style={{ position: 'relative', width: '100%' }}>
-                <select
-                  name="Status_Sewa"
-                  value={formData.Status_Sewa}
-                  onChange={handleChange}
-                  onFocus={(e) => {
-                    e.target.style.border = '1px solid #053183';
-                    e.target.style.outline = 'none';
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.border = fieldErrors.Status_Sewa
-                      ? '1px solid red'
-                      : '1px solid #ced4da';
-                  }}
-                  style={{
-                    appearance: 'none',
-                    WebkitAppearance: 'none',
-                    width: '100%',
-                    padding: '0px 36px 0px 16px',
-                    borderRadius: '4px',
-                    border: fieldErrors.Status_Sewa
-                      ? '1px solid red'
-                      : '1px solid #ced4da',
-                    height: '40px',
-                    fontSize: '14px',
-                    backgroundColor: '#fff',
-                    color: '#272b30',
-                    boxSizing: 'border-box',
-                    cursor: 'pointer'
-                  }}
-                >
-                  <option value="">Pilih Status Sewa</option>
-                  <option value="AKTIF">AKTIF</option>
-                  <option value="NON AKTIF">NON AKTIF</option>
-                </select>
+              <select
+                name="Status_Sewa"
+                value={formData.Status_Sewa}
+                onChange={handleChange}
+                onFocus={(e) => {
+                  e.target.style.border = '1px solid #053183';
+                  e.target.style.outline = 'none';
+                }}
+                onBlur={(e) => {
+                  e.target.style.border = fieldErrors.Status_Sewa
+                    ? '1px solid red'
+                    : '1px solid #ccc';
+                }}
+                style={{
+                  appearance: 'none',
+                  width: '100%',
+                  padding: '0px 32px 0px 16px',
+                  borderRadius: '4px',
+                  border: fieldErrors.Status_Sewa
+                    ? '0.8px solid red'
+                    : '0.8px solid #ced4da',
+                  height: '40px',
+                  fontSize: '14px',
+                  boxSizing: 'border-box',
+                  backgroundColor: '#fff'
+                }}
+              >
+                <option value="" style={{ color: '#272b30' }}>
+                  Pilih Status Sewa
+                </option>
+                <option value="AKTIF" style={{ color: '#272b30' }}>
+                  AKTIF
+                </option>
+                <option value="NON AKTIF" style={{ color: '#272b30' }}>
+                  NON AKTIF
+                </option>
+              </select>
 
-                <img
-                  src="/down.png"
-                  alt=""
-                  style={{
-                    position: 'absolute',
-                    right: '16px',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    width: '11px',
-                    height: '11px',
-                    pointerEvents: 'none'
-                  }}
-                />
-              </div>
+              <img
+                src="/down.png"
+                alt=""
+                style={{
+                  position: 'absolute',
+                  right: '16px',
+                  top: '38px',
+                  width: '11px',
+                  height: '11px',
+                  pointerEvents: 'none'
+                }}
+              />
 
               {fieldErrors.Status_Sewa && (
                 <small
@@ -715,7 +748,10 @@ const payload = {
                   height: '40px',
                   textShadow: '0.2px 0 currentColor',
                   width: '88.61px',
-                  boxSizing: 'border-box'
+                  boxSizing: 'border-box',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
                 }}
               >
                 Kembali
@@ -760,5 +796,6 @@ const payload = {
       </div>
     </div>
   );
+};
 
 export default EditPenyewa;
