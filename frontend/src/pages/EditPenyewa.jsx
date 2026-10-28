@@ -24,15 +24,18 @@ const EditPenyewa = () => {
   const [loadingData, setLoadingData] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
+
     const fetchData = async () => {
       try {
-        const roomsData = await getRooms();
+        const [roomsData, tenantData] = await Promise.all([
+          getRooms(),
+          getTenantById(id)
+        ]);
+
+        if (!isMounted) return;
+
         setRooms(roomsData);
-
-        const tenantData = await getTenantById(id);
-
-        console.log('Data penyewa:', tenantData);
-        console.log('Data kamar:', roomsData);
 
         const rawTglMasuk =
           tenantData.tgl_masuk ??
@@ -78,30 +81,25 @@ const EditPenyewa = () => {
         });
 
         setDisplayNoHp(noHpLama);
-        setLoadingData(false);
       } catch (err) {
         console.error('Gagal memuat data penyewa:', err);
-        setErrorMessage('Gagal memuat data penyewa.');
-        setLoadingData(false);
+
+        if (isMounted) {
+          setErrorMessage('Gagal memuat data penyewa.');
+        }
+      } finally {
+        if (isMounted) {
+          setLoadingData(false);
+        }
       }
     };
 
     fetchData();
+
+    return () => {
+      isMounted = false;
+    };
   }, [id]);
-
-  const maskPhoneNumber = (phone) => {
-    const cleanPhone = String(phone ?? '').replace(/\D/g, '');
-
-    if (cleanPhone.length <= 7) {
-      return cleanPhone;
-    }
-
-    const start = cleanPhone.slice(0, 4);
-    const end = cleanPhone.slice(-3);
-    const maskedLength = cleanPhone.length - 7;
-
-    return `${start}${'*'.repeat(maskedLength)}${end}`;
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -128,6 +126,8 @@ const EditPenyewa = () => {
       ...prev,
       [name]: false
     }));
+
+    setErrorMessage('');
   };
 
   const handleSubmit = async (e) => {
@@ -160,7 +160,7 @@ const EditPenyewa = () => {
 
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
-      setErrorMessage('Mohon lengkapi data yang wajib diisi.');
+      setErrorMessage('Mohon lengkapi data');
       return;
     }
 
