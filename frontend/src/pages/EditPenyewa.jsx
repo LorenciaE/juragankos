@@ -59,7 +59,11 @@ useEffect(() => {
           tenantData.nama_lengkap ??
           tenantData.Nama_Lengkap ??
           '',
-        No_Hp: '',
+        No_Hp: String(
+        tenantData.no_hp ??
+        tenantData.No_Hp ??
+        ''
+      ).replace(/\D/g, ''),
         Tgl_Masuk: tglMasuk,
         Tgl_Keluar: tglKeluar,
         Kamar_ID: String(
@@ -104,31 +108,32 @@ useEffect(() => {
     return `${start}${'*'.repeat(maskedLength)}${end}`;
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
-const handleChange = (e) => {
-  const { name, value } = e.target;
+    if (name === 'No_Hp') {
+      const cleanedValue = value.replace(/[^\d*]/g, '');
 
-  if (name === 'No_Hp') {
-    // Pertahankan angka dan tanda bintang saat mengedit nomor
-    const cleanedValue = value.replace(/[^\d*]/g, '');
+      setDisplayNoHp(cleanedValue);
 
-    setDisplayNoHp(cleanedValue);
+      setFormData((prev) => ({
+        ...prev,
+        No_Hp: cleanedValue.includes('*')
+          ? cleanedValue
+          : cleanedValue.replace(/\D/g, '')
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value
+      }));
+    }
 
-    // Jika nomor masih mengandung bintang, jangan hapus bintangnya.
-    // Jika pengguna memasukkan nomor lengkap tanpa bintang,
-    // simpan angka saja untuk proses masking saat submit.
-    setFormData((prev) => ({
+    setFieldErrors((prev) => ({
       ...prev,
-      No_Hp: cleanedValue.includes('*')
-        ? cleanedValue
-        : cleanedValue.replace(/\D/g, '')
+      [name]: false
     }));
-  } else {
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value
-    }));
-  }
+  };
 
   setFieldErrors((prev) => ({
     ...prev,
@@ -148,7 +153,7 @@ const handleChange = (e) => {
       errors.Nama_Lengkap = true;
     }
 
-    if (!formData.No_Hp) {
+    if (!String(formData.No_Hp ?? '').trim()) {
       errors.No_Hp = true;
     }
 
