@@ -119,7 +119,11 @@ const handleSubmit = async (e) => {
     errors.Status_Ketersediaan = true;
   }
 
+    console.log('Isi formData:', formData);
+    console.log('Hasil validasi errors:', errors);
+    
   if (Object.keys(errors).length > 0) {
+
     setFieldErrors(errors);
     setErrorMessage('Mohon Lengkapi Data');
     return;
