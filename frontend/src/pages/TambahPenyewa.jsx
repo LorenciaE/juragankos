@@ -309,9 +309,16 @@ const payload = {
                 ? '1px solid red' 
                 : '1px solid #ccc'} style={{ appearance: 'none', width: '100%', padding: '0px 16px', borderRadius: '4px', border: fieldErrors.Kamar_ID ? '0.8px solid red' : '0.8px solid #ced4da', height: '40px', fontSize: '14px' }}>
                 <option value="" style={{ color: '#272b30'}}>Pilih Nomor Kamar</option>
-                {rooms.map(room => (
-                  <option key={room.Kamar_ID} value={room.Kamar_ID}>{room.No_Kamar}</option>
-                ))}
+                {rooms.map((room) => {
+                const roomId = room.kamar_id ?? room.Kamar_ID;
+                const roomNumber = room.no_kamar ?? room.No_Kamar;
+
+                return (
+                  <option key={roomId} value={roomId}>
+                    {roomNumber}
+                  </option>
+                );
+              })}
               </select>
               <img src="/down.png" alt="" style={{ position: 'absolute', right: '646px', top: '73%', transform: 'translateY(-50%)', width: '11px', height: '11px', pointerEvents: 'none' }}/>
               {fieldErrors.Kamar_ID && (

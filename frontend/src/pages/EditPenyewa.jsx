@@ -559,11 +559,16 @@ const payload = {
                   Pilih Nomor Kamar
                 </option>
 
-                {rooms.map((room) => (
-                  <option key={room.kamar_id} value={room.kamar_id}>
-                    {room.no_kamar}
+                {rooms.map((room) => {
+                const roomId = room.kamar_id ?? room.Kamar_ID;
+                const roomNumber = room.no_kamar ?? room.No_Kamar;
+
+                return (
+                  <option key={roomId} value={roomId}>
+                    {roomNumber}
                   </option>
-                ))}
+                );
+              })}
               </select>
 
               {fieldErrors.Kamar_ID && (
