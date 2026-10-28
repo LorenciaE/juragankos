@@ -28,11 +28,6 @@ const TambahPembayaran = () => {
           t => t.Kamar_ID === parseInt(id) && t.Status_Sewa === 'AKTIF'
         );
         
-        if (activeTenant) {
-          setActiveSewaId(activeTenant.Sewa_ID);
-        } else {
-          setErrorMessage('Kamar ini belum memiliki penyewa aktif.');
-        }
       } catch (err) {
         console.error('Gagal mengambil data penyewa:', err);
       }
