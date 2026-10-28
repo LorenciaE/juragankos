@@ -147,14 +147,15 @@ const EditPembayaran = () => {
 
     try {
       const dataToSubmit = {
-        bulan_pembayaran: formData.Bulan_Pembayaran,
-        tgl_pembayaran: formData.Tgl_Pembayaran,
-        status_pembayaran: formData.Status_Pembayaran,
-        metode_pembayaran: formData.Metode_Pembayaran,
-        nominal: Number(formData.Nominal),
-        kamar_id: Number(id),
-        sewa_id: sewaId === null ? null : Number(sewaId)
+        Bulan_Pembayaran: formData.Bulan_Pembayaran,
+        Tgl_Pembayaran: formData.Tgl_Pembayaran,
+        Status_Pembayaran: formData.Status_Pembayaran,
+        Metode_Pembayaran: formData.Metode_Pembayaran,
+        Nominal: Number(formData.Nominal),
+        Kamar_ID: Number(id),
+        Sewa_ID: sewaId === null ? null : Number(sewaId)
       };
+
 
       await updatePayment(paymentId, dataToSubmit);
 
