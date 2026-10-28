@@ -64,11 +64,6 @@ const TambahPembayaran = () => {
       return;
     }
 
-    if (!activeSewaId) {
-      setErrorMessage('Tidak bisa menyimpan: Kamar belum memiliki penyewa aktif.');
-      return;
-    }
-
     try {
       const dataToSubmit = {
         ...formData,
