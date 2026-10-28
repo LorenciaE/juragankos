@@ -196,13 +196,6 @@ const updateTenant = async (req, res) => {
             [id]
         );
 
-        if (oldTenantResult.rows.length === 0) {
-            await connection.query('ROLLBACK');
-            return res.status(404).json({
-                message: 'Data penyewa tidak ditemukan'
-            });
-        }
-
         const oldRoomId = oldTenantResult.rows[0].kamar_id;
 
         // Pastikan kamar tujuan ada
@@ -238,13 +231,6 @@ const updateTenant = async (req, res) => {
                 id
             ]
         );
-
-        if (leaseResult.rowCount === 0) {
-            await connection.query('ROLLBACK');
-            return res.status(404).json({
-                message: 'Data sewa penyewa tidak ditemukan'
-            });
-        }
 
         // Perbarui kamar lama jika penyewa pindah kamar
         if (String(oldRoomId) !== String(Kamar_ID)) {
@@ -332,13 +318,6 @@ const deleteTenant = async (req, res) => {
              FOR UPDATE`,
             [id]
         );
-
-        if (tenantResult.rows.length === 0) {
-            await connection.query('ROLLBACK');
-            return res.status(404).json({
-                message: 'Penyewa tidak ditemukan'
-            });
-        }
 
         const roomId = tenantResult.rows[0].kamar_id;
 
