@@ -81,55 +81,79 @@ const EditKamar = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setErrorMessage('');
-    setSuccessMessage('');
 
-    const errors = {};
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setErrorMessage('');
+  setSuccessMessage('');
 
-    if (!formData.No_Kamar) errors.No_Kamar = true;
-    if (!formData.Harga) errors.Harga = true;
-    if (!formData.Lantai) errors.Lantai = true;
-    if (!formData.Tipe_Kamar) errors.Tipe_Kamar = true;
-    if (!formData.Status_Ketersediaan) {
-      errors.Status_Ketersediaan = true;
-    }
+  const errors = {};
 
-    if (Object.keys(errors).length > 0) {
-      setFieldErrors(errors);
-      setErrorMessage('Mohon Lengkapi Data');
-      return;
-    }
+  if (String(formData.No_Kamar ?? '').trim() === '') {
+    errors.No_Kamar = true;
+  }
 
-    try {
-      // Kirim data dengan nama kolom yang digunakan backend.
-      const roomData = {
-        no_kamar: formData.No_Kamar,
-        harga: Number(formData.Harga),
-        lantai: Number(formData.Lantai),
-        tipe_kamar: formData.Tipe_Kamar,
-        status_ketersediaan: formData.Status_Ketersediaan
-      };
+  if (
+    formData.Harga === '' ||
+    formData.Harga === null ||
+    formData.Harga === undefined
+  ) {
+    errors.Harga = true;
+  }
 
-      await updateRoom(id, roomData);
+  if (
+    formData.Lantai === '' ||
+    formData.Lantai === null ||
+    formData.Lantai === undefined
+  ) {
+    errors.Lantai = true;
+  }
 
-      setSuccessMessage('Data kamar berhasil diperbarui.');
+  if (String(formData.Tipe_Kamar ?? '').trim() === '') {
+    errors.Tipe_Kamar = true;
+  }
 
-      setTimeout(() => {
-        navigate('/kamar');
-      }, 1500);
-    } catch (err) {
-      console.error('Gagal memperbarui kamar:', err);
-      console.error('Detail error:', err.response?.data);
+  if (
+    String(formData.Status_Ketersediaan ?? '').trim() === ''
+  ) {
+    errors.Status_Ketersediaan = true;
+  }
 
-      const msg =
-        err.response?.data?.message ||
-        'Terjadi kesalahan pada server';
+  if (Object.keys(errors).length > 0) {
+    setFieldErrors(errors);
+    setErrorMessage('Mohon Lengkapi Data');
+    return;
+  }
 
-      setErrorMessage(msg);
-    }
-  };
+  try {
+    const roomData = {
+      No_Kamar: String(formData.No_Kamar).trim(),
+      Harga: Number(formData.Harga),
+      Lantai: Number(formData.Lantai),
+      Tipe_Kamar: formData.Tipe_Kamar,
+      Status_Ketersediaan: formData.Status_Ketersediaan
+    };
+
+    console.log('Data kamar yang dikirim:', roomData);
+
+    await updateRoom(id, roomData);
+
+    setSuccessMessage('Data kamar berhasil diperbarui.');
+
+    setTimeout(() => {
+      navigate('/kamar');
+    }, 1500);
+  } catch (err) {
+    console.error('Gagal memperbarui kamar:', err);
+    console.error('Detail error:', err.response?.data);
+
+    setErrorMessage(
+      err.response?.data?.message ||
+      'Terjadi kesalahan pada server'
+    );
+  }
+};
+
 
   if (loadingData) {
     return (
