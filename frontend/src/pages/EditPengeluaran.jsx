@@ -311,10 +311,10 @@ useEffect(() => {
             </div>
 
             <div style={{ display: 'flex'}}>
-              <Link type="button" onClick={() => navigate(-1)} style={{ backgroundColor: '#fff', color: '#479f45', border: '1px solid #479f45', padding: '9px 16px', borderRadius: '4px', textDecoration: 'none', fontWeight: '600', fontSize: '14px', height: '40px', width: '88.61px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center'}}>
+              <Link type="button" onClick={() => navigate(-1)} style={{ textShadow: '0.2px 0 currentColor', backgroundColor: '#fff', color: '#479f45', border: '1px solid #479f45', padding: '9px 16px', borderRadius: '4px', textDecoration: 'none', fontWeight: '600', fontSize: '14px', height: '40px', width: '88.61px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center'}}>
                 Kembali
               </Link>
-              <button type="submit" style={{ backgroundColor: '#479f45', color: 'white', border: 'none', padding: '0px 16px', borderRadius: '4px', fontWeight: '600', cursor: 'pointer', marginLeft: '24px', fontSize: '14px', height: '40px', width: '84.3px'}}>
+              <button type="submit" style={{ textShadow: '0.2px 0 currentColor', backgroundColor: '#479f45', color: 'white', border: 'none', padding: '0px 16px', borderRadius: '4px', fontWeight: '600', cursor: 'pointer', marginLeft: '24px', fontSize: '14px', height: '40px', width: '84.3px'}}>
                 Simpan
               </button>
             </div>

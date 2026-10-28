@@ -663,7 +663,7 @@ const EditPenyewa = () => {
                 style={{
                   display: 'block',
                   marginBottom: '8px',
-                  fontWeight: '500',
+                  fontWeight: '600',
                   textShadow: '0.2px 0 currentColor',
                   fontSize: '14px',
                   color: '#4f575e',

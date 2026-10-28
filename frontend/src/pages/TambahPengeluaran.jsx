@@ -227,7 +227,7 @@ const TambahPengeluaran = () => {
             </div>
 
             <div style={{ marginBottom: fieldErrors.Nominal ? '6px' : '24px' }}>
-              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', textShadow: '0.2px 0 currentColor', fontSize: '14px', color: '#4f575e', height: '21px' }}>Nominal <span style={{ color: 'red' }}>*</span></label>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', textShadow: '0.2px 0 currentColor', fontSize: '14px', color: '#4f575e', height: '21px' }}>Nominal <span style={{ color: 'red' }}>*</span></label>
               <input type="number" name="Nominal" value={formData.Nominal} onChange={handleChange} onFocus={(e) => {
                 e.target.style.border = '1px solid #053183';
                 e.target.style.outline = 'none';
@@ -242,7 +242,7 @@ const TambahPengeluaran = () => {
             </div>
 
             <div style={{ marginBottom: fieldErrors.Deskripsi ? '6px' : '24px' }}>
-              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', textShadow: '0.2px 0 currentColor', fontSize: '14px', color: '#4f575e', height: '21px' }}>Deskripsi <span style={{ color: 'red' }}>*</span></label>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', textShadow: '0.2px 0 currentColor', fontSize: '14px', color: '#4f575e', height: '21px' }}>Deskripsi <span style={{ color: 'red' }}>*</span></label>
               <input type="text" name="Deskripsi" value={formData.Deskripsi} onChange={handleChange} onFocus={(e) => {
                 e.target.style.border = '1px solid #053183';
                 e.target.style.outline = 'none';
@@ -297,10 +297,10 @@ const TambahPengeluaran = () => {
             </div>
 
             <div style={{ display: 'flex'}}>
-              <Link type="button" onClick={() => navigate(-1)} style={{ backgroundColor: '#fff', color: '#479f45', border: '1px solid #479f45', padding: '9px 16px', borderRadius: '4px', textDecoration: 'none', fontWeight: '600', fontSize: '14px', height: '40px', width: '88.61px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center'}}>
+              <Link type="button" onClick={() => navigate(-1)} style={{ textShadow: '0.2px 0 currentColor', backgroundColor: '#fff', color: '#479f45', border: '1px solid #479f45', padding: '9px 16px', borderRadius: '4px', textDecoration: 'none', fontWeight: '600', fontSize: '14px', height: '40px', width: '88.61px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center'}}>
                 Kembali
               </Link>
-              <button type="submit" style={{ backgroundColor: '#479f45', color: 'white', border: 'none', padding: '0px 16px', borderRadius: '4px', fontWeight: '600', cursor: 'pointer', marginLeft: '24px', fontSize: '14px', height: '40px', width: '84.3px'}}>
+              <button type="submit" style={{ textShadow: '0.2px 0 currentColor', backgroundColor: '#479f45', color: 'white', border: 'none', padding: '0px 16px', borderRadius: '4px', fontWeight: '600', cursor: 'pointer', marginLeft: '24px', fontSize: '14px', height: '40px', width: '84.3px'}}>
                 Simpan
               </button>
             </div>          

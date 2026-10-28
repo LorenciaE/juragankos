@@ -228,7 +228,7 @@ const Pengeluaran = () => {
       {/* Baris 2: Dropdown Filter Full Width */}
       <div style={{ marginBottom: '20px', position: 'relative' }}>
         <select className="filter-select" style={{ padding: '0px 16px', borderRadius: '4px', flex: 1, fontWeight: '600', color: '#272b30', width: '1200px', height: '40px', fontSize: '14px', appearance: 'none', WebkitAppearance: 'none', MozAppearance: 'none' }} value={filterkategori} onChange={(e) => setFilterkategori(e.target.value)}>
-          <option value="">Pilih kategori</option>
+          <option value="">Pilih Kategori</option>
           {uniquekategori.map(k => <option key={k} value={k}>{k}</option>)}
         </select>
         <img src="/down.png" alt="" style={{ position: 'absolute', right: '14px', top: '55%', transform: 'translateY(-50%)', width: '11px', height: '11px', pointerEvents: 'none' }} />

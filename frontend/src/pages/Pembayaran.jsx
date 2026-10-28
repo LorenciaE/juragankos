@@ -528,7 +528,7 @@ const Pembayaran = () => {
                   fontWeight: '600'
                 }}
               >
-                harga:
+                Harga:
               </span>
 
               <span

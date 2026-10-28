@@ -196,7 +196,6 @@ const TambahKamar = () => {
           fontSize: '32px',
           color: '#111',
           fontWeight: '600',
-          textShadow: '0.5px 0 currentColor',
           marginBottom: '32px',
           marginTop: '-2px'
         }}
@@ -225,7 +224,6 @@ const TambahKamar = () => {
                   display: 'block',
                   marginBottom: '8px',
                   fontWeight: '600',
-                  textShadow: '0.2px 0 currentColor',
                   fontSize: '14px',
                   color: '#4f575e'
                 }}
@@ -274,7 +272,6 @@ const TambahKamar = () => {
                   display: 'block',
                   marginBottom: '8px',
                   fontWeight: '600',
-                  textShadow: '0.2px 0 currentColor',
                   fontSize: '14px',
                   color: '#4f575e'
                 }}
@@ -323,7 +320,6 @@ const TambahKamar = () => {
                   display: 'block',
                   marginBottom: '8px',
                   fontWeight: '600',
-                  textShadow: '0.2px 0 currentColor',
                   fontSize: '14px',
                   color: '#4f575e'
                 }}
@@ -377,7 +373,6 @@ const TambahKamar = () => {
                   display: 'block',
                   marginBottom: '9px',
                   fontWeight: '600',
-                  textShadow: '0.2px 0 currentColor',
                   fontSize: '14px',
                   color: '#4f575e'
                 }}
@@ -452,7 +447,6 @@ const TambahKamar = () => {
                   display: 'block',
                   marginBottom: '8px',
                   fontWeight: '600',
-                  textShadow: '0.2px 0 currentColor',
                   fontSize: '14px',
                   color: '#4f575e'
                 }}

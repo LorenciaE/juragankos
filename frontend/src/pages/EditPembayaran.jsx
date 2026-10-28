@@ -584,7 +584,7 @@ const EditPembayaran = () => {
                   height: '40px',
                   boxSizing: 'border-box',
                   textAlign: 'center',
-                  width: '88.61px'
+                  width: '88.61px', textShadow: '0.2px 0 currentColor'
                 }}
               >
                 Kembali
@@ -603,7 +603,7 @@ const EditPembayaran = () => {
                   marginLeft: '24px',
                   fontSize: '14px',
                   height: '40px',
-                  width: '85px'
+                  width: '85px', textShadow: '0.2px 0 currentColor'
                 }}
               >
                 Simpan

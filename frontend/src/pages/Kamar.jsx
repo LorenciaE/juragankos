@@ -215,7 +215,7 @@ const Kamar = () => {
         {/* Filter lantai */}
         <div style={{ position: 'relative', flex: 1 }}>
           <select className="filter-select" style={{ ...filterInputStyle, width: '100%', fontWeight: '600', padding: '0px 16px', appearance: 'none', WebkitAppearance: 'none', MozAppearance: 'none' }} value={filterlantai} onChange={(e) => setFilterlantai(e.target.value)}>
-            <option value="">Pilih lantai</option>
+            <option value="">Pilih Lantai</option>
             {uniquelantai.map((l) => (<option key={l} value={l}>{l}</option>))}
           </select>
 

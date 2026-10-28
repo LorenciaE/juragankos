@@ -652,7 +652,7 @@ const handleSubmit = async (e) => {
                   height: '40px',
                   boxSizing: 'border-box',
                   textAlign: 'center',
-                  width: '88.61px'
+                  width: '88.61px', textShadow: '0.2px 0 currentColor'
                 }}
               >
                 Kembali
@@ -671,7 +671,7 @@ const handleSubmit = async (e) => {
                   fontSize: '14px',
                   height: '40px',
                   width: '85px',
-                  marginLeft: '24px'
+                  marginLeft: '24px', textShadow: '0.2px 0 currentColor'
                 }}
               >
                 Simpan
