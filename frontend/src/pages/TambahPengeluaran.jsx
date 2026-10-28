@@ -72,7 +72,7 @@ const TambahPengeluaran = () => {
 
     try {
       await createExpense(payload);
-      setSuccessMessage('Data Berhasil Ditambahkan');
+      setSuccessMessage('Data Berhasil Ditambahkan / Diedit');
       setTimeout(() => {
         navigate('/pengeluaran'); 
       }, 1500);

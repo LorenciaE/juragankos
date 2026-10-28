@@ -75,7 +75,6 @@ const EditPembayaran = () => {
         );
       } catch (err) {
         console.error('Gagal mengambil data pembayaran:', err);
-        console.error('Detail error:', err.response?.data);
 
         setErrorMessage(
           err.response?.data?.message ||
@@ -159,7 +158,7 @@ const EditPembayaran = () => {
 
       await updatePayment(paymentId, dataToSubmit);
 
-      setSuccessMessage('Data pembayaran berhasil diperbarui.');
+      setSuccessMessage('Data Berhasil Ditambahkan / Diedit');
 
       setTimeout(() => {
         navigate(`/kamar/${id}/pembayaran`);

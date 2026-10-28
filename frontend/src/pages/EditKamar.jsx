@@ -139,7 +139,7 @@ const handleSubmit = async (e) => {
 
     await updateRoom(id, roomData);
 
-    setSuccessMessage('Data kamar berhasil diperbarui.');
+    setSuccessMessage('Data Berhasil Ditambahkan / Diedit');
 
     setTimeout(() => {
       navigate('/kamar');

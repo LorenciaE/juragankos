@@ -74,7 +74,7 @@ const TambahKamar = () => {
 
       await createRoom(payload);
 
-      setSuccessMessage('Data Berhasil Ditambahkan');
+      setSuccessMessage('Data Berhasil Ditambahkan / Diedit');
 
       setTimeout(() => {
         navigate('/kamar');

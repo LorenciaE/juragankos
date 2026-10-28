@@ -101,6 +101,27 @@ const EditPenyewa = () => {
     };
   }, [id]);
 
+      // Fungsi untuk menyamarkan digit tengah nomor HP
+  const maskPhoneNumber = (phone) => {
+    // Menghapus semua karakter non-angka
+    const cleanPhone = phone.replace(/\D/g, '');
+    if (cleanPhone.length <= 6) return cleanPhone;
+
+    const startLength = 4; // 4 digit pertama tetap terlihat (misal: 0812)
+    const endLength = 3;   // 3 digit terakhir tetap terlihat
+
+    if (cleanPhone.length <= startLength + endLength) {
+      return cleanPhone;
+    }
+
+    const start = cleanPhone.slice(0, startLength);
+    const end = cleanPhone.slice(-endLength);
+    const maskedLength = cleanPhone.length - (startLength + endLength);
+    const masked = '*'.repeat(maskedLength);
+
+    return `${start}${masked}${end}`;
+  };
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -172,7 +193,7 @@ const EditPenyewa = () => {
 
       await updateTenant(id, payload);
 
-      setSuccessMessage('Data Berhasil Diedit');
+      setSuccessMessage('Data Berhasil Ditambahkan / Diedit');
 
       setTimeout(() => {
         navigate('/penyewa');

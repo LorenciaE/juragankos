@@ -83,7 +83,7 @@ const TambahPembayaran = () => {
 
       await createPayment(dataToSubmit);
 
-      setSuccessMessage('Data Berhasil Ditambahkan');
+      setSuccessMessage('Data Berhasil Ditambahkan / Diedit');
 
       setTimeout(() => {
         navigate(`/kamar/${id}/pembayaran`);

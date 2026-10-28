@@ -55,8 +55,6 @@ const TambahPenyewa = () => {
     return `${start}${masked}${end}`;
   };
 
-
-
 const handleChange = (e) => {
   const { name, value } = e.target;
 
