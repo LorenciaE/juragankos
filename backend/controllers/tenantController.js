@@ -214,25 +214,6 @@ const updateTenant = async (req, res) => {
             [Kamar_ID]
         );
 
-        if (roomResult.rows.length === 0) {
-            await connection.query('ROLLBACK');
-            return res.status(400).json({
-                message: 'Kamar tidak ditemukan'
-            });
-        }
-
-        // Jangan menolak kamar yang sama hanya karena sudah terisi
-        if (
-            String(oldRoomId) !== String(Kamar_ID) &&
-            Status_Sewa === 'AKTIF' &&
-            roomResult.rows[0].status_ketersediaan === 'TERISI'
-        ) {
-            await connection.query('ROLLBACK');
-            return res.status(400).json({
-                message: 'Kamar tujuan sudah terisi'
-            });
-        }
-
         await connection.query(
             `UPDATE defaultdb.penyewa
              SET nama_lengkap = $1,
