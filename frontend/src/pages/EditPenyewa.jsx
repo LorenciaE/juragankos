@@ -608,8 +608,7 @@ const payload = {
                 </small>
               )}
             </div>
-
-
+ 
             {/* STATUS SEWA */}
             <div style={{ marginBottom: fieldErrors.Status_Sewa ? '4px' : '24px' }}>
               <label
@@ -626,45 +625,67 @@ const payload = {
                 Status Sewa <span style={{ color: 'red' }}>*</span>
               </label>
 
-              <select
-                name="Status_Sewa"
-                value={formData.Status_Sewa}
-                onChange={handleChange}
-                onFocus={(e) => {
-                  e.target.style.border = '1px solid #053183';
-                  e.target.style.outline = 'none';
-                }}
-                onBlur={(e) => {
-                  e.target.style.border = fieldErrors.Status_Sewa
-                    ? '1px solid red'
-                    : '1px solid #ccc';
-                }}
-                style={{
-                  appearance: 'none',
-                  width: '100%',
-                  padding: '0px 16px',
-                  borderRadius: '4px',
-                  border: fieldErrors.Status_Sewa
-                    ? '0.8px solid red'
-                    : '0.8px solid #ced4da',
-                  height: '40px',
-                  fontSize: '14px',
-                  boxSizing: 'border-box'
-                }}
-              >
-                <option value="" style={{ color: '#272b30' }}>
-                  Pilih Status Sewa
-                </option>
-                <option value="AKTIF" style={{ color: '#272b30' }}>
-                  AKTIF
-                </option>
-                <option value="NON AKTIF" style={{ color: '#272b30' }}>
-                  NON AKTIF
-                </option>
-              </select>
+              <div style={{ position: 'relative', width: '100%' }}>
+                <select
+                  name="Status_Sewa"
+                  value={formData.Status_Sewa}
+                  onChange={handleChange}
+                  onFocus={(e) => {
+                    e.target.style.border = '1px solid #053183';
+                    e.target.style.outline = 'none';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.border = fieldErrors.Status_Sewa
+                      ? '1px solid red'
+                      : '1px solid #ced4da';
+                  }}
+                  style={{
+                    appearance: 'none',
+                    WebkitAppearance: 'none',
+                    width: '100%',
+                    padding: '0px 36px 0px 16px',
+                    borderRadius: '4px',
+                    border: fieldErrors.Status_Sewa
+                      ? '1px solid red'
+                      : '1px solid #ced4da',
+                    height: '40px',
+                    fontSize: '14px',
+                    backgroundColor: '#fff',
+                    color: '#272b30',
+                    boxSizing: 'border-box',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <option value="">Pilih Status Sewa</option>
+                  <option value="AKTIF">AKTIF</option>
+                  <option value="NON AKTIF">NON AKTIF</option>
+                </select>
+
+                <img
+                  src="/down.png"
+                  alt=""
+                  style={{
+                    position: 'absolute',
+                    right: '16px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    width: '11px',
+                    height: '11px',
+                    pointerEvents: 'none'
+                  }}
+                />
+              </div>
 
               {fieldErrors.Status_Sewa && (
-                <small style={{ display: 'block', color: 'red', fontSize: '12px', lineHeight: '16px', marginTop: '4px' }}>
+                <small
+                  style={{
+                    display: 'block',
+                    color: 'red',
+                    fontSize: '12px',
+                    lineHeight: '16px',
+                    marginTop: '4px'
+                  }}
+                >
                   This field is required.
                 </small>
               )}
