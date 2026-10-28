@@ -66,7 +66,7 @@ const EditPenyewa = () => {
             tenantData.nama_lengkap ??
             tenantData.Nama_Lengkap ??
             '',
-          No_Hp: noHpLama.replace(/\D/g, ''),
+          No_Hp: noHpLama,
           Tgl_Masuk: tglMasuk,
           Tgl_Keluar: tglKeluar,
           Kamar_ID: String(
@@ -80,7 +80,7 @@ const EditPenyewa = () => {
             ''
         });
 
-        setDisplayNoHp(maskPhoneNumber(noHpLama));
+        setDisplayNoHp(noHpLama);
       } catch (err) {
         console.error('Gagal memuat data penyewa:', err);
 
@@ -114,31 +114,31 @@ const EditPenyewa = () => {
     };
 
     const handleChange = (e) => {
-    const { name, value } = e.target;
+      const { name, value } = e.target;
 
-    if (name === 'No_Hp') {
-      const cleanedValue = value.replace(/[^\d*]/g, '');
+      if (name === 'No_Hp') {
+        const cleanedValue = value.replace(/[^\d*]/g, '');
 
-      setDisplayNoHp(cleanedValue);
+        setDisplayNoHp(cleanedValue);
 
-      setFormData((prev) => ({
+        setFormData((prev) => ({
+          ...prev,
+          No_Hp: cleanedValue
+        }));
+      } else {
+        setFormData((prev) => ({
+          ...prev,
+          [name]: value
+        }));
+      }
+
+      setFieldErrors((prev) => ({
         ...prev,
-        No_Hp: cleanedValue.replace(/\D/g, '')
+        [name]: false
       }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value
-      }));
-    }
 
-    setFieldErrors((prev) => ({
-      ...prev,
-      [name]: false
-    }));
-
-    setErrorMessage('');
-  };
+      setErrorMessage('');
+    };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
