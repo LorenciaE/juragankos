@@ -43,15 +43,17 @@ const TambahPembayaran = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setErrorMessage('');
     setSuccessMessage('');
 
-    let errors = {};
-    if (!formData.Bulan_Pembayaran) errors.Bulan_Pembayaran = true;
-    if (!formData.Tgl_Pembayaran) errors.Tgl_Pembayaran = true;
-    if (!formData.Status_Pembayaran) errors.Status_Pembayaran = true;
-    if (!formData.Metode_Pembayaran) errors.Metode_Pembayaran = true;
-    if (!formData.Nominal) errors.Nominal = true;
+    const errors = {};
+
+    Object.entries(formData).forEach(([key, value]) => {
+      if (value === null || value === undefined || String(value).trim() === '') {
+        errors[key] = true;
+      }
+    });
 
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
@@ -62,18 +64,25 @@ const TambahPembayaran = () => {
     try {
       const dataToSubmit = {
         ...formData,
-        Kamar_ID: parseInt(id),
-        Sewa_ID: parseInt(activeSewaId),
-        Nominal: parseFloat(formData.Nominal)
+        Kamar_ID: Number(id),
+        Sewa_ID: Number(activeSewaId),
+        Nominal: Number(formData.Nominal)
       };
 
       await createPayment(dataToSubmit);
-      setSuccessMessage('Data Berhasil Ditambahkan / Diedit');
+
+      setSuccessMessage('Data Berhasil Ditambahkan');
+
       setTimeout(() => {
-        navigate(`/kamar/${id}/pembayaran`); 
+        navigate(`/kamar/${id}/pembayaran`);
       }, 1500);
     } catch (err) {
-      const msg = err.response?.data?.message || 'Terjadi kesalahan pada server';
+      console.error('Gagal menambahkan pembayaran:', err);
+
+      const msg =
+        err.response?.data?.message ||
+        'Terjadi kesalahan pada server';
+
       setErrorMessage(msg);
     }
   };
