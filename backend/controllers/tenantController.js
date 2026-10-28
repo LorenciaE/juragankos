@@ -108,23 +108,6 @@ const createTenant = async (req, res) => {
             [Kamar_ID]
         );
 
-        if (roomResult.rows.length === 0) {
-            await connection.query('ROLLBACK');
-            return res.status(400).json({
-                message: 'Kamar tidak ditemukan'
-            });
-        }
-
-        if (
-            Status_Sewa === 'AKTIF' &&
-            roomResult.rows[0].status_ketersediaan === 'TERISI'
-        ) {
-            await connection.query('ROLLBACK');
-            return res.status(400).json({
-                message: 'Kamar sudah terisi'
-            });
-        }
-
         const tenantResult = await connection.query(
             `INSERT INTO defaultdb.penyewa
                 (nama_lengkap, no_hp, kamar_id)
