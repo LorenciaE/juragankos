@@ -258,21 +258,40 @@ const TambahPengeluaran = () => {
 
             <div style={{ marginBottom: '24px' }}>
               <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px', color: '#4f575e', height: '21px' }}>No Kamar</label>
-              <select 
-                name="Kamar_ID" 
-                value={formData.Kamar_ID} 
-                onChange={handleChange} 
+              <select
+                name="Kamar_ID"
+                value={formData.Kamar_ID}
+                onChange={handleChange}
                 onFocus={(e) => {
                   e.target.style.border = '1px solid #053183';
                   e.target.style.outline = 'none';
                 }}
-                onBlur={(e) => e.target.style.border = '0.8px solid #ced4da'} 
-                style={{ appearance: 'none', width: '100%', padding: '0px 16px', borderRadius: '4px', border: '0.8px solid #ced4da', height: '40px', color: '#272b30', fontSize: '14px'}}
+                onBlur={(e) => {
+                  e.target.style.border = '0.8px solid #ced4da';
+                }}
+                style={{
+                  appearance: 'none',
+                  width: '100%',
+                  padding: '0px 16px',
+                  borderRadius: '4px',
+                  border: '0.8px solid #ced4da',
+                  height: '40px',
+                  color: '#272b30',
+                  fontSize: '14px'
+                }}
               >
-                <option value="" style={{ color: '#272b30' }}>Pilih No Kamar</option>
-                {rooms.map(room => (
-                  <option key={room.Kamar_ID} value={room.Kamar_ID}>{room.No_Kamar}</option>
-                ))}
+                <option value="">Pilih No Kamar</option>
+
+                {rooms.map((room) => {
+                  const roomId = room.kamar_id ?? room.Kamar_ID;
+                  const roomNumber = room.no_kamar ?? room.No_Kamar;
+
+                  return (
+                    <option key={roomId} value={roomId}>
+                      {roomNumber}
+                    </option>
+                  );
+                })}
               </select>
               <img src="/down.png" alt="" style={{ position: 'absolute', right: '648px', top: '84.5%', transform: 'translateY(-50%)', width: '11px', height: '11px', pointerEvents: 'none' }}/>
             </div>
