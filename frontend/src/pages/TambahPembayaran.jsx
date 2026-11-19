@@ -5,15 +5,8 @@ import { createPayment, getTenants } from '../services/api';
 const TambahPembayaran = () => {
   const navigate = useNavigate();
   const { id } = useParams(); // ID Kamar dari URL
-  
-  const [formData, setFormData] = useState({
-    Bulan_Pembayaran: '',
-    Tgl_Pembayaran: '',
-    Status_Pembayaran: '',
-    Metode_Pembayaran: '',
-    Nominal: ''
-  });
 
+  const [formData, setFormData] = useState({ Bulan_Pembayaran: '', Tgl_Pembayaran: '', Status_Pembayaran: '', Metode_Pembayaran: '', Nominal: '' });
   const [activeSewaId, setActiveSewaId] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -23,11 +16,8 @@ const TambahPembayaran = () => {
     const fetchActiveTenant = async () => {
       try {
         const tenants = await getTenants();
-
         const activeTenant = tenants.find(
-          t =>
-            Number(t.Kamar_ID ?? t.kamar_id) === Number(id) &&
-            String(t.Status_Sewa ?? t.status_sewa ?? '').toUpperCase() === 'AKTIF'
+          t => Number(t.Kamar_ID ?? t.kamar_id) === Number(id) && String(t.Status_Sewa ?? t.status_sewa ?? '').toUpperCase() === 'AKTIF'
         );
 
         if (activeTenant) {
@@ -42,10 +32,8 @@ const TambahPembayaran = () => {
         console.error('Gagal mengambil data penyewa:', err);
       }
     };
-
     fetchActiveTenant();
   }, [id]);
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -55,16 +43,12 @@ const TambahPembayaran = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setErrorMessage('');
     setSuccessMessage('');
 
     const errors = {};
-
     Object.entries(formData).forEach(([key, value]) => {
-      if (value === null || value === undefined || String(value).trim() === '') {
-        errors[key] = true;
-      }
+      if (value === null || value === undefined || String(value).trim() === '') errors[key] = true;
     });
 
     if (Object.keys(errors).length > 0) {
@@ -74,27 +58,13 @@ const TambahPembayaran = () => {
     }
 
     try {
-      const dataToSubmit = {
-        ...formData,
-        Kamar_ID: Number(id),
-        Sewa_ID: Number(activeSewaId),
-        Nominal: Number(formData.Nominal)
-      };
-
+      const dataToSubmit = { ...formData, Kamar_ID: Number(id), Sewa_ID: Number(activeSewaId), Nominal: Number(formData.Nominal) };
       await createPayment(dataToSubmit);
-
       setSuccessMessage('Data Berhasil Ditambahkan / Diedit');
-
-      setTimeout(() => {
-        navigate(`/kamar/${id}/pembayaran`);
-      }, 1500);
+      setTimeout(() => { navigate(`/kamar/${id}/pembayaran`); }, 1500);
     } catch (err) {
       console.error('Gagal menambahkan pembayaran:', err);
-
-      const msg =
-        err.response?.data?.message ||
-        'Terjadi kesalahan pada server';
-
+      const msg = err.response?.data?.message || 'Terjadi kesalahan pada server';
       setErrorMessage(msg);
     }
   };
@@ -103,205 +73,98 @@ const TambahPembayaran = () => {
     <div style={{ position: 'relative' }}>
       {/* BANNER ERROR */}
       {errorMessage && (
-        <div
-          role="alert"
-          className="feedback-message feedback-message-error feedback-message-autoclose"
-          style={{
-            position: 'fixed',
-            top: '24px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: '600px',
-            height: '59px',
-            padding: '16px',
-            backgroundColor: '#dc2020',
-            color: '#ffffff',
-            borderRadius: '4px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            boxSizing: 'border-box',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-            zIndex: 10000,
-            fontSize: '16px',
-            fontWeight: '600'
-          }}
-        >
-          <div
-            style={{
-              width: '20px',
-              height: '20px',
-              borderRadius: '50%',
-              backgroundColor: 'rgba(255, 255, 255, 0.3)',
-              color: '#ffffff',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '12px',
-              fontWeight: '600',
-              flexShrink: 0
-            }}
-          >
-            ✕
-          </div>
+        <div role="alert" className="feedback-message feedback-message-error feedback-message-autoclose" style={{ position: 'fixed', top: '24px', left: '50%', transform: 'translateX(-50%)', width: '600px', height: '59px', padding: '16px', backgroundColor: '#dc2020', color: '#ffffff', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '12px', boxSizing: 'border-box', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', zIndex: 10000, fontSize: '16px', fontWeight: '600' }}>
+          <div style={{ width: '20px', height: '20px', borderRadius: '50%', backgroundColor: 'rgba(255, 255, 255, 0.3)', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '600', flexShrink: 0 }}>✕</div>
           <span>{errorMessage}</span>
         </div>
       )}
 
       {/* BANNER SUCCESS */}
       {successMessage && (
-        <div
-          role="alert"
-          className="feedback-message feedback-message-success feedback-message-autoclose"
-          style={{
-            position: 'fixed',
-            top: '24px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: '600px',
-            height: '59px',
-            padding: '16px',
-            backgroundColor: '#29823B',
-            color: '#ffffff',
-            borderRadius: '4px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            boxSizing: 'border-box',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-            zIndex: 10000,
-            fontSize: '16px',
-            fontWeight: '600'
-          }}
-        >
-          <div
-            style={{
-              width: '20px',
-              height: '20px',
-              borderRadius: '50%',
-              backgroundColor: 'rgba(255, 255, 255, 0.3)',
-              color: '#ffffff',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '12px',
-              fontWeight: '600',
-              flexShrink: 0
-            }}
-          >
-            ✓
-          </div>
+        <div role="alert" className="feedback-message feedback-message-success feedback-message-autoclose" style={{ position: 'fixed', top: '24px', left: '50%', transform: 'translateX(-50%)', width: '600px', height: '59px', padding: '16px', backgroundColor: '#29823B', color: '#ffffff', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '12px', boxSizing: 'border-box', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', zIndex: 10000, fontSize: '16px', fontWeight: '600' }}>
+          <div style={{ width: '20px', height: '20px', borderRadius: '50%', backgroundColor: 'rgba(255, 255, 255, 0.3)', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '600', flexShrink: 0 }}>✓</div>
           <span>{successMessage}</span>
         </div>
       )}
 
-      <h2 style={{ fontSize: '32px', color: '#111', fontWeight: '600', marginBottom: '32px', margin: '-2px'}}>Tambah Pembayaran</h2>
-      
+      <h2 style={{ fontSize: '32px', color: '#111', fontWeight: '600', marginBottom: '32px', margin: '-2px' }}>Tambah Pembayaran</h2>
+
       <div style={{ display: 'flex', gap: '20px', marginTop: '32px' }}>
-        <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '4px', border: '0.8px solid #d9dee3', width: '592px', height: '554px'}}>
+        <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '4px', border: '0.8px solid #d9dee3', width: '592px', height: '554px' }}>
           <form onSubmit={handleSubmit}>
-            
             <div style={{ marginBottom: fieldErrors.Bulan_Pembayaran ? '6px' : '26px' }}>
               <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px', color: '#4f575e' }}>Bulan Pembayaran <span style={{ color: 'red' }}>*</span></label>
-              <input type="text" name="Bulan_Pembayaran" placeholder="MM/YYYY" value={formData.Bulan_Pembayaran} onChange={handleChange} onFocus={(e) => {
-                e.target.style.border = '1px solid #053183';
-                e.target.style.outline = 'none';
-              }}
-              onBlur={(e) => e.target.style.border = fieldErrors.Bulan_Pembayaran 
-              ? '0.8px solid red' : '0.8px solid #ced4da'} style={{ width: '100%', padding: '0px 16px', borderRadius: '4px', border: fieldErrors.Bulan_Pembayaran ? '0.8px solid red' : '0.8px solid #ced4da', height: '40px', fontSize: '14px' }} />
-              {fieldErrors.Bulan_Pembayaran && (
-                <small style={{ display:'block', color:'red', fontSize:'12px', lineHeight:'16px', marginTop:'4px' }}>
-                  This field is required.
-                </small>
-              )}
+              <input
+                type="text" name="Bulan_Pembayaran" placeholder="MM/YYYY" value={formData.Bulan_Pembayaran} onChange={handleChange}
+                onFocus={(e) => { e.target.style.border = '1px solid #053183'; e.target.style.outline = 'none'; }}
+                onBlur={(e) => e.target.style.border = fieldErrors.Bulan_Pembayaran ? '0.8px solid red' : '0.8px solid #ced4da'}
+                style={{ width: '100%', padding: '0px 16px', borderRadius: '4px', border: fieldErrors.Bulan_Pembayaran ? '0.8px solid red' : '0.8px solid #ced4da', height: '40px', fontSize: '14px' }}
+              />
+              {fieldErrors.Bulan_Pembayaran && <small style={{ display: 'block', color: 'red', fontSize: '12px', lineHeight: '16px', marginTop: '4px' }}>This field is required.</small>}
             </div>
 
             <div style={{ marginBottom: fieldErrors.Tgl_Pembayaran ? '6px' : '26px' }}>
               <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px', color: '#4f575e' }}>Tanggal Pembayaran <span style={{ color: 'red' }}>*</span></label>
-              <input type="date" name="Tgl_Pembayaran" value={formData.Tgl_Pembayaran} onChange={handleChange} onFocus={(e) => {
-                e.target.style.border = '1px solid #053183';
-                e.target.style.outline = 'none';
-              }}
-              onBlur={(e) => e.target.style.border = fieldErrors.Tgl_Pembayaran 
-              ? '0.8px solid red' : '0.8px solid #ced4da'} style={{ width: '100%', padding: '0px 16px', borderRadius: '4px', border: fieldErrors.Tgl_Pembayaran ? '0.8px solid red' : '0.8px solid #ced4da', height: '40px', fontSize: '14px' }} />
-              {fieldErrors.Tgl_Pembayaran && (
-                <small style={{ display:'block', color:'red', fontSize:'12px', lineHeight:'16px', marginTop:'4px' }}>
-                  This field is required.
-                </small>
-              )}
+              <input
+                type="date" name="Tgl_Pembayaran" value={formData.Tgl_Pembayaran} onChange={handleChange}
+                onFocus={(e) => { e.target.style.border = '1px solid #053183'; e.target.style.outline = 'none'; }}
+                onBlur={(e) => e.target.style.border = fieldErrors.Tgl_Pembayaran ? '0.8px solid red' : '0.8px solid #ced4da'}
+                style={{ width: '100%', padding: '0px 16px', borderRadius: '4px', border: fieldErrors.Tgl_Pembayaran ? '0.8px solid red' : '0.8px solid #ced4da', height: '40px', fontSize: '14px' }}
+              />
+              {fieldErrors.Tgl_Pembayaran && <small style={{ display: 'block', color: 'red', fontSize: '12px', lineHeight: '16px', marginTop: '4px' }}>This field is required.</small>}
             </div>
 
             <div style={{ marginBottom: fieldErrors.Status_Pembayaran ? '6px' : '26px' }}>
               <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px', color: '#4f575e' }}>Status Pembayaran <span style={{ color: 'red' }}>*</span></label>
-              <select name="Status_Pembayaran" value={formData.Status_Pembayaran} onChange={handleChange} onFocus={(e) => {
-                  e.target.style.border = '1px solid #053183';
-                  e.target.style.outline = 'none';
-                }}
-                onBlur={(e) => e.target.style.border = fieldErrors.Status_Pembayaran 
-                ? '0.8px solid red' : '0.8px solid #ced4da'} style={{ appearance: 'none', width: '100%', padding: '0px 16px', borderRadius: '4px', border: fieldErrors.Status_Pembayaran ? '0.8px solid red' : '0.8px solid #ced4da', height: '40px', fontSize: '14px'}}>
-                <option value="" style={{ color: '#272b30'}}>Pilih Status Pembayaran</option>
-                <option value="LUNAS" style={{ color: '#272b30'}}>LUNAS</option>
-                <option value="BELUM LUNAS" style={{ color: '#272b30'}}>BELUM LUNAS</option>
+              <select
+                name="Status_Pembayaran" value={formData.Status_Pembayaran} onChange={handleChange}
+                onFocus={(e) => { e.target.style.border = '1px solid #053183'; e.target.style.outline = 'none'; }}
+                onBlur={(e) => e.target.style.border = fieldErrors.Status_Pembayaran ? '0.8px solid red' : '0.8px solid #ced4da'}
+                style={{ appearance: 'none', width: '100%', padding: '0px 16px', borderRadius: '4px', border: fieldErrors.Status_Pembayaran ? '0.8px solid red' : '0.8px solid #ced4da', height: '40px', fontSize: '14px' }}
+              >
+                <option value="" style={{ color: '#272b30' }}>Pilih Status Pembayaran</option>
+                <option value="LUNAS" style={{ color: '#272b30' }}>LUNAS</option>
+                <option value="BELUM LUNAS" style={{ color: '#272b30' }}>BELUM LUNAS</option>
               </select>
-              <img src="/down.png" alt="" style={{ position: 'absolute', right: '648px', top: '53.25%', transform: 'translateY(-50%)', width: '11px', height: '11px', pointerEvents: 'none' }}/>
-              {fieldErrors.Status_Pembayaran && (
-                <small style={{ display:'block', color:'red', fontSize:'12px', lineHeight:'16px', marginTop:'4px' }}>
-                  This field is required.
-                </small>
-              )}
+              <img src="/down.png" alt="" style={{ position: 'absolute', right: '648px', top: '53.25%', transform: 'translateY(-50%)', width: '11px', height: '11px', pointerEvents: 'none' }} />
+              {fieldErrors.Status_Pembayaran && <small style={{ display: 'block', color: 'red', fontSize: '12px', lineHeight: '16px', marginTop: '4px' }}>This field is required.</small>}
             </div>
 
             <div style={{ marginBottom: fieldErrors.Metode_Pembayaran ? '6px' : '26px' }}>
               <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px', color: '#4f575e' }}>Metode Pembayaran <span style={{ color: 'red' }}>*</span></label>
-              <select name="Metode_Pembayaran" value={formData.Metode_Pembayaran} onChange={handleChange} onFocus={(e) => {
-                  e.target.style.border = '1px solid #053183';
-                  e.target.style.outline = 'none';
-                }}
-                onBlur={(e) => e.target.style.border = fieldErrors.Metode_Pembayaran 
-                ? '0.8px solid red' : '0.8px solid #ced4da'} style={{ appearance: 'none', width: '100%', padding: '0px 16px', borderRadius: '4px', border: fieldErrors.Metode_Pembayaran ? '0.8px solid red' : '0.8px solid #ced4da', height: '40px', fontSize: '14px'}}>
-                <option value="" style={{ color: '#272b30'}}>Pilih Metode Pembayaran</option>
-                <option value="TRANSFER" style={{ color: '#272b30'}}>TRANSFER</option>
-                <option value="TUNAI" style={{ color: '#272b30'}}>TUNAI</option>
+              <select
+                name="Metode_Pembayaran" value={formData.Metode_Pembayaran} onChange={handleChange}
+                onFocus={(e) => { e.target.style.border = '1px solid #053183'; e.target.style.outline = 'none'; }}
+                onBlur={(e) => e.target.style.border = fieldErrors.Metode_Pembayaran ? '0.8px solid red' : '0.8px solid #ced4da'}
+                style={{ appearance: 'none', width: '100%', padding: '0px 16px', borderRadius: '4px', border: fieldErrors.Metode_Pembayaran ? '0.8px solid red' : '0.8px solid #ced4da', height: '40px', fontSize: '14px' }}
+              >
+                <option value="" style={{ color: '#272b30' }}>Pilih Metode Pembayaran</option>
+                <option value="TRANSFER" style={{ color: '#272b30' }}>TRANSFER</option>
+                <option value="TUNAI" style={{ color: '#272b30' }}>TUNAI</option>
               </select>
-              <img src="/down.png" alt="" style={{ position: 'absolute', right: '648px', top: '68%', transform: 'translateY(-50%)', width: '11px', height: '11px', pointerEvents: 'none' }}/>
-              {fieldErrors.Metode_Pembayaran && (
-                <small style={{ display:'block', color:'red', fontSize:'12px', lineHeight:'16px', marginTop:'4px' }}>
-                  This field is required.
-                </small>
-              )}
+              <img src="/down.png" alt="" style={{ position: 'absolute', right: '648px', top: '68%', transform: 'translateY(-50%)', width: '11px', height: '11px', pointerEvents: 'none' }} />
+              {fieldErrors.Metode_Pembayaran && <small style={{ display: 'block', color: 'red', fontSize: '12px', lineHeight: '16px', marginTop: '4px' }}>This field is required.</small>}
             </div>
 
             <div style={{ marginBottom: fieldErrors.Nominal ? '6px' : '24px' }}>
               <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px', color: '#4f575e' }}>Nominal <span style={{ color: 'red' }}>*</span></label>
               <input type="number" name="Nominal" value={formData.Nominal} onChange={handleChange} style={{ width: '100%', padding: '0px 16px', borderRadius: '4px', border: fieldErrors.Nominal ? '0.8px solid red' : '0.8px solid #ced4da', height: '40px', fontSize: '14px' }} />
-              {fieldErrors.Nominal && (
-                <small style={{ display:'block', color:'red', fontSize:'12px', lineHeight:'16px', marginTop:'4px' }}>
-                  This field is required.
-                </small>
-              )}
+              {fieldErrors.Nominal && <small style={{ display: 'block', color: 'red', fontSize: '12px', lineHeight: '16px', marginTop: '4px' }}>This field is required.</small>}
             </div>
 
-            <div style={{ display: 'flex'}}>
-              <Link type="button" onClick={() => navigate(-1)} style={{ textShadow: '0.2px 0 currentColor', backgroundColor: '#fff', color: '#479f45', border: '1px solid #479f45', padding: '9px 16px', borderRadius: '4px', textDecoration: 'none', fontWeight: '600', fontSize: '14px', height: '40px', width: '88.61px'}}>
+            <div style={{ display: 'flex' }}>
+              <Link type="button" onClick={() => navigate(-1)} style={{ textShadow: '0.2px 0 currentColor', backgroundColor: '#fff', color: '#479f45', border: '1px solid #479f45', padding: '9px 16px', borderRadius: '4px', textDecoration: 'none', fontWeight: '600', fontSize: '14px', height: '40px', width: '88.61px' }}>
                 Kembali
               </Link>
-              <button type="submit" style={{ textShadow: '0.2px 0 currentColor', backgroundColor: '#479f45', color: 'white', border: 'none', padding: '0px 16px', borderRadius: '4px', fontWeight: '600', cursor: 'pointer', marginLeft: '16px', fontSize: '14px', height: '40px', width: '84.3px', margin: '0px 0px 0px 24px'}}>
+              <button type="submit" style={{ textShadow: '0.2px 0 currentColor', backgroundColor: '#479f45', color: 'white', border: 'none', padding: '0px 16px', borderRadius: '4px', fontWeight: '600', cursor: 'pointer', marginLeft: '16px', fontSize: '14px', height: '40px', width: '84.3px', margin: '0px 0px 0px 24px' }}>
                 Simpan
               </button>
             </div>
           </form>
         </div>
+
         <div>
-          <img 
-            src="/Request.png" 
-            alt="Ilustrasi"
-            style={{
-              width: '592px',
-              height: '261.44px',
-              objectFit: 'fill',
-              margin: '-2px'
-            }}
-          />
+          <img src="/Request.png" alt="Ilustrasi" style={{ width: '592px', height: '261.44px', objectFit: 'fill', margin: '-2px' }} />
         </div>
       </div>
     </div>

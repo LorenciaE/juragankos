@@ -27,14 +27,10 @@ const Kamar = () => {
   // Helper menampilkan banner
   const showNotification = (message, type = 'success') => {
     setToast({ show: true, message, type });
-    setTimeout(() => {
-      setToast({ show: false, message: '', type: 'success' });
-    }, 3000);
+    setTimeout(() => { setToast({ show: false, message: '', type: 'success' }); }, 3000);
   };
 
-  useEffect(() => {
-    fetchRooms();
-  }, []);
+  useEffect(() => { fetchRooms(); }, []);
 
   const fetchRooms = async () => {
     try {
@@ -48,15 +44,8 @@ const Kamar = () => {
     }
   };
 
-  const openDeleteModal = (id) => {
-    setSelectedRoomId(id);
-    setShowDeleteModal(true);
-  };
-
-  const closeDeleteModal = () => {
-    setShowDeleteModal(false);
-    setSelectedRoomId(null);
-  };
+  const openDeleteModal = (id) => { setSelectedRoomId(id); setShowDeleteModal(true); };
+  const closeDeleteModal = () => { setShowDeleteModal(false); setSelectedRoomId(null); };
 
   // Eksekusi Hapus dengan penanganan pesan khusus
   const handleConfirmDelete = async () => {
@@ -84,11 +73,7 @@ const Kamar = () => {
   const processedRooms = useMemo(() => {
     let sortableRooms = [...rooms];
 
-    if (searchTerm) {
-      sortableRooms = sortableRooms.filter(r => 
-        r.no_kamar.toString().toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
+    if (searchTerm) sortableRooms = sortableRooms.filter(r => r.no_kamar.toString().toLowerCase().includes(searchTerm.toLowerCase()));
     if (filterlantai) sortableRooms = sortableRooms.filter(r => r.lantai.toString() === filterlantai);
     if (filterStatus) sortableRooms = sortableRooms.filter(r => r.status_ketersediaan === filterStatus);
     if (filterTipe) sortableRooms = sortableRooms.filter(r => r.tipe_kamar === filterTipe);
@@ -109,9 +94,7 @@ const Kamar = () => {
   const endIndex = startIndex + itemsPerPage;
   const currentRooms = processedRooms.slice(startIndex, endIndex);
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, filterlantai, filterStatus, filterTipe, sortConfig]);
+  useEffect(() => { setCurrentPage(1); }, [searchTerm, filterlantai, filterStatus, filterTipe, sortConfig]);
 
   const requestSort = (key) => {
     let direction = 'asc';
@@ -122,19 +105,15 @@ const Kamar = () => {
   const uniquelantai = [...new Set(rooms.map(item => item.lantai))];
 
   // Styling Variables
-  const tableHeaderStyle = { borderBottom: '1px solid #e0e0e0', fontWeight: '600', color: '#4f575e', fontSize: '14px', cursor: 'pointer', userSelect: 'none', height: '48px'};
+  const tableHeaderStyle = { borderBottom: '1px solid #e0e0e0', fontWeight: '600', color: '#4f575e', fontSize: '14px', cursor: 'pointer', userSelect: 'none', height: '48px' };
   const tableDataStyle = { padding: '8px 20px', borderBottom: '1px solid #e0e0e0', fontSize: '14px', color: '#272b30', height: '56.8px' };
   const btnStyle = { display: 'inline-flex', alignItems: 'center', color: 'white', border: 'none', padding: '0px 14px', borderRadius: '4px', cursor: 'pointer', textDecoration: 'none', fontSize: '14px', fontWeight: '600' };
   const filterInputStyle = { padding: '0px 16px 0px 40px', height: '40px', borderRadius: '4px', border: '1px solid #d9d9d9', fontSize: '14px', width: '100%', outline: 'none', color: '#272b30', backgroundColor: '#fff' };
 
   // Pemilihan warna dan ikon banner berdasarkan tipe pesan
   const getToastConfig = () => {
-    if (toast.type === 'success') {
-      return { bg: '#29823B', icon: '✓' };
-    }
-    if (toast.type === 'info') {
-      return { bg: '#0275d8', icon: 'i' };
-    }
+    if (toast.type === 'success') return { bg: '#29823B', icon: '✓' };
+    if (toast.type === 'info') return { bg: '#0275d8', icon: 'i' };
     return { bg: '#dc2020', icon: '✕' };
   };
 
@@ -142,52 +121,10 @@ const Kamar = () => {
 
   return (
     <div style={{ position: 'relative' }}>
-      
       {/* BANNER NOTIFIKASI */}
       {toast.show && (
-        <div
-          role="alert"
-          className={`feedback-message feedback-message-${toast.type} feedback-message-autoclose`}
-          style={{
-            position: 'fixed',
-            top: '24px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            height: '59px',
-            padding: '16px',
-            backgroundColor: getToastConfig().bg,
-            color: '#ffffff',
-            borderRadius: '4px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            boxSizing: 'border-box',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-            zIndex: 10000,
-            fontSize: '16px',
-            fontWeight: '600',
-            whiteSpace: 'nowrap',
-            // Jika tipe 'success', ukuran fix 600px disamakan dengan Tambah/Edit.
-            // Jika tipe lain (misal 'info'), lebarnya otomatis menyesuaikan panjang teks.
-            width: toast.type === 'success' ? '600px' : 'auto',
-            maxWidth: '90vw'
-          }}
-        >
-          <div
-            style={{
-              width: '20px',
-              height: '20px',
-              borderRadius: '50%',
-              backgroundColor: 'rgba(255, 255, 255, 0.3)',
-              color: '#ffffff',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '12px',
-              fontWeight: 'bold',
-              flexShrink: 0
-            }}
-          >
+        <div role="alert" className={`feedback-message feedback-message-${toast.type} feedback-message-autoclose`} style={{ position: 'fixed', top: '24px', left: '50%', transform: 'translateX(-50%)', height: '59px', padding: '16px', backgroundColor: getToastConfig().bg, color: '#ffffff', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '12px', boxSizing: 'border-box', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', zIndex: 10000, fontSize: '16px', fontWeight: '600', whiteSpace: 'nowrap', width: toast.type === 'success' ? '600px' : 'auto', maxWidth: '90vw' }}>
+          <div style={{ width: '20px', height: '20px', borderRadius: '50%', backgroundColor: 'rgba(255, 255, 255, 0.3)', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 'bold', flexShrink: 0 }}>
             {getToastConfig().icon}
           </div>
           <span style={{ whiteSpace: 'nowrap' }}>{toast.message}</span>
@@ -197,28 +134,28 @@ const Kamar = () => {
       {/* Baris 1: Judul, Search, dan Tombol Tambah */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', height: '40px', marginRight: '-50px' }}>
         <h2 style={{ fontSize: '32px', fontWeight: '600', color: '#111', display: 'flex', alignItems: 'center', gap: '10px', margin: 0 }}>
-          <Link to="/" style={{ textDecoration: 'none', color: '#111', fontSize: '32px' }}><img src="/back.png" style={{transform: 'translateY(-3px)', width:'14px', height:'18px'}} alt="Kembali" /></Link> Kamar
+          <Link to="/" style={{ textDecoration: 'none', color: '#111', fontSize: '32px' }}><img src="/back.png" style={{ transform: 'translateY(-3px)', width: '14px', height: '18px' }} alt="Kembali" /></Link> Kamar
         </h2>
-        
-        <div style={{display:'flex', alignItems:'center', height:'40px', width:'600px', gap:'12px'}}>
-          <div style={{position:'relative', height:'40px'}}>
-            <img src="/search.png" alt="Cari" style={{position:'absolute', left:'18px', top:'50%', transform:'translateY(-50%)', width:'14px', height:'14px', objectFit:'contain'}}/>
-            <input type="text" placeholder="Cari Nomor Kamar" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} style={{...filterInputStyle, width:'294.11px', height:'40px', boxSizing:'border-box', padding:'0px 12px 0px 41px', fontSize:'14px', fontWeight:'600', color:'#4f575e', border:'1px solid #d9d9d9', borderRadius:'4px', outline:'none'}}/>
+
+        <div style={{ display: 'flex', alignItems: 'center', height: '40px', width: '600px', gap: '12px' }}>
+          <div style={{ position: 'relative', height: '40px' }}>
+            <img src="/search.png" alt="Cari" style={{ position: 'absolute', left: '18px', top: '50%', transform: 'translateY(-50%)', width: '14px', height: '14px', objectFit: 'contain' }} />
+            <input type="text" placeholder="Cari Nomor Kamar" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} style={{ ...filterInputStyle, width: '294.11px', height: '40px', boxSizing: 'border-box', padding: '0px 12px 0px 41px', fontSize: '14px', fontWeight: '600', color: '#4f575e', border: '1px solid #d9d9d9', borderRadius: '4px', outline: 'none' }} />
           </div>
-          <Link to="/kamar/tambah" style={{display:'flex', alignItems:'center', justifyContent:'center', gap:'12px', backgroundColor:'#fe6f01', width:'243.13px', height:'40px', color:'#fff', textDecoration:'none', padding:'0px', borderRadius:'4px', fontWeight:'600', fontSize:'14px', boxSizing:'border-box'}}>Tambah Kamar<img src="/plus.png" alt="Tambah" style={{width:'13px', height:'13px', objectFit:'contain'}}/></Link>
+          <Link to="/kamar/tambah" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', backgroundColor: '#fe6f01', width: '243.13px', height: '40px', color: '#fff', textDecoration: 'none', padding: '0px', borderRadius: '4px', fontWeight: '600', fontSize: '14px', boxSizing: 'border-box' }}>
+            Tambah Kamar<img src="/plus.png" alt="Tambah" style={{ width: '13px', height: '13px', objectFit: 'contain' }} />
+          </Link>
         </div>
       </div>
 
       {/* Baris 2: Dropdown Filters */}
       <div style={{ display: 'flex', gap: '16px', marginBottom: '20px', height: '40px' }}>
-
         {/* Filter lantai */}
         <div style={{ position: 'relative', flex: 1 }}>
           <select className="filter-select" style={{ ...filterInputStyle, width: '100%', fontWeight: '600', padding: '0px 16px', appearance: 'none', WebkitAppearance: 'none', MozAppearance: 'none' }} value={filterlantai} onChange={(e) => setFilterlantai(e.target.value)}>
             <option value="">Pilih Lantai</option>
             {uniquelantai.map((l) => (<option key={l} value={l}>{l}</option>))}
           </select>
-
           <img src="/down.png" alt="" style={{ position: 'absolute', right: '14px', top: '55%', transform: 'translateY(-50%)', width: '11px', height: '11px', pointerEvents: 'none' }} />
         </div>
 
@@ -229,7 +166,6 @@ const Kamar = () => {
             <option value="TERISI">TERISI</option>
             <option value="KOSONG">KOSONG</option>
           </select>
-
           <img src="/down.png" alt="" style={{ position: 'absolute', right: '14px', top: '55%', transform: 'translateY(-50%)', width: '11px', height: '11px', pointerEvents: 'none' }} />
         </div>
 
@@ -240,10 +176,8 @@ const Kamar = () => {
             <option value="AC">AC</option>
             <option value="NON AC">NON AC</option>
           </select>
-
-          <img src="/down.png" alt="" style={{ position: 'absolute', right: '14px', top: '55%', transform: 'translateY(-50%)', width: '11px', height: '11px', pointerEvents: 'none' }}/>
+          <img src="/down.png" alt="" style={{ position: 'absolute', right: '14px', top: '55%', transform: 'translateY(-50%)', width: '11px', height: '11px', pointerEvents: 'none' }} />
         </div>
-
       </div>
 
       {/* Baris 3: Tabel */}
@@ -251,12 +185,12 @@ const Kamar = () => {
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
           <thead>
             <tr>
-              <th className="sortable-header" style={{...tableHeaderStyle, padding:'0px 24px', color:sortConfig.key==='no_kamar'?'#083487':'#555'}} onClick={()=>requestSort('no_kamar')}>Nomor Kamar<img src="/sort.png" style={{width:'12px', height:'12px', marginLeft:'6px'}} alt="Sort" /></th>
-              <th className="sortable-header" style={{...tableHeaderStyle, padding:'0px 24px', width:'136.19px', color:sortConfig.key==='harga'?'#083487':'#555'}} onClick={()=>requestSort('harga')}>harga<img src="/sort.png" style={{width:'12px', height:'12px', marginLeft:'6px'}} alt="Sort" /></th>
-              <th className="sortable-header" style={{...tableHeaderStyle, padding:'0px 20px', width:'115.98px', color:sortConfig.key==='lantai'?'#083487':'#555'}} onClick={()=>requestSort('lantai')}>lantai<img src="/sort.png" style={{width:'12px', height:'12px', marginLeft:'6px'}} alt="Sort" /></th>
-              <th className="sortable-header" style={{...tableHeaderStyle, padding:'0px 20px', width:'193.53px', color:sortConfig.key==='status_ketersediaan'?'#083487':'#555'}} onClick={()=>requestSort('status_ketersediaan')}>Status Ketersediaan<img src="/sort.png" style={{width:'12px', height:'12px', marginLeft:'6px'}} alt="Sort" /></th>
-              <th className="sortable-header" style={{...tableHeaderStyle, padding:'0px 20px', width:'134.82px', color:sortConfig.key==='tipe_kamar'?'#083487':'#555'}} onClick={()=>requestSort('tipe_kamar')}>Tipe Kamar<img src="/sort.png" style={{width:'12px', height:'12px', marginLeft:'6px'}} alt="Sort" /></th>
-              <th style={{...tableHeaderStyle, padding:'0px 20px', width:'456.21px', cursor:'default', textAlign:'center'}}>Action</th>
+              <th className="sortable-header" style={{ ...tableHeaderStyle, padding: '0px 24px', color: sortConfig.key === 'no_kamar' ? '#083487' : '#555' }} onClick={() => requestSort('no_kamar')}>Nomor Kamar<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
+              <th className="sortable-header" style={{ ...tableHeaderStyle, padding: '0px 24px', width: '136.19px', color: sortConfig.key === 'harga' ? '#083487' : '#555' }} onClick={() => requestSort('harga')}>harga<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
+              <th className="sortable-header" style={{ ...tableHeaderStyle, padding: '0px 20px', width: '115.98px', color: sortConfig.key === 'lantai' ? '#083487' : '#555' }} onClick={() => requestSort('lantai')}>lantai<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
+              <th className="sortable-header" style={{ ...tableHeaderStyle, padding: '0px 20px', width: '193.53px', color: sortConfig.key === 'status_ketersediaan' ? '#083487' : '#555' }} onClick={() => requestSort('status_ketersediaan')}>Status Ketersediaan<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
+              <th className="sortable-header" style={{ ...tableHeaderStyle, padding: '0px 20px', width: '134.82px', color: sortConfig.key === 'tipe_kamar' ? '#083487' : '#555' }} onClick={() => requestSort('tipe_kamar')}>Tipe Kamar<img src="/sort.png" style={{ width: '12px', height: '12px', marginLeft: '6px' }} alt="Sort" /></th>
+              <th style={{ ...tableHeaderStyle, padding: '0px 20px', width: '456.21px', cursor: 'default', textAlign: 'center' }}>Action</th>
             </tr>
           </thead>
 
@@ -271,63 +205,17 @@ const Kamar = () => {
                   <td style={tableDataStyle}>{room.tipe_kamar}</td>
 
                   <td style={tableDataStyle}>
-                    <Link
-                      to={`/kamar/detail/${room.kamar_id}`}
-                      style={{
-                        ...btnStyle,
-                        backgroundColor: '#3d91fe',
-                        height: '40px',
-                        width: '87.4px',
-                        gap: '6px'
-                      }}
-                    >
-                      Detail
-                      <img src="/view.png" style={{width:'18px', height:'14px'}} alt="Detail" />
+                    <Link to={`/kamar/detail/${room.kamar_id}`} style={{ ...btnStyle, backgroundColor: '#3d91fe', height: '40px', width: '87.4px', gap: '6px' }}>
+                      Detail <img src="/view.png" style={{ width: '18px', height: '14px' }} alt="Detail" />
                     </Link>
-
-                    <Link
-                      to={`/kamar/edit/${room.kamar_id}`}
-                      style={{
-                        ...btnStyle,
-                        backgroundColor: '#feb941',
-                        height: '40px',
-                        width: '71.58px',
-                        margin: '0px 0px 0px 10px',
-                        gap: '3px'
-                      }}
-                    >
-                      Edit
-                      <img src="/pen.png" style={{width:'14px', height:'12px'}} alt="Edit" />
+                    <Link to={`/kamar/edit/${room.kamar_id}`} style={{ ...btnStyle, backgroundColor: '#feb941', height: '40px', width: '71.58px', margin: '0px 0px 0px 10px', gap: '3px' }}>
+                      Edit <img src="/pen.png" style={{ width: '14px', height: '12px' }} alt="Edit" />
                     </Link>
-
-                    <Link
-                      to={`/kamar/${room.kamar_id}/pembayaran`}
-                      style={{
-                        ...btnStyle,
-                        backgroundColor: '#479f45',
-                        height: '40px',
-                        width:'137.15px',
-                        margin: '0px 0px 0px 10px',
-                        gap: '10px'
-                      }}
-                    >
-                      Pembayaran
-                      <img src="/card.png" style={{width:'22px', height:'18px'}} alt="Pembayaran" />
+                    <Link to={`/kamar/${room.kamar_id}/pembayaran`} style={{ ...btnStyle, backgroundColor: '#479f45', height: '40px', width: '137.15px', margin: '0px 0px 0px 10px', gap: '10px' }}>
+                      Pembayaran <img src="/card.png" style={{ width: '22px', height: '18px' }} alt="Pembayaran" />
                     </Link>
-
-                    <button
-                      onClick={() => openDeleteModal(room.kamar_id)}
-                      style={{
-                        ...btnStyle,
-                        backgroundColor: '#f00',
-                        height: '40px',
-                        width:'90.09px',
-                        margin: '0px 0px 0px 10px',
-                        gap: '5px'
-                      }}
-                    >
-                      Hapus
-                      <img src="/trash.png" style={{width:'14px', height:'14px'}} alt="Hapus" />
+                    <button onClick={() => openDeleteModal(room.kamar_id)} style={{ ...btnStyle, backgroundColor: '#f00', height: '40px', width: '90.09px', margin: '0px 0px 0px 10px', gap: '5px' }}>
+                      Hapus <img src="/trash.png" style={{ width: '14px', height: '14px' }} alt="Hapus" />
                     </button>
                   </td>
                 </tr>
@@ -339,115 +227,32 @@ const Kamar = () => {
 
       {/* Pesan jika tidak ada data */}
       {processedRooms.length === 0 && (
-        <div
-          style={{
-            marginTop: '0px',
-            fontSize: '14px',
-            color: '#111'
-          }}
-        >
-          Tidak ada data yang ditampilkan
-        </div>
+        <div style={{ marginTop: '0px', fontSize: '14px', color: '#111' }}>Tidak ada data yang ditampilkan</div>
       )}
 
       {/* Footer Info & Pagination */}
       {processedRooms.length > 0 && (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            width: '100%',
-            marginTop: '22px'
-          }}
-        >
-          <div
-            style={{
-              fontSize: '14px',
-              color: '#6a7178'
-            }}
-          >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginTop: '22px' }}>
+          <div style={{ fontSize: '14px', color: '#6a7178' }}>
             {`${startIndex + 1} to ${Math.min(endIndex, processedRooms.length)} of ${processedRooms.length} items`}
           </div>
 
           {totalPages > 1 && (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px'
-              }}
-            >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               {/* Previous */}
-              <button
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
-                style={{
-                  width: '32px',
-                  height: '32px',
-                  border: '1px solid #e0e4e8',
-                  borderRadius: '4px',
-                  backgroundColor: '#fff',
-                  color: currentPage === 1 ? '#c5cbd1' : '#4f575e',
-                  cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
-                  fontSize: '20px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-              >
+              <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1} style={{ width: '32px', height: '32px', border: '1px solid #e0e4e8', borderRadius: '4px', backgroundColor: '#fff', color: currentPage === 1 ? '#c5cbd1' : '#4f575e', cursor: currentPage === 1 ? 'not-allowed' : 'pointer', fontSize: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <span style={{ transform: 'translateY(-3px)' }}>‹</span>
               </button>
 
               {/* Nomor halaman */}
-              {Array.from(
-                { length: totalPages },
-                (_, index) => index + 1
-              ).map(page => (
-                <button
-                  key={page}
-                  onClick={() => setCurrentPage(page)}
-                  style={{
-                    width: '32px',
-                    height: '32px',
-                    border: currentPage === page
-                      ? '1px solid #083487'
-                      : '1px solid #e0e4e8',
-                    borderRadius: '4px',
-                    backgroundColor: '#fff',
-                    color: currentPage === page
-                      ? '#083487'
-                      : '#4f575e',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    fontWeight: currentPage === page ? '600' : '400',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
-                >
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map(page => (
+                <button key={page} onClick={() => setCurrentPage(page)} style={{ width: '32px', height: '32px', border: currentPage === page ? '1px solid #083487' : '1px solid #e0e4e8', borderRadius: '4px', backgroundColor: '#fff', color: currentPage === page ? '#083487' : '#4f575e', cursor: 'pointer', fontSize: '14px', fontWeight: currentPage === page ? '600' : '400', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   {page}
                 </button>
               ))}
 
               {/* Next */}
-              <button
-                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                disabled={currentPage === totalPages}
-                style={{
-                  width: '32px',
-                  height: '32px',
-                  border: '1px solid #e0e4e8',
-                  borderRadius: '4px',
-                  backgroundColor: '#fff',
-                  color: currentPage === totalPages ? '#c5cbd1' : '#4f575e',
-                  cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
-                  fontSize: '20px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-              >
+              <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages} style={{ width: '32px', height: '32px', border: '1px solid #e0e4e8', borderRadius: '4px', backgroundColor: '#fff', color: currentPage === totalPages ? '#c5cbd1' : '#4f575e', cursor: currentPage === totalPages ? 'not-allowed' : 'pointer', fontSize: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <span style={{ transform: 'translateY(-3px)' }}>›</span>
               </button>
             </div>
@@ -457,93 +262,16 @@ const Kamar = () => {
 
       {/* POP-UP MODAL KONFIRMASI HAPUS */}
       {showDeleteModal && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100vw',
-            height: '100vh',
-            backgroundColor: '#00000040',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 9999
-          }}
-        >
-          <div
-            className="popup-dialog"
-            style={{
-              backgroundColor: '#FFFFFF',
-              width: '500px',
-              height: '132px',
-              padding: '24px',
-              margin: '24px',
-              borderRadius: '4px',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
-              boxSizing: 'border-box',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              textAlign: 'center'
-            }}
-          >
-            <p
-              style={{
-                fontSize: '16px',
-                fontWeight: '600',
-                color: '#272b30',
-                margin: 0
-              }}
-            >
-              Apakah yakin ingin menghapus data ini?
-            </p>
-
-            <div
-              style={{
-                display: 'flex',
-                gap: '16px',
-                justifyContent: 'center'
-              }}
-            >
-              <button
-                onClick={closeDeleteModal}
-                style={{
-                  flex: 1,
-                  height: '40px',
-                  backgroundColor: '#fff',
-                  color: '#f00',
-                  border: '1px solid #f00',
-                  borderRadius: '4px',
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  cursor: 'pointer'
-                }}
-              >
-                Batal
-              </button>
-
-              <button
-                onClick={handleConfirmDelete}
-                style={{
-                  flex: 1,
-                  height: '40px',
-                  backgroundColor: '#f00',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '4px',
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  cursor: 'pointer'
-                }}
-              >
-                Hapus
-              </button>
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: '#00000040', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999 }}>
+          <div className="popup-dialog" style={{ backgroundColor: '#FFFFFF', width: '500px', height: '132px', padding: '24px', margin: '24px', borderRadius: '4px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', textAlign: 'center' }}>
+            <p style={{ fontSize: '16px', fontWeight: '600', color: '#272b30', margin: 0 }}>Apakah yakin ingin menghapus data ini?</p>
+            <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
+              <button onClick={closeDeleteModal} style={{ flex: 1, height: '40px', backgroundColor: '#fff', color: '#f00', border: '1px solid #f00', borderRadius: '4px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>Batal</button>
+              <button onClick={handleConfirmDelete} style={{ flex: 1, height: '40px', backgroundColor: '#f00', color: '#fff', border: 'none', borderRadius: '4px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>Hapus</button>
             </div>
           </div>
         </div>
       )}
-
     </div>
   );
 };

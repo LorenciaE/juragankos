@@ -4,15 +4,8 @@ import { createExpense, getRooms } from '../services/api';
 
 const TambahPengeluaran = () => {
   const navigate = useNavigate();
-  
-  const [formData, setFormData] = useState({
-    Tgl_Pengeluaran: '',
-    Kategori: '',
-    Nominal: '',
-    Deskripsi: '',
-    Kamar_ID: ''
-  });
 
+  const [formData, setFormData] = useState({ Tgl_Pengeluaran: '', Kategori: '', Nominal: '', Deskripsi: '', Kamar_ID: '' });
   const [rooms, setRooms] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -43,7 +36,7 @@ const TambahPengeluaran = () => {
     setSuccessMessage('');
 
     let errors = {};
-    
+
     // 1. Validasi Frontend (HANYA field wajib, Kamar_ID TIDAK dicek di sini)
     if (!formData.Tgl_Pengeluaran) errors.Tgl_Pengeluaran = true;
     if (!formData.Kategori) errors.Kategori = true;
@@ -73,250 +66,117 @@ const TambahPengeluaran = () => {
     try {
       await createExpense(payload);
       setSuccessMessage('Data Berhasil Ditambahkan / Diedit');
-      setTimeout(() => {
-        navigate('/pengeluaran'); 
-      }, 1500);
+      setTimeout(() => { navigate('/pengeluaran'); }, 1500);
     } catch (err) {
       // 4. Tangkap Error dari Backend
-      const msg = err.response?.data?.message 
-               || err.response?.data?.error 
-               || 'Terjadi kesalahan pada server. Pastikan database mengizinkan data kosong pada No Kamar.';
+      const msg = err.response?.data?.message || err.response?.data?.error || 'Terjadi kesalahan pada server. Pastikan database mengizinkan data kosong pada No Kamar.';
       setErrorMessage(msg);
     }
   };
 
   return (
     <div style={{ position: 'relative' }}>
-      
       {/* BANNER ERROR */}
       {errorMessage && (
-        <div
-          role="alert"
-          className="feedback-message feedback-message-error feedback-message-autoclose"
-          style={{
-            position: 'fixed',
-            top: '24px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: '600px',
-            height: '59px',
-            padding: '16px',
-            backgroundColor: '#dc2020',
-            color: '#ffffff',
-            borderRadius: '4px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            boxSizing: 'border-box',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-            zIndex: 10000,
-            fontSize: '16px',
-            fontWeight: '600'
-          }}
-        >
-          <div
-            style={{
-              width: '20px',
-              height: '20px',
-              borderRadius: '50%',
-              backgroundColor: 'rgba(255, 255, 255, 0.3)',
-              color: '#ffffff',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '12px',
-              fontWeight: '600',
-              flexShrink: 0
-            }}
-          >
-            ✕
-          </div>
+        <div role="alert" className="feedback-message feedback-message-error feedback-message-autoclose" style={{ position: 'fixed', top: '24px', left: '50%', transform: 'translateX(-50%)', width: '600px', height: '59px', padding: '16px', backgroundColor: '#dc2020', color: '#ffffff', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '12px', boxSizing: 'border-box', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', zIndex: 10000, fontSize: '16px', fontWeight: '600' }}>
+          <div style={{ width: '20px', height: '20px', borderRadius: '50%', backgroundColor: 'rgba(255, 255, 255, 0.3)', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '600', flexShrink: 0 }}>✕</div>
           <span>{errorMessage}</span>
         </div>
       )}
 
       {/* BANNER SUCCESS */}
       {successMessage && (
-        <div
-          role="alert"
-          className="feedback-message feedback-message-success feedback-message-autoclose"
-          style={{
-            position: 'fixed',
-            top: '24px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: '600px',
-            height: '59px',
-            padding: '16px',
-            backgroundColor: '#29823B',
-            color: '#ffffff',
-            borderRadius: '4px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            boxSizing: 'border-box',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-            zIndex: 10000,
-            fontSize: '16px',
-            fontWeight: '600'
-          }}
-        >
-          <div
-            style={{
-              width: '20px',
-              height: '20px',
-              borderRadius: '50%',
-              backgroundColor: 'rgba(255, 255, 255, 0.3)',
-              color: '#ffffff',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '12px',
-              fontWeight: '600',
-              flexShrink: 0
-            }}
-          >
-            ✓
-          </div>
+        <div role="alert" className="feedback-message feedback-message-success feedback-message-autoclose" style={{ position: 'fixed', top: '24px', left: '50%', transform: 'translateX(-50%)', width: '600px', height: '59px', padding: '16px', backgroundColor: '#29823B', color: '#ffffff', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '12px', boxSizing: 'border-box', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', zIndex: 10000, fontSize: '16px', fontWeight: '600' }}>
+          <div style={{ width: '20px', height: '20px', borderRadius: '50%', backgroundColor: 'rgba(255, 255, 255, 0.3)', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '600', flexShrink: 0 }}>✓</div>
           <span>{successMessage}</span>
         </div>
       )}
 
-      <h2 style={{ fontSize: '32px', color: '#111', fontWeight: '600', marginBottom: '32px', marginTop: '-2px'}}>Tambah Pengeluaran</h2>
-      
+      <h2 style={{ fontSize: '32px', color: '#111', fontWeight: '600', marginBottom: '32px', marginTop: '-2px' }}>Tambah Pengeluaran</h2>
+
       <div style={{ display: 'flex', gap: '20px', marginTop: '-2px' }}>
-        <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '4px', border: '0.8px solid #d9dee3', width: '592px', height: '554px'}}>
+        <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '4px', border: '0.8px solid #d9dee3', width: '592px', height: '554px' }}>
           <form onSubmit={handleSubmit}>
-            
             <div style={{ marginBottom: fieldErrors.Tgl_Pengeluaran ? '14px' : '34px' }}>
-              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px', color: '#4f575e', height: '21px'}}>Tanggal Pengeluaran <span style={{ color: 'red' }}>*</span></label>
-              <input type="date" name="Tgl_Pengeluaran" value={formData.Tgl_Pengeluaran} onChange={handleChange} 
-              onFocus={(e) => {
-                e.target.style.border = '1px solid #053183';
-                e.target.style.outline = 'none';
-              }}
-              onBlur={(e) => e.target.style.border = fieldErrors.Tgl_Pengeluaran 
-              ? '1px solid red' 
-              : '1px solid #ccc'} style={{ width: '100%', padding: '0px 16px', borderRadius: '4px', border: fieldErrors.Tgl_Pengeluaran ? '0.8px solid red' : '0.8px solid #ced4da', height: '40px', fontSize: '14px' }} />
-              {fieldErrors.Tgl_Pengeluaran && (
-                <small style={{ display:'block', color:'red', fontSize:'12px', lineHeight:'16px', marginTop:'4px' }}>
-                  This field is required.
-                </small>
-              )}
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px', color: '#4f575e', height: '21px' }}>Tanggal Pengeluaran <span style={{ color: 'red' }}>*</span></label>
+              <input
+                type="date" name="Tgl_Pengeluaran" value={formData.Tgl_Pengeluaran} onChange={handleChange}
+                onFocus={(e) => { e.target.style.border = '1px solid #053183'; e.target.style.outline = 'none'; }}
+                onBlur={(e) => e.target.style.border = fieldErrors.Tgl_Pengeluaran ? '1px solid red' : '1px solid #ccc'}
+                style={{ width: '100%', padding: '0px 16px', borderRadius: '4px', border: fieldErrors.Tgl_Pengeluaran ? '0.8px solid red' : '0.8px solid #ced4da', height: '40px', fontSize: '14px' }}
+              />
+              {fieldErrors.Tgl_Pengeluaran && <small style={{ display: 'block', color: 'red', fontSize: '12px', lineHeight: '16px', marginTop: '4px' }}>This field is required.</small>}
             </div>
 
             <div style={{ marginBottom: fieldErrors.Kategori ? '6px' : '24px' }}>
-              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px', color: '#4f575e' , height: '21px'}}>Kategori Pengeluaran <span style={{ color: 'red' }}>*</span></label>
-              <select name="Kategori" value={formData.Kategori} onChange={handleChange} onFocus={(e) => {
-                  e.target.style.border = '1px solid #053183';
-                  e.target.style.outline = 'none';
-                }}
-                onBlur={(e) => e.target.style.border = fieldErrors.Kategori 
-                ? '1px solid red' 
-                : '1px solid #ccc'} style={{ appearance: 'none', width: '100%', padding: '0px 16px', borderRadius: '4px', border: fieldErrors.Kategori ? '0.8px solid red' : '0.8px solid #ced4da', height: '40px', color: formData.Kategori ? '#272b30' : '#272b30', fontSize: '14px'}}>
-                <option value="" style={{ color: '#272b30'}}>Pilih Kategori Pengeluaran</option>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px', color: '#4f575e', height: '21px' }}>Kategori Pengeluaran <span style={{ color: 'red' }}>*</span></label>
+              <select
+                name="Kategori" value={formData.Kategori} onChange={handleChange}
+                onFocus={(e) => { e.target.style.border = '1px solid #053183'; e.target.style.outline = 'none'; }}
+                onBlur={(e) => e.target.style.border = fieldErrors.Kategori ? '1px solid red' : '1px solid #ccc'}
+                style={{ appearance: 'none', width: '100%', padding: '0px 16px', borderRadius: '4px', border: fieldErrors.Kategori ? '0.8px solid red' : '0.8px solid #ced4da', height: '40px', color: formData.Kategori ? '#272b30' : '#272b30', fontSize: '14px' }}
+              >
+                <option value="" style={{ color: '#272b30' }}>Pilih Kategori Pengeluaran</option>
                 <option value="GAJI KARYAWAN" style={{ color: '#272b30' }}>GAJI KARYAWAN</option>
                 <option value="BIAYA OPERASIONAL" style={{ color: '#272b30' }}>BIAYA OPERASIONAL</option>
               </select>
-              <img src="/down.png" alt="" style={{ position: 'absolute', right: '648px', top: '40%', transform: 'translateY(-50%)', width: '11px', height: '11px', pointerEvents: 'none' }}/>
-              {fieldErrors.Kategori && (
-                <small style={{ display:'block', color:'red', fontSize:'12px', lineHeight:'16px', marginTop:'4px' }}>
-                  This field is required.
-                </small>
-              )}
+              <img src="/down.png" alt="" style={{ position: 'absolute', right: '648px', top: '40%', transform: 'translateY(-50%)', width: '11px', height: '11px', pointerEvents: 'none' }} />
+              {fieldErrors.Kategori && <small style={{ display: 'block', color: 'red', fontSize: '12px', lineHeight: '16px', marginTop: '4px' }}>This field is required.</small>}
             </div>
 
             <div style={{ marginBottom: fieldErrors.Nominal ? '6px' : '24px' }}>
               <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', textShadow: '0.2px 0 currentColor', fontSize: '14px', color: '#4f575e', height: '21px' }}>Nominal <span style={{ color: 'red' }}>*</span></label>
-              <input type="number" name="Nominal" value={formData.Nominal} onChange={handleChange} onFocus={(e) => {
-                e.target.style.border = '1px solid #053183';
-                e.target.style.outline = 'none';
-              }}
-              onBlur={(e) => e.target.style.border = fieldErrors.Nominal 
-              ? '0.8px solid red' : '0.8px solid #ced4da'} style={{ width: '100%', padding: '0px 16px', borderRadius: '4px', border: fieldErrors.Nominal ? '0.8px solid red' : '0.8px solid #ced4da', height: '40px', fontSize: '14px' }} />
-              {fieldErrors.Nominal && (
-                <small style={{ display:'block', color:'red', fontSize:'12px', lineHeight:'16px', marginTop:'4px' }}>
-                  This field is required.
-                </small>
-              )}
+              <input
+                type="number" name="Nominal" value={formData.Nominal} onChange={handleChange}
+                onFocus={(e) => { e.target.style.border = '1px solid #053183'; e.target.style.outline = 'none'; }}
+                onBlur={(e) => e.target.style.border = fieldErrors.Nominal ? '0.8px solid red' : '0.8px solid #ced4da'}
+                style={{ width: '100%', padding: '0px 16px', borderRadius: '4px', border: fieldErrors.Nominal ? '0.8px solid red' : '0.8px solid #ced4da', height: '40px', fontSize: '14px' }}
+              />
+              {fieldErrors.Nominal && <small style={{ display: 'block', color: 'red', fontSize: '12px', lineHeight: '16px', marginTop: '4px' }}>This field is required.</small>}
             </div>
 
             <div style={{ marginBottom: fieldErrors.Deskripsi ? '6px' : '24px' }}>
               <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', textShadow: '0.2px 0 currentColor', fontSize: '14px', color: '#4f575e', height: '21px' }}>Deskripsi <span style={{ color: 'red' }}>*</span></label>
-              <input type="text" name="Deskripsi" value={formData.Deskripsi} onChange={handleChange} onFocus={(e) => {
-                e.target.style.border = '1px solid #053183';
-                e.target.style.outline = 'none';
-              }}
-              onBlur={(e) => e.target.style.border = fieldErrors.Deskripsi 
-              ? '0.8px solid red' : '0.8px solid #ced4da'} style={{ width: '100%', padding: '0px 16px', borderRadius: '4px', border: fieldErrors.Deskripsi ? '0.8px solid red' : '0.8px solid #ced4da' , height: '40px', fontSize: '14px'}} />
-              {fieldErrors.Deskripsi && (
-                <small style={{ display:'block', color:'red', fontSize:'12px', lineHeight:'16px', marginTop:'4px' }}>
-                  This field is required.
-                </small>
-              )}
+              <input
+                type="text" name="Deskripsi" value={formData.Deskripsi} onChange={handleChange}
+                onFocus={(e) => { e.target.style.border = '1px solid #053183'; e.target.style.outline = 'none'; }}
+                onBlur={(e) => e.target.style.border = fieldErrors.Deskripsi ? '0.8px solid red' : '0.8px solid #ced4da'}
+                style={{ width: '100%', padding: '0px 16px', borderRadius: '4px', border: fieldErrors.Deskripsi ? '0.8px solid red' : '0.8px solid #ced4da', height: '40px', fontSize: '14px' }}
+              />
+              {fieldErrors.Deskripsi && <small style={{ display: 'block', color: 'red', fontSize: '12px', lineHeight: '16px', marginTop: '4px' }}>This field is required.</small>}
             </div>
 
             <div style={{ marginBottom: '24px' }}>
               <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px', color: '#4f575e', height: '21px' }}>No Kamar</label>
               <select
-                name="Kamar_ID"
-                value={formData.Kamar_ID}
-                onChange={handleChange}
-                onFocus={(e) => {
-                  e.target.style.border = '1px solid #053183';
-                  e.target.style.outline = 'none';
-                }}
-                onBlur={(e) => {
-                  e.target.style.border = '0.8px solid #ced4da';
-                }}
-                style={{
-                  appearance: 'none',
-                  width: '100%',
-                  padding: '0px 16px',
-                  borderRadius: '4px',
-                  border: '0.8px solid #ced4da',
-                  height: '40px',
-                  color: '#272b30',
-                  fontSize: '14px'
-                }}
+                name="Kamar_ID" value={formData.Kamar_ID} onChange={handleChange}
+                onFocus={(e) => { e.target.style.border = '1px solid #053183'; e.target.style.outline = 'none'; }}
+                onBlur={(e) => { e.target.style.border = '0.8px solid #ced4da'; }}
+                style={{ appearance: 'none', width: '100%', padding: '0px 16px', borderRadius: '4px', border: '0.8px solid #ced4da', height: '40px', color: '#272b30', fontSize: '14px' }}
               >
                 <option value="">Pilih No Kamar</option>
-
                 {rooms.map((room) => {
                   const roomId = room.kamar_id ?? room.Kamar_ID;
                   const roomNumber = room.no_kamar ?? room.No_Kamar;
-
-                  return (
-                    <option key={roomId} value={roomId}>
-                      {roomNumber}
-                    </option>
-                  );
+                  return <option key={roomId} value={roomId}>{roomNumber}</option>;
                 })}
               </select>
-              <img src="/down.png" alt="" style={{ position: 'absolute', right: '648px', top: '84.5%', transform: 'translateY(-50%)', width: '11px', height: '11px', pointerEvents: 'none' }}/>
+              <img src="/down.png" alt="" style={{ position: 'absolute', right: '648px', top: '84.5%', transform: 'translateY(-50%)', width: '11px', height: '11px', pointerEvents: 'none' }} />
             </div>
 
-            <div style={{ display: 'flex'}}>
-              <Link type="button" onClick={() => navigate(-1)} style={{ textShadow: '0.2px 0 currentColor', backgroundColor: '#fff', color: '#479f45', border: '1px solid #479f45', padding: '9px 16px', borderRadius: '4px', textDecoration: 'none', fontWeight: '600', fontSize: '14px', height: '40px', width: '88.61px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center'}}>
+            <div style={{ display: 'flex' }}>
+              <Link type="button" onClick={() => navigate(-1)} style={{ textShadow: '0.2px 0 currentColor', backgroundColor: '#fff', color: '#479f45', border: '1px solid #479f45', padding: '9px 16px', borderRadius: '4px', textDecoration: 'none', fontWeight: '600', fontSize: '14px', height: '40px', width: '88.61px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
                 Kembali
               </Link>
-              <button type="submit" style={{ textShadow: '0.2px 0 currentColor', backgroundColor: '#479f45', color: 'white', border: 'none', padding: '0px 16px', borderRadius: '4px', fontWeight: '600', cursor: 'pointer', marginLeft: '24px', fontSize: '14px', height: '40px', width: '84.3px'}}>
+              <button type="submit" style={{ textShadow: '0.2px 0 currentColor', backgroundColor: '#479f45', color: 'white', border: 'none', padding: '0px 16px', borderRadius: '4px', fontWeight: '600', cursor: 'pointer', marginLeft: '24px', fontSize: '14px', height: '40px', width: '84.3px' }}>
                 Simpan
               </button>
-            </div>          
+            </div>
           </form>
         </div>
+
         <div>
-          <img 
-            src="/Request.png" 
-            alt="Ilustrasi"
-            style={{
-              width: '592px',
-              height: '261.44px',
-              objectFit: 'fill',
-              margin: '-2px'
-            }}
-          />
+          <img src="/Request.png" alt="Ilustrasi" style={{ width: '592px', height: '261.44px', objectFit: 'fill', margin: '-2px' }} />
         </div>
       </div>
     </div>
