@@ -24,7 +24,7 @@ const TambahKamar = () => {
 
     const errors = {};
     if (!formData.No_Kamar.trim()) errors.No_Kamar = true;
-    if (formData.Harga === '' || Number(formData.Harga) < 0) errors.Harga = true;
+    if (formData.Harga === '') errors.Harga = true; 
     if (formData.Lantai === '' || Number(formData.Lantai) < 0) errors.Lantai = true;
     if (!formData.Tipe_Kamar) errors.Tipe_Kamar = true;
     if (!formData.Status_Ketersediaan) errors.Status_Ketersediaan = true;
