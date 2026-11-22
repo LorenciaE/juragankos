@@ -38,7 +38,7 @@ const TambahKamar = () => {
     try {
       // Kirim data sesuai nama field yang digunakan aplikasi. Harga dan Lantai dikirim sebagai angka.
       const payload = {
-        No_Kamar: formData.No_Kamar.trim(), Harga: Number(formData.Harga), Lantai: Number(formData.Lantai),
+        No_Kamar: formData.No_Kamar.trim(), Harga: Number(formData.Harga), Lantai: String(formData.Lantai).trim(),
         Tipe_Kamar: formData.Tipe_Kamar, Status_Ketersediaan: formData.Status_Ketersediaan
       };
       console.log('Payload tambah kamar:', payload);

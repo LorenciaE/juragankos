@@ -72,7 +72,7 @@ const EditKamar = () => {
 
     try {
       const roomData = {
-        No_Kamar: String(formData.No_Kamar).trim(), Harga: Number(formData.Harga), Lantai: Number(formData.Lantai),
+        No_Kamar: String(formData.No_Kamar).trim(), Harga: Number(formData.Harga), Lantai: String(formData.Lantai).trim(),
         Tipe_Kamar: formData.Tipe_Kamar, Status_Ketersediaan: formData.Status_Ketersediaan
       };
       console.log('Data kamar yang dikirim:', roomData);
