@@ -28,7 +28,7 @@ const Login = () => {
     setFieldErrors({});
 
     // Validasi username dan password
-    if (username === 'admin123' && password === 'admin123') {
+    if ((username === 'admin123' && password === 'admin123') || (username === 'Admin123' && password === 'Admin123')) {
       sessionStorage.setItem('isLoggedIn', 'true');
       navigate('/');
     } else {
