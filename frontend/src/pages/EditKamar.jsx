@@ -146,7 +146,7 @@ const EditKamar = () => {
                 Lantai <span style={{ color: 'red' }}>*</span>
               </label>
               <input
-                type="number" name="Lantai" value={formData.Lantai} onChange={handleChange}
+                type="text" name="Lantai" value={formData.Lantai} onChange={handleChange}
                 onFocus={(e) => { e.target.style.border = '1px solid #053183'; e.target.style.outline = 'none'; }}
                 onBlur={(e) => { e.target.style.border = fieldErrors.Lantai ? '1px solid red' : '1px solid #ccc'; }}
                 style={{ width: '100%', boxSizing: 'border-box', padding: '0 16px', borderRadius: '4px', border: fieldErrors.Lantai ? '0.8px solid red' : '0.8px solid #ced4da', height: '40px', fontSize: '14px' }}
