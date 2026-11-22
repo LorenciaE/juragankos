@@ -25,7 +25,7 @@ const TambahKamar = () => {
     const errors = {};
     if (!formData.No_Kamar.trim()) errors.No_Kamar = true;
     if (formData.Harga === '') errors.Harga = true; 
-    if (formData.Lantai === '' || Number(formData.Lantai) < 0) errors.Lantai = true;
+    if (formData.Lantai === '') errors.Lantai = true;
     if (!formData.Tipe_Kamar) errors.Tipe_Kamar = true;
     if (!formData.Status_Ketersediaan) errors.Status_Ketersediaan = true;
 
@@ -102,7 +102,7 @@ const TambahKamar = () => {
                 onBlur={(e) => { e.target.style.border = fieldErrors.Harga ? '1px solid red' : '1px solid #ccc'; }}
                 style={{ width: '100%', padding: '0px 16px', borderRadius: '4px', border: fieldErrors.Harga ? '0.8px solid red' : '0.8px solid #ced4da', height: '40px', boxSizing: 'border-box' }}
               />
-              {fieldErrors.Harga && <small style={{ display: 'block', color: 'red', fontSize: '12px', lineHeight: '16px', marginTop: '4px' }}>Masukkan harga yang valid.</small>}
+              {fieldErrors.Harga && <small style={{ display: 'block', color: 'red', fontSize: '12px', lineHeight: '16px', marginTop: '4px' }}>This field is required.</small>}
             </div>
 
             {/* LANTAI */}
@@ -111,12 +111,12 @@ const TambahKamar = () => {
                 Lantai <span style={{ color: 'red' }}>*</span>
               </label>
               <input
-                type="number" min="0" name="Lantai" value={formData.Lantai} onChange={handleChange}
+                type="number" name="Lantai" value={formData.Lantai} onChange={handleChange}
                 onFocus={(e) => { e.target.style.border = '1px solid #053183'; e.target.style.outline = 'none'; }}
                 onBlur={(e) => { e.target.style.border = fieldErrors.Lantai ? '1px solid red' : '1px solid #ccc'; }}
                 style={{ width: '100%', padding: '0px 16px', borderRadius: '4px', border: fieldErrors.Lantai ? '0.8px solid red' : '0.8px solid #ced4da', height: '40px', boxSizing: 'border-box' }}
               />
-              {fieldErrors.Lantai && <small style={{ display: 'block', color: 'red', fontSize: '12px', lineHeight: '16px', marginTop: '4px' }}>Masukkan lantai yang valid.</small>}
+              {fieldErrors.Lantai && <small style={{ display: 'block', color: 'red', fontSize: '12px', lineHeight: '16px', marginTop: '4px' }}>This field is required.</small>}
             </div>
 
             {/* TIPE KAMAR */}

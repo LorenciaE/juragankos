@@ -69,7 +69,7 @@ const EditPembayaran = () => {
     if (!formData.Tgl_Pembayaran) errors.Tgl_Pembayaran = true;
     if (!formData.Status_Pembayaran) errors.Status_Pembayaran = true;
     if (!formData.Metode_Pembayaran) errors.Metode_Pembayaran = true;
-    if (formData.Nominal === '' || formData.Nominal === null || Number(formData.Nominal) <= 0) errors.Nominal = true;
+    if (formData.Nominal === '' || formData.Nominal === null) errors.Nominal = true;
 
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
