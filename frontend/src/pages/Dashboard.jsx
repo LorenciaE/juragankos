@@ -275,41 +275,73 @@ const Dashboard = () => {
           <h3 style={{ ...cardHeaderStyle, borderBottom: 'none', fontWeight: '600', fontSize: 18, marginBottom: 10 }}>Daftar Kamar Kosong</h3>
 
           <div style={{ backgroundColor: '#fff', border: '1px solid #e6e6e6', borderRadius: '4px' }}>
-            <table style={{ width: '760.45px', borderCollapse: 'collapse', textAlign: 'left' }}>
-              <thead>
-                <tr>
-                  <th className="sortable-header" style={{ ...thStyle, width: '170.07px', color: sortConfig.key === 'no_kamar' ? '#083487' : '#4f575e', cursor: 'pointer' }} onClick={() => requestSort('no_kamar')}>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>Nomor Kamar <img src="/sort.png" style={{ width: '12px', height: '12px' }} alt="Sort" /></span>
-                  </th>
-                  <th className="sortable-header" style={{ ...thStyle, width: '112.53px', color: sortConfig.key === 'harga' ? '#083487' : '#4f575e', cursor: 'pointer' }} onClick={() => requestSort('harga')}>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>Harga <img src="/sort.png" style={{ width: '12px', height: '12px' }} alt="Sort" /></span>
-                  </th>
-                  <th className="sortable-header" style={{ ...thStyle, width: '150.79px', color: sortConfig.key === 'tipe_kamar' ? '#083487' : '#4f575e', cursor: 'pointer' }} onClick={() => requestSort('tipe_kamar')}>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>Tipe Kamar <img src="/sort.png" style={{ width: '12px', height: '12px' }} alt="Sort" /></span>
-                  </th>
-                  <th className="sortable-header" style={{ ...thStyle, width: '114.23px', color: sortConfig.key === 'lantai' ? '#083487' : '#4f575e', cursor: 'pointer' }} onClick={() => requestSort('lantai')}>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>Lantai <img src="/sort.png" style={{ width: '12px', height: '12px' }} alt="Sort" /></span>
-                  </th>
-                  <th className="sortable-header" style={{ ...thStyle, width: '212.83px', color: sortConfig.key === 'status_ketersediaan' ? '#083487' : '#4f575e', cursor: 'pointer' }} onClick={() => requestSort('status_ketersediaan')}>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>Status Ketersediaan <img src="/sort.png" style={{ width: '12px', height: '12px' }} alt="Sort" /></span>
-                  </th>
-                </tr>
-              </thead>
+            <table style={{ width: '760.45px', borderCollapse: 'collapse', textAlign: 'left', tableLayout: 'fixed' }}>
+  <thead>
+    <tr>
+      <th
+        className="sortable-header"
+        style={{ ...thStyle, width: '145px', color: sortConfig.key === 'no_kamar' ? '#083487' : '#4f575e', cursor: 'pointer' }}
+        onClick={() => requestSort('no_kamar')}
+      >
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+          Nomor Kamar <img src="/sort.png" style={{ width: '12px', height: '12px' }} alt="Sort" />
+        </span>
+      </th>
+      <th
+        className="sortable-header"
+        style={{ ...thStyle, width: '175px', color: sortConfig.key === 'harga' ? '#083487' : '#4f575e', cursor: 'pointer' }}
+        onClick={() => requestSort('harga')}
+      >
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+          Harga <img src="/sort.png" style={{ width: '12px', height: '12px' }} alt="Sort" />
+        </span>
+      </th>
+      <th
+        className="sortable-header"
+        style={{ ...thStyle, width: '145px', color: sortConfig.key === 'tipe_kamar' ? '#083487' : '#4f575e', cursor: 'pointer' }}
+        onClick={() => requestSort('tipe_kamar')}
+      >
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+          Tipe Kamar <img src="/sort.png" style={{ width: '12px', height: '12px' }} alt="Sort" />
+        </span>
+      </th>
+      <th
+        className="sortable-header"
+        style={{ ...thStyle, width: '95px', color: sortConfig.key === 'lantai' ? '#083487' : '#4f575e', cursor: 'pointer' }}
+        onClick={() => requestSort('lantai')}
+      >
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+          Lantai <img src="/sort.png" style={{ width: '12px', height: '12px' }} alt="Sort" />
+        </span>
+      </th>
+      <th
+        className="sortable-header"
+        style={{ ...thStyle, width: '200.45px', color: sortConfig.key === 'status_ketersediaan' ? '#083487' : '#4f575e', cursor: 'pointer' }}
+        onClick={() => requestSort('status_ketersediaan')}
+      >
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+          Status Ketersediaan <img src="/sort.png" style={{ width: '12px', height: '12px' }} alt="Sort" />
+        </span>
+      </th>
+    </tr>
+  </thead>
 
-              {currentKamarKosong.length > 0 && (
-                <tbody>
-                  {currentKamarKosong.map(r => (
-                    <tr key={r.kamar_id}>
-                      <td style={{ ...tdStyle, width: '170.07px' }}>{r.no_kamar}</td>
-                      <td style={{ ...tdStyle, width: '112.53px' }}>Rp {Number(r.harga ?? 0).toLocaleString('id-ID')}</td>
-                      <td style={{ ...tdStyle, width: '150.79px' }}>{r.tipe_kamar}</td>
-                      <td style={{ ...tdStyle, width: '114.23px' }}>{r.lantai}</td>
-                      <td style={{ ...tdStyle, width: '212.83px' }}>{r.status_ketersediaan}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              )}
-            </table>
+  {currentKamarKosong.length > 0 && (
+    <tbody>
+      {currentKamarKosong.map(r => (
+        <tr key={r.kamar_id}>
+          <td style={{ ...tdStyle, width: '145px' }}>{r.no_kamar}</td>
+          <td style={{ ...tdStyle, width: '175px', whiteSpace: 'nowrap' }}>
+            Rp {Number(r.harga ?? 0).toLocaleString('id-ID')}
+          </td>
+          <td style={{ ...tdStyle, width: '145px' }}>{r.tipe_kamar}</td>
+          <td style={{ ...tdStyle, width: '95px' }}>{r.lantai}</td>
+          <td style={{ ...tdStyle, width: '200.45px' }}>{r.status_ketersediaan}</td>
+        </tr>
+      ))}
+    </tbody>
+  )}
+</table>
           </div>
 
           {sortedDaftarKamarKosong.length === 0 && (
