@@ -287,7 +287,7 @@ const Dashboard = () => {
                   <th className="sortable-header" style={{ ...thStyle, width: '145.79px', color: sortConfig.key === 'tipe_kamar' ? '#083487' : '#4f575e', cursor: 'pointer' }} onClick={() => requestSort('tipe_kamar')}>
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>Tipe Kamar <img src="/sort.png" style={{ width: '12px', height: '12px' }} alt="Sort" /></span>
                   </th>
-                  <th className="sortable-header" style={{ ...thStyle, width: '1124.23px', color: sortConfig.key === 'lantai' ? '#083487' : '#4f575e', cursor: 'pointer' }} onClick={() => requestSort('lantai')}>
+                  <th className="sortable-header" style={{ ...thStyle, width: '124.23px', color: sortConfig.key === 'lantai' ? '#083487' : '#4f575e', cursor: 'pointer' }} onClick={() => requestSort('lantai')}>
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>Lantai <img src="/sort.png" style={{ width: '12px', height: '12px' }} alt="Sort" /></span>
                   </th>
                   <th className="sortable-header" style={{ ...thStyle, width: '212.83px', color: sortConfig.key === 'status_ketersediaan' ? '#083487' : '#4f575e', cursor: 'pointer' }} onClick={() => requestSort('status_ketersediaan')}>
