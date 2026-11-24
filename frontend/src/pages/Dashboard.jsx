@@ -43,31 +43,87 @@ const Dashboard = () => {
 
   if (loading) return <p style={{ padding: '20px' }}>Memuat data...</p>;
 
-  // =========================
+// =========================
   // PERHITUNGAN DASHBOARD
   // =========================
   const totalKamar = rooms.length;
-  const kamarTerisi = rooms.filter(r => r.status_ketersediaan === 'TERISI').length;
-  const kamarKosong = rooms.filter(r => r.status_ketersediaan === 'KOSONG').length;
-  const totalPenyewaAktif = tenants.filter(t => t.status_sewa === 'AKTIF').length;
+  const daftarKamarTerisi = rooms.filter(r => r.status_ketersediaan === 'TERISI');
+  const daftarKamarKosong = rooms.filter(r => r.status_ketersediaan === 'KOSONG');
+  const kamarTerisi = daftarKamarTerisi.length;
+  const kamarKosong = daftarKamarKosong.length;
 
-  // Mendapatkan bulan dan tahun saat ini
+  const penyewaAktif = tenants.filter(t => t.status_sewa === 'AKTIF');
+  const totalPenyewaAktif = penyewaAktif.length;
+
   const now = new Date();
-  const bulanIni = now.getMonth();
+  const bulanIni = now.getMonth(); // 0 - 11
   const tahunIni = now.getFullYear();
 
-  // Pembayaran lunas berdasarkan tanggal pembayaran bulan ini
-  const pembayaranBulanIni = payments.filter(p => {
-    if (p.status_pembayaran !== 'LUNAS' || !p.tgl_pembayaran) return false;
-    const tanggal = new Date(p.tgl_pembayaran);
-    return !Number.isNaN(tanggal.getTime()) && tanggal.getMonth() === bulanIni && tanggal.getFullYear() === tahunIni;
+  // Helper parsing tanggal aman (mendukung YYYY-MM-DD maupun DD/MM/YYYY)
+  const parseTanggal = (value) => {
+    if (!value) return null;
+    const str = String(value).trim();
+    const dmy = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+    if (dmy) return new Date(Number(dmy[3]), Number(dmy[2]) - 1, Number(dmy[1]));
+    const ymd = str.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);
+    if (ymd) return new Date(Number(ymd[1]), Number(ymd[2]) - 1, Number(ymd[3]));
+    const parsed = new Date(str);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+  };
+
+  // Cek apakah pembayaran termasuk periode bulan & tahun ini
+  const isPeriodeBulanIni = (p) => {
+    if (p.bulan_pembayaran) {
+      const bm = String(p.bulan_pembayaran).trim();
+      const mmYyyy = `${String(bulanIni + 1).padStart(2, '0')}/${tahunIni}`;
+      const yyyyMm = `${tahunIni}-${String(bulanIni + 1).padStart(2, '0')}`;
+      if (bm === mmYyyy || bm === yyyyMm) return true;
+    }
+    const tanggal = parseTanggal(p.tgl_pembayaran);
+    return tanggal !== null && tanggal.getMonth() === bulanIni && tanggal.getFullYear() === tahunIni;
+  };
+
+  // Helper mencocokkan record payment ke kamar (via kamar_id, sewa_id, atau no_kamar)
+  const isPaymentMilikKamar = (p, room) => {
+    if (p.kamar_id != null && room.kamar_id != null) {
+      return p.kamar_id === room.kamar_id;
+    }
+    if (p.sewa_id != null) {
+      const sewaIdsKamar = penyewaAktif
+        .filter(t => t.kamar_id === room.kamar_id)
+        .map(t => t.sewa_id ?? t.id);
+      if (sewaIdsKamar.includes(p.sewa_id)) return true;
+    }
+    if (p.no_kamar && room.no_kamar) {
+      return String(p.no_kamar).trim() === String(room.no_kamar).trim();
+    }
+    return false;
+  };
+
+  // 1. Pendapatan Bulan Ini (semua transaksi LUNAS pada bulan berjalan)
+  const pembayaranLunasBulanIni = payments.filter(
+    p => p.status_pembayaran === 'LUNAS' && isPeriodeBulanIni(p)
+  );
+  const totalPendapatanBulanIni = pembayaranLunasBulanIni.reduce(
+    (sum, p) => sum + Number(p.nominal ?? 0),
+    0
+  );
+
+  // 2. Kamar Terisi yang Sudah Lunas Bulan Ini (dihitung 1 per kamar)
+  const daftarKamarSudahLunas = daftarKamarTerisi.filter(room => {
+    const jumlahPenyewaKamar = penyewaAktif.filter(t => t.kamar_id === room.kamar_id).length || 1;
+    const jumlahLunasKamar = pembayaranLunasBulanIni.filter(p => isPaymentMilikKamar(p, room)).length;
+    return jumlahLunasKamar >= jumlahPenyewaKamar;
   });
 
-  const totalPendapatanBulanIni = pembayaranBulanIni.reduce((sum, p) => sum + Number(p.nominal ?? 0), 0);
-  const kamarBelumLunas = payments.filter(p => p.status_pembayaran === 'BELUM LUNAS').length;
-  const kamarSudahLunas = pembayaranBulanIni.length;
-  const daftarKamarKosong = rooms.filter(r => r.status_ketersediaan === 'KOSONG');
-  const daftarBelumBayar = payments.filter(p => p.status_pembayaran === 'BELUM LUNAS');
+  // 3. Kamar Terisi yang Belum Bayar / Belum Lunas Bulan Ini (dihitung 1 per kamar)
+  // Mencakup kamar terisi yang statusnya 'BELUM LUNAS' maupun yang belum ada record pembayaran bulan ini
+  const daftarBelumBayar = daftarKamarTerisi.filter(
+    room => !pembayaranLunasBulanIni.some(p => isPaymentMilikKamar(p, room))
+  );
+
+  const kamarSudahLunas = daftarKamarSudahLunas.length;
+  const kamarBelumLunas = daftarBelumBayar.length;
 
   // =========================
   // SORTING
@@ -285,12 +341,14 @@ const Dashboard = () => {
               </thead>
 
               {currentBelumBayar.length > 0 && (
-                <tbody>
-                  {currentBelumBayar.map(p => (
-                    <tr key={p.pembayaran_id}><td style={tdStyle}>{p.no_kamar ?? '-'}</td></tr>
-                  ))}
-                </tbody>
-              )}
+              <tbody>
+                {currentBelumBayar.map(r => (
+                  <tr key={r.kamar_id}>
+                    <td style={tdStyle}>{r.no_kamar ?? '-'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            )}
             </table>
           </div>
 
