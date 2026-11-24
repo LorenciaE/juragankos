@@ -281,7 +281,7 @@ const Dashboard = () => {
                   <th className="sortable-header" style={{ ...thStyle, width: '170.07px', color: sortConfig.key === 'no_kamar' ? '#083487' : '#4f575e', cursor: 'pointer' }} onClick={() => requestSort('no_kamar')}>
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>Nomor Kamar <img src="/sort.png" style={{ width: '12px', height: '12px' }} alt="Sort" /></span>
                   </th>
-                  <th className="sortable-header" style={{ ...thStyle, width: '134.82px', color: sortConfig.key === 'harga' ? '#083487' : '#4f575e', cursor: 'pointer' }} onClick={() => requestSort('harga')}>
+                  <th className="sortable-header" style={{ ...thStyle, width: '112.53px', color: sortConfig.key === 'harga' ? '#083487' : '#4f575e', cursor: 'pointer' }} onClick={() => requestSort('harga')}>
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>Harga <img src="/sort.png" style={{ width: '12px', height: '12px' }} alt="Sort" /></span>
                   </th>
                   <th className="sortable-header" style={{ ...thStyle, width: '150.79px', color: sortConfig.key === 'tipe_kamar' ? '#083487' : '#4f575e', cursor: 'pointer' }} onClick={() => requestSort('tipe_kamar')}>
